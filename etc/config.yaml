@@ -1,0 +1,34 @@
+max_age: 48 # Maximum age a route can be present without any traffic
+csv_delimiter: ";" # Delimiter used by pmacct on the CSV file
+max_routes: 1500 # Maximum routes allowed
+min_bytes: 0 # 
+packet_sampling: 10000 # Packet sampling configured on the flow agent
+
+# Where to get the latest file from pmmact. Used in "run" mode
+pmacct_data_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/simpleoutput-latest.txt'
+# Where all the files are located. Used in "simulate" mode
+pmacct_data_folder: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows'
+# Where pmacct stores the BGP feed
+pmacct_bgp_folder: '/Users/dbarroso/Documents/workspace/pmacct_data/output/bgp'
+
+# List of plugins to run
+plugins:
+  - 'prefix_data.SavePrefixData'
+  - 'statistics.RouteStatistics'
+  - 'statistics.OffloadedBytes'
+  - 'bird.Bird'
+
+# Used by plugin prefix_data.SavePrefixData. See more details on the plugin documentation.
+latest_data_file: '/Users/dbarroso/Documents/workspace/pmacct_data/statistics/latest_data.csv'
+preserve_data_files: False
+
+# Used by plugin statistics.RouteStatistics. See more details on the plugin documentation.
+route_statistics_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/route_statistics.csv'
+route_statistics_png_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/route_statistics.png'
+
+# Used by plugin statistics.OffloadedBytes. See more details on the plugin documentation.
+draw_offloaded_bytes_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/offloaded_bytes.csv'
+draw_offloaded_bytes_png_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/offloaded_bytes.png'
+
+# Used by plugin bird.Bird. See more details on the plugin documentation.
+bird_policy_file: '/Users/dbarroso/Documents/workspace/pmacct_data/allow_prefixes.bird'
