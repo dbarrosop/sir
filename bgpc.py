@@ -128,10 +128,11 @@ def run_simulation(folder):
         count += 1
 
 
-if __name__ == '__main__':
+def cli():
     args = configure_parser()
 
     content = open(args.config, 'r')
+    global conf
     conf = yaml.load(content)
 
     if args.action == 'simulate':
@@ -141,3 +142,7 @@ if __name__ == '__main__':
         simulation = False
         time = datetime.now().strftime('%Y%m%d-%H%M')
         bgp_controller(conf['pmacct_data_file'], time)
+
+
+if __name__ == "__main__":
+    cli()
