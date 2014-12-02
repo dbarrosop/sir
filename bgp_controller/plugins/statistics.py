@@ -1,3 +1,28 @@
+"""
+Name:
+    RouteStatistics
+Author:
+    David Barroso <dbarroso@spotify.com>
+Description:
+    Keeps historical data of which prefixes are added, kept, removed, etc. on every run. The data is
+    saved on a CSV file with the following format::
+
+        Time,Total,Kept,Added,Removed,Expired
+
+    In addition it will generate a graph for better visualization.
+Requires:
+    - prev_pt
+    - new_pt
+    - time
+Configuration:
+    - route_statistics_file: Where to store the data
+    - route_statistics_png_file: Where to save the graph
+    - max_routes: Maximum routes allowed (for decoration)
+    - min_bytes: Min bytes necessary to consider a prefix eligible (for decoration)
+    - max_age: Maximum age a route can be present without any traffic (for decoration)
+"""
+
+
 from base import PrefixPlugin
 
 import pandas as pd
@@ -38,7 +63,6 @@ class RouteStatistics(PrefixPlugin):
     run_once_during_simulations = False
 
     def process_data(self):
-        """ Test """
         total = len(self.new_pt)
         kept = len(self.new_pt.common_prefixes(self.prev_pt))
         removed = len(self.prev_pt.missing_prefixes(self.new_pt)) - self.new_pt.expired_prefixes

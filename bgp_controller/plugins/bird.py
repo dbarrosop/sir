@@ -20,9 +20,6 @@ class Bird(PrefixPlugin):
     run_once_during_simulations = True
 
     def run(self):
-        """
-        Test2
-        """
         #previous_policy_file = self.conf['bird_previous_policy_file']
         policy_file = self.conf['bird_policy_file']
 
