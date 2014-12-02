@@ -1,12 +1,5 @@
 Statistics
 **********
 
-statistics.RouteStatistics
-==========================
+.. automodule:: bgp_controller.plugins.statistics
 
-.. autoclass:: bgp_controller.plugins.statistics.RouteStatistics
-
-statistics.OffloadedBytes
-==========================
-
-.. autoclass:: bgp_controller.plugins.statistics.OffloadedBytes

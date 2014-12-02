@@ -338,7 +338,7 @@ Where you keep the file is up to you, I will use **/etc/sir-conf.yaml**. Make su
     192.168.0.0/24 via 10.0.1.11 dev eth2  proto bird
 
     # We run the controller
-    $ python /spotify/sir/bgpc.py run -c /etc/sir-conf.yaml
+    $ python /spotify/sir/sir.py run -c /etc/sir-conf.yaml
     BIRD 1.4.5 ready.
     Reading configuration from /etc/bird/bird.conf
     Reconfigured
@@ -356,4 +356,4 @@ Where you keep the file is up to you, I will use **/etc/sir-conf.yaml**. Make su
 
 Now you have to make sure you run the controller every hour after pmacct has saved the data on disc. To do that you can add a cron task, create the file **/etc/cron.d/sir** with the content::
 
-    5 * * * *   root    /usr/bin/env python /spotify/sir/bgpc.py run -c /etc/sir-conf.yaml
+    5 * * * *   root    /usr/bin/env python /spotify/sir/sir.py run -c /etc/sir-conf.yaml
