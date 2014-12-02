@@ -10,7 +10,7 @@ install_reqs = parse_requirements('requirements.txt')
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
-    name='wolf',
+    name='sir',
     version='0.01',
     py_modules=['sir'],
     packages = find_packages(),
