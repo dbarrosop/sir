@@ -38,6 +38,7 @@ class RouteStatistics(PrefixPlugin):
     run_once_during_simulations = False
 
     def process_data(self):
+        """ Test """
         total = len(self.new_pt)
         kept = len(self.new_pt.common_prefixes(self.prev_pt))
         removed = len(self.prev_pt.missing_prefixes(self.new_pt)) - self.new_pt.expired_prefixes
