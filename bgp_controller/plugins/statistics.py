@@ -17,8 +17,10 @@ class RouteStatistics(PrefixPlugin):
         David Barroso <dbarroso@spotify.com>
     Description:
         Keeps historical data of which prefixes are added, kept, removed, etc. on every run. The data is
-        saved on a CSV file with the following format:
+        saved on a CSV file with the following format::
+
             Time,Total,Kept,Added,Removed,Expired
+
         In addition it will generate a graph for better visualization.
     Requires:
         - prev_pt
@@ -84,8 +86,10 @@ class OffloadedBytes(PrefixPlugin):
     Description:
         Keeps historical data of how much data is send and how much is offloaded. We consider that data is
         offloaded when a prefix in raw_pt was present in prev_pt. The data saved on the CSV file has the
-        following format:
+        following format::
+
             Time,Total,Offloaded,%
+
         In addition it will generate a graph for better visualization.
     Requires:
         - raw_pt

@@ -19,7 +19,7 @@ Class Constants
 When you create your own plugin you have to set two constants that will define when your plugin will be triggered:
 
     - **skip_simulation**: If set to *True* the plugin will not be executed in *simulations*.
-    - **run_once_during_simulations**: If set to *True*, when running in *simulations*, the plugin will be called on the last iteration of the simulation. If set to *False, it will be called on every iteration.
+    - **run_once_during_simulations**: If set to *True*, when running in *simulations*, the plugin will be called on the last iteration of the simulation. If set to *False*, it will be called on every iteration.
 
 Variables
 =========

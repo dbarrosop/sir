@@ -14,3 +14,4 @@ Contents
    users_guide/index
    developers_guide/index
    api/index
+   plugins/index

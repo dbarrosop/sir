@@ -11,14 +11,16 @@ class SavePrefixData(PrefixPlugin):
         David Barroso <dbarroso@spotify.com>
     Description:
         Saves all the prefixes in new_pt in a CSV file with detailed information for further processing. The data
-        saved will contain the following information:
+        saved will contain the following information::
+
             DST_IP;DST_MASK;PACKETS;BYTES;AVG_PACKETS;AVG_BYTES;AGE
+
     Requires:
         - new_pt
     Configuration:
         - latest_data_file: path to the file where to save the data
-        - preserve_data_files: If set to True we will rotate the file latest_data_file apending the date to
-        the filename. If set to False we will overwrite it and the previous content will be lost.
+        - preserve_data_files: If set to True we will rotate the file latest_data_file appending the date to
+            the filename. If set to False we will overwrite it and the previous content will be lost.
     """
 
     skip_simulation = False
