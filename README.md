@@ -7,6 +7,12 @@ I recommend you to start reading the [First Steps](http://sdn-internet-router-si
 
 You can also check the following [slides](docs/_static/SDN_Internet_Router-sir-Nov14.pdf) and [video](http://youtu.be/o1njanXhQqM?list=PLXSSXAe33jI2IIWtfnnEj5J7B7KoixKCe).
 
+Documentation
+=============
+
+You can find the documentation on [Read the Docs](http://sdn-internet-router-sir.readthedocs.org/en/latest/).
+
+
 Note
 ====
 
