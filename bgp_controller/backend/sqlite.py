@@ -1,5 +1,6 @@
 from base import Backend
 import sqlite3 as lite
+from bgp_controller.prefix_table import Prefix, PrefixTable
 
 import os
 
@@ -24,15 +25,24 @@ class SQLite(Backend):
 
         return result
 
-    def get_best_prefixes(self, start_time, end_time, limit):
+    def _get_pt(self, list, sampling=1):
+        pt = PrefixTable()
+
+        for p in list:
+            prefix = Prefix(p[0], p[1], p[2], p[3], p[4], sampling)
+            pt.add(prefix)
+
+        return pt
+
+    def get_best_prefixes(self, start_time, end_time):
         query = ("""
                          SELECT ip_dst, mask_dst, AVG(bytes), AVG(packets), stamp_updated
                          FROM acct
                          WHERE datetime(stamp_updated) BETWEEN datetime('%s') AND datetime('%s')
                          GROUP BY ip_dst, mask_dst ORDER BY AVG(bytes) DESC
                          LIMIT %s;
-                """) % (start_time, end_time, limit)
-        return self._execute_query(query)
+                """) % (start_time, end_time, self.conf['max_routes'])
+        return self._get_pt(self._execute_query(query), self.conf['packet_sampling'])
 
     def get_raw_prefixes(self, start_time, end_time):
         query = ("""
@@ -46,7 +56,7 @@ class SQLite(Backend):
                               WHERE datetime(stamp_updated) BETWEEN datetime('%s') AND datetime('%s')
                          );
                 """) % (start_time, end_time, start_time, end_time)
-        return self._execute_query(query)
+        return self._get_pt(self._execute_query(query), self.conf['packet_sampling'])
 
     def get_previous_prefixes(self, start_time, end_time):
         query = ("""
@@ -57,7 +67,8 @@ class SQLite(Backend):
                          AND
                          stamp_updated = (SELECT MAX(stamp_updated) FROM best_prefixes);
                 """) % (start_time, end_time)
-        return self._execute_query(query)
+
+        return self._get_pt(self._execute_query(query))
 
     def save_prefix_table(self, prefix_table, date):
         cur = self.con.cursor()

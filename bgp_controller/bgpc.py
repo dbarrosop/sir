@@ -49,35 +49,14 @@ class BGPController:
         print start, end
 
         # The best prefix for the previous run
-        self.prev_pt = PrefixTable(
-            max_routes = 0,
-            history = 0,
-        )
-        prefixes = self.backend.get_previous_prefixes(start, end)
-        for p in prefixes:
-            prefix = Prefix(p[0], p[1], p[2], p[3], p[4])
-            self.prev_pt.add(prefix)
+        self.prev_pt = self.backend.get_previous_prefixes(start, end)
 
         # The new best prefixes
-        prefixes = self.backend.get_best_prefixes(start, end, self.conf['max_routes'])
-        self.new_pt = PrefixTable(
-            max_routes = self.conf['max_routes'],
-            history = self.conf['history'],
-        )
-        for p in prefixes:
-            prefix = Prefix(p[0], p[1], p[2], p[3], p[4], self.conf['packet_sampling'])
-            self.new_pt.add(prefix)
+        self.new_pt = self.backend.get_best_prefixes(start, end)
         self.backend.save_prefix_table(self.new_pt, end)
 
         # Raw data from the last hour
-        self.raw_pt = PrefixTable(
-            max_routes = 0,
-            history = 0,
-        )
-        prefixes = self.backend.get_raw_prefixes(start, end)
-        for p in prefixes:
-            prefix = Prefix(p[0], p[1], p[2], p[3], p[4], self.conf['packet_sampling'])
-            self.raw_pt.add(prefix)
+        self.raw_pt = self.backend.get_raw_prefixes(start, end)
 
     def execute_plugins(self, time, simulation, last_run):
         for plugin in self.conf['plugins']:

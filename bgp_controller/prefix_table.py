@@ -34,9 +34,7 @@ class Prefix:
         return self.packets
 
 class PrefixTable:
-    def __init__(self, max_routes = 0, history = 0, packet_sampling=1):
-        self.max_routes = max_routes
-        self.history = history
+    def __init__(self, packet_sampling=1):
         self.packet_sampling = packet_sampling
         self.prefix_set = set()
         self.prefixes = dict()
