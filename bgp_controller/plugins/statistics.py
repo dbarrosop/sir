@@ -38,37 +38,43 @@ class RouteStatistics(PrefixPlugin):
     run_once_during_simulations = False
 
     def process_data(self):
-        total = len(self.new_pt)
-        kept = len(self.new_pt.common_prefixes(self.prev_pt))
-        removed = len(self.prev_pt.missing_prefixes(self.new_pt)) - self.new_pt.expired_prefixes
-        added = len(self.new_pt.missing_prefixes(self.prev_pt))
+        data = dict()
+        data['time'] = self.time.strftime('%Y-%m-%d %H:%M:%S')
+        data['total'] = len(self.new_pt)
+        data['kept'] = len(self.new_pt.common_prefixes(self.prev_pt))
+        data['removed'] = len(self.prev_pt.missing_prefixes(self.new_pt)) - self.new_pt.expired_prefixes
+        data['added'] = len(self.new_pt.missing_prefixes(self.prev_pt))
 
-        if os.path.exists(self.conf['route_statistics_file']):
-            add_headers = False
-        else:
-            add_headers = True
-
-        with open(self.conf['route_statistics_file'], "a") as f:
-            if add_headers:
-                line = 'Time,Total,Kept,Added,Removed,Expired\n'
-                f.write(line)
-            line = '%s, %s, %s, %s, %s, %s\n' % (self.time, total, kept, added, removed, self.new_pt.expired_prefixes)
-            f.write(line)
-            f.close()
+        self.backend.save_dict(data, self.conf['RouteStatistics']['db_table'])
 
     def plot(self):
         pd.set_option('display.mpl_style', 'default')
-        data = pd.read_csv(self.conf['route_statistics_file'])
+        table = self.backend.get_data_from_table(self.conf['RouteStatistics']['db_table'])
+
+        raw_data = list()
+
+        for row in table:
+            raw_data.append(
+                {
+                    'date': row[0],
+                    'total': row[1],
+                    'kept': row[2],
+                    'removed': row[3],
+                    'added': row[4],
+                }
+            )
+
+        data = pd.DataFrame(raw_data)
         plot = data.plot(
-            x='Time',
+            x='date',
             figsize = (9,9),
             grid=True,
-            title='Route Statistics, max_routes: %s, min_bytes: %s, max_age: %s' %
-                  (self.conf['max_routes'], self.conf['min_bytes'], self.conf['max_age']),
+            title='Route Statistics, max_routes: %s, history: %s' %
+                  (self.conf['max_routes'], self.conf['history']),
             legend=True,
         )
         fig = plot.get_figure()
-        fig.savefig(self.conf['route_statistics_png_file'])
+        fig.savefig(self.conf['RouteStatistics']['png_file'])
 
     def run(self):
         self.process_data()
@@ -108,36 +114,44 @@ class OffloadedBytes(PrefixPlugin):
 
     def plot(self):
         pd.set_option('display.mpl_style', 'default')
-        data = pd.read_csv(self.conf['draw_offloaded_bytes_file'])
+
+        table = self.backend.get_data_from_table(self.conf['OffloadedBytes']['db_table'])
+
+        raw_data = list()
+
+        for row in table:
+            raw_data.append(
+                {
+                    'date': row[0],
+                    'total_bytes': row[1],
+                    'offloaded': row[2],
+                    'percentage': row[3],
+                }
+            )
+
+        data = pd.DataFrame(raw_data)
+
         plot = data.plot(
-            x='Time',
-            secondary_y=['%'],
+            x='date',
+            secondary_y=['percentage'],
             figsize = (9,9),
             grid=True,
-            title='Data Offloaded, max_routes: %s, min_bytes: %s, max_age: %s' %
-                  (self.conf['max_routes'], self.conf['min_bytes'], self.conf['max_age']),
+            title='Data Offloaded, max_routes: %s, history: %s' %
+                  (self.conf['max_routes'], self.conf['history']),
             legend=True,
         )
         fig = plot.get_figure()
-        fig.savefig(self.conf['draw_offloaded_bytes_png_file'])
+        fig.savefig(self.conf['OffloadedBytes']['png_file'])
 
     def process(self):
-        ol_bytes = sum(p.get_bytes() for p in self.raw_pt if self.prev_pt.prefix_present(p))
-        total_bytes = self.raw_pt.get_total_bytes()
-        percentage = ol_bytes*100/total_bytes
+        data = dict()
+        data['time'] = self.time.strftime('%Y-%m-%d %H:%M:%S')
+        data['total_bytes'] = self.raw_pt.get_total_bytes()
+        data['offloaded'] = sum(p.get_bytes() for p in self.raw_pt if self.prev_pt.prefix_present(p))
 
-        if os.path.exists(self.conf['draw_offloaded_bytes_file']):
-            add_headers = False
-        else:
-            add_headers = True
+        data['percentage'] = data['offloaded']*100000/data['total_bytes']
 
-        with open(self.conf['draw_offloaded_bytes_file'], "a") as f:
-            if add_headers:
-                line = 'Time,Total,Offloaded,%\n'
-                f.write(line)
-            line = '%s, %s, %s, %s\n' % (self.time, total_bytes, ol_bytes, percentage)
-            f.write(line)
-            f.close()
+        self.backend.save_dict(data, self.conf['OffloadedBytes']['db_table'])
 
     def run(self):
         self.process()

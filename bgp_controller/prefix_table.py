@@ -1,21 +1,19 @@
 import csv
 
 class Prefix:
-    def __init__(self, prefix, mask, packets, num_bytes):
+    def __init__(self, prefix, mask, packets, bytes, date, sampling=1):
         self.prefix = prefix
         self.mask = mask
-        self.packets = packets
-        self.bytes = num_bytes
-        self.avg_packets = packets
-        self.avg_bytes = num_bytes
-        self.age = 0
+        self.packets = int(packets*sampling)
+        self.bytes = int(bytes*sampling)
+        self.date = date
 
     def __eq__(self, other):
         return self.prefix == other.prefix and self.mask == other.mask
 
     def __str__(self):
-        return '%s/%s, packets: %s, bytes: %s, age: %s' %\
-               (self.prefix, self.mask, self.packets, self.bytes, self.age)
+        return '%s/%s, packets: %s, bytes: %s, date: %s' %\
+               (self.prefix, self.mask, self.packets, self.bytes, self.date)
 
     def __hash__(self):
         return hash(self.prefix) ^ hash(self.mask)
@@ -23,23 +21,11 @@ class Prefix:
     def get_prefix(self):
         return '%s/%s' % (self.prefix, self.mask)
 
-    def set_age(self, age):
-        self.age = age
+    def get_prefix_network(self):
+        return self.prefix
 
-    def reset_age(self):
-        self.age = 0
-
-    def get_age(self):
-        return self.age
-
-    def set_avg_bytes(self, value):
-        self.avg_bytes = value
-
-    def set_avg_packets(self, value):
-        self.avg_packets = value
-
-    def increment_age(self, inc=1):
-        self.age += inc
+    def get_prefix_mask(self):
+        return self.mask
 
     def get_bytes(self):
         return self.bytes
@@ -47,27 +33,10 @@ class Prefix:
     def get_packets(self):
         return self.packets
 
-    def add(self, other_prefix):
-        self.packets = self.packets + other_prefix.packets
-        self.bytes = self.bytes + other_prefix.bytes
-
-    def average(self, other_prefix):
-        self.avg_packets = ( self.avg_packets + other_prefix.avg_packets ) / 2
-        self.avg_bytes = ( self.avg_bytes + other_prefix.avg_bytes ) / 2
-
-    def reset_counters(self):
-        self.packets = 0
-        self.bytes = 0
-
-    def csv(self):
-        return '%s;%s;%s;%s;%s;%s;%s\n' % (self.prefix, self.mask, self.packets, self.bytes,\
-                                     self.avg_packets, self.avg_bytes, self.age)
-
 class PrefixTable:
-    def __init__(self, max_routes = 0, max_age = 0, min_bytes = 0, packet_sampling=1):
+    def __init__(self, max_routes = 0, history = 0, packet_sampling=1):
         self.max_routes = max_routes
-        self.max_age = max_age
-        self.min_bytes = min_bytes
+        self.history = history
         self.packet_sampling = packet_sampling
         self.prefix_set = set()
         self.prefixes = dict()
@@ -91,16 +60,6 @@ class PrefixTable:
         self.prefix_set.add(prefix.get_prefix())
         self.prefixes[prefix.get_prefix()] = prefix
 
-    def replace_prefix_table(self, dictionary):
-        self.prefixes = dict(dictionary)
-        self.prefix_set = set(self.prefixes.keys())
-
-    def get_prefixes(self):
-        return self.prefixes.values()
-
-    def prefix_present(self, prefix):
-        return prefix.get_prefix() in self.prefix_set
-
     def common_prefixes(self, pt):
         """
         Args:
@@ -118,6 +77,23 @@ class PrefixTable:
             A set containing all prefixes present in the current object but not in pt
         """
         return self.prefix_set - pt.prefix_set
+
+    def get_total_bytes(self):
+        return sum(p.get_bytes() for p in self.prefixes.values())
+
+    def prefix_present(self, prefix):
+        return prefix.get_prefix() in self.prefix_set
+
+    '''
+    def replace_prefix_table(self, dictionary):
+        self.prefixes = dict(dictionary)
+        self.prefix_set = set(self.prefixes.keys())
+
+    def get_prefixes(self):
+        return self.prefixes.values()
+
+
+
 
     def iteritems(self):
         for key, value in self.prefixes.iteritems():
@@ -203,3 +179,4 @@ class PrefixTable:
             self.expired_prefixes = num_prefixes - len(prefixes)
             prefixes = sorted(prefixes, key=lambda x: x.bytes, reverse=True)[:self.get_max_routes()]
             self.replace_prefix_table({x.get_prefix(): x for x in prefixes})
+    '''

@@ -1,8 +1,10 @@
 from bgp_controller.prefix_table import PrefixTable
 
-from datetime import datetime
-import os.path
+from bgp_controller.bgpc import BGPController
+
 import argparse
+
+import os.path
 import yaml
 import json
 
@@ -41,6 +43,7 @@ def configure_parser():
     return args
 
 
+'''
 def load_bgp_file():
     files = os.listdir(conf['pmacct_bgp_folder'])
     files = [os.path.join(conf['pmacct_bgp_folder'], f) for f in files] # add path to each file
@@ -59,6 +62,12 @@ def load_bgp_file():
 
 
 def bgp_controller(filename, time, simulation=False, last_run=True):
+    backend_class =  locate('bgp_controller.backend.%s' % conf['backend'])
+    backend = backend_class(conf)
+    backend.open()
+
+    asd = backend.get_last_prefix_table()
+
     # Prefix table containing information regarding the previous run
     prev_pt = PrefixTable(
         max_routes = conf['max_routes'],
@@ -95,10 +104,13 @@ def bgp_controller(filename, time, simulation=False, last_run=True):
 
     bgp_table = load_bgp_file()
 
+    backend.save_prefix_table(new_pt, 'processed_prefixes', time)
+
     for plugin in conf['plugins']:
         plugin_class = locate('bgp_controller.plugins.%s' % plugin)
         plugin = plugin_class(
             conf = conf,
+            backend = backend,
             data_file=filename,
             raw_pt = raw_pt,
             new_pt = new_pt,
@@ -109,6 +121,8 @@ def bgp_controller(filename, time, simulation=False, last_run=True):
             last_run = last_run
         )
         plugin._execute()
+
+    backend.close()
 
 
 def run_simulation(folder):
@@ -142,7 +156,17 @@ def cli():
         simulation = False
         time = datetime.now().strftime('%Y%m%d-%H%M')
         bgp_controller(conf['pmacct_data_file'], time)
+'''
 
+def cli():
+    args = configure_parser()
+
+    bgp_controller = BGPController(args.config)
+
+    if args.action == 'simulate':
+        bgp_controller.simulate()
+    elif args.action == 'run':
+        bgp_controller.run()
 
 if __name__ == "__main__":
     cli()
