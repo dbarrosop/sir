@@ -3,9 +3,9 @@ class PrefixPlugin:
     skip_simulation = False
     run_once_during_simulations = False
 
-    def __init__(self, conf, data_file, raw_pt, new_pt, prev_pt, bgp_table, time, simulation, last_run):
+    def __init__(self, conf, backend, raw_pt, new_pt, prev_pt, bgp_table, time, simulation, last_run):
         self.conf = conf
-        self.data_file = data_file
+        self.backend = backend
         self.raw_pt = raw_pt
         self.new_pt = new_pt
         self.prev_pt = prev_pt
