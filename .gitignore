@@ -55,3 +55,4 @@ target/
 
 .DS_Store
 files/*
+.idea
