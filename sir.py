@@ -4,12 +4,6 @@ from bgp_controller.bgpc import BGPController
 
 import argparse
 
-import os.path
-import yaml
-import json
-
-from pydoc import locate
-
 
 def configure_parser():
     parser = argparse.ArgumentParser(

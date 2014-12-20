@@ -2,8 +2,7 @@ from pydoc import locate
 import yaml
 from datetime import datetime, timedelta
 
-from prefix_table import Prefix, PrefixTable
-
+# TODO Add logging
 
 class BGPController:
     def __init__(self, config_file):

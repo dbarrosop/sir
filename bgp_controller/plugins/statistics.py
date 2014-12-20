@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use('Agg')
 
 # TODO make sure it runs in 'run' mode
-# TODO select how many hours you want to graph
+# FIXME Update documentation
 
 class RouteStatistics(PrefixPlugin):
     """
@@ -63,8 +63,8 @@ class RouteStatistics(PrefixPlugin):
                     'added': row[4],
                 }
             )
-
-        data = pd.DataFrame(raw_data)
+        time_frame = self.conf['RouteStatistics']['plot_days']*24
+        data = pd.DataFrame(raw_data)[-time_frame:]
         plot = data.plot(
             x='date',
             figsize = (9,9),
@@ -124,12 +124,12 @@ class OffloadedBytes(PrefixPlugin):
                 {
                     'date': row[0],
                     'total_bytes': row[1],
-                    'offloaded': row[2],
+                    'offloaded': float(row[2]),
                     'percentage': row[3],
                 }
             )
-
-        data = pd.DataFrame(raw_data)
+        time_frame = self.conf['OffloadedBytes']['plot_days']*24
+        data = pd.DataFrame(raw_data)[-time_frame:]
 
         plot = data.plot(
             x='date',
@@ -149,7 +149,7 @@ class OffloadedBytes(PrefixPlugin):
         data['total_bytes'] = self.raw_pt.get_total_bytes()
         data['offloaded'] = sum(p.get_bytes() for p in self.raw_pt if self.prev_pt.prefix_present(p))
 
-        data['percentage'] = data['offloaded']*100000/data['total_bytes']
+        data['percentage'] = float(data['offloaded'])*100/float(data['total_bytes'])
 
         self.backend.save_dict(data, self.conf['OffloadedBytes']['db_table'])
 

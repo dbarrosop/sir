@@ -1,20 +1,18 @@
-history: 48 # Maximum age a route can be present without any traffic
-max_routes: 30000 # Maximum routes allowed
+history: 12
+max_routes: 1000 # Maximum routes allowed
 packet_sampling: 10000 # Packet sampling configured on the flow agent
 
 # Where pmacct stores the BGP feed
 pmacct_bgp_folder: '/Users/dbarroso/Documents/workspace/pmacct_data/output/bgp'
 
 backend: 'sqlite.SQLite'
-sqlite_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/pmacct.db'
+backend_options:
+  sqlite_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/pmacct.db'
 
 simulate:
   date_format: '%Y-%m-%d %H:%M:%S'
-  #start_date: '2012-12-07 00:00:00'
-  #end_date: '2015-12-08 00:00:00'
-  start_date: '2014-12-07 00:00:00'
-  end_date: '2014-12-08 00:00:00'
-
+  start_date: '2014-12-18 00:00:00'
+  end_date: '2014-12-20 00:00:00'
 
 # List of plugins to run
 plugins:
@@ -26,11 +24,13 @@ plugins:
 RouteStatistics:
   db_table: 'route_statistics'
   png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/route_statistics.png'
+  plot_days: 1
 
 # Used by plugin statistics.OffloadedBytes. See more details on the plugin documentation.
 OffloadedBytes:
   db_table: 'offloaded_bytes'
   png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/offloaded_bytes.png'
+  plot_days: 1
 
 # Used by plugin bird.Bird. See more details on the plugin documentation.
 Bird:

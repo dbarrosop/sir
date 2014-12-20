@@ -4,13 +4,16 @@ from bgp_controller.prefix_table import Prefix, PrefixTable
 
 import os
 
+# TODO Add a cleaning method to delete acct and best_prefixes
+# TODO Save BGP in SQL?
+
 class SQLite(Backend):
 
     def open(self):
-        if not os.path.isfile(self.conf['sqlite_file']):
-            raise Exception("Database file doesn't exist: %s"% self.conf['sqlite_file'])
+        if not os.path.isfile(self.conf['backend_options']['sqlite_file']):
+            raise Exception("Database file doesn't exist: %s" % self.conf['sqlite_file'])
 
-        self.con = lite.connect(self.conf['sqlite_file'])
+        self.con = lite.connect(self.conf['backend_options']['sqlite_file'])
 
     def close(self):
         self.con.close()
