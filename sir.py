@@ -1,8 +1,11 @@
-from bgp_controller.prefix_table import PrefixTable
-
 from bgp_controller.bgpc import BGPController
 
 import argparse
+import yaml
+import sys
+
+import logging
+logger = logging.getLogger('sir')
 
 
 def configure_parser():
@@ -36,126 +39,27 @@ def configure_parser():
     args = parser.parse_args()
     return args
 
+def configure_logging(config):
+    formatter = logging.Formatter('program=sir severity_label=%(levelname)s severity=%(levelno)s %(message)s')
+    logger.setLevel(config['logging_level'])
 
-'''
-def load_bgp_file():
-    files = os.listdir(conf['pmacct_bgp_folder'])
-    files = [os.path.join(conf['pmacct_bgp_folder'], f) for f in files] # add path to each file
-
-    bgp_table = dict()
-    bgp_table['dump_init'] = list()
-    bgp_table['dump'] = list()
-    bgp_table['dump_close'] = list()
-
-    with open(files[-1]) as data_file:
-        for line in data_file.readlines():
-            content = json.loads(line)
-            bgp_table[content['event_type']].append(content)
-
-    return bgp_table
-
-
-def bgp_controller(filename, time, simulation=False, last_run=True):
-    backend_class =  locate('bgp_controller.backend.%s' % conf['backend'])
-    backend = backend_class(conf)
-    backend.open()
-
-    asd = backend.get_last_prefix_table()
-
-    # Prefix table containing information regarding the previous run
-    prev_pt = PrefixTable(
-        max_routes = conf['max_routes'],
-        max_age = 0,
-        min_bytes = 0,
-        packet_sampling=1
-    )
-    if os.path.exists(conf['latest_data_file']):
-        prev_pt.load_from_csv(conf['latest_data_file'], conf['csv_delimiter'], read_ext_data=True)
-
-    # Prefix table containing information about this run, unfiltered and unmodified
-    raw_pt = PrefixTable(
-        max_routes = 0,
-        max_age = 0,
-        min_bytes = 0,
-        packet_sampling=conf['packet_sampling']
-    )
-    raw_pt.load_from_csv(filename, conf['csv_delimiter'], read_ext_data=False)
-
-    # Prefix table containing information about this run
-    new_pt = PrefixTable(
-        max_routes = conf['max_routes'],
-        max_age = conf['max_age'],
-        min_bytes = conf['min_bytes'],
-        packet_sampling=conf['packet_sampling']
-    )
-    new_pt.copy_prefixes(raw_pt)
-
-    # We join the old prefix list with the new one and then we filter routes to get
-    # only the routes we want
-    new_pt.join_prefix_tables(prev_pt)
-
-    new_pt.filter_routes()
-
-    bgp_table = load_bgp_file()
-
-    backend.save_prefix_table(new_pt, 'processed_prefixes', time)
-
-    for plugin in conf['plugins']:
-        plugin_class = locate('bgp_controller.plugins.%s' % plugin)
-        plugin = plugin_class(
-            conf = conf,
-            backend = backend,
-            data_file=filename,
-            raw_pt = raw_pt,
-            new_pt = new_pt,
-            prev_pt = prev_pt,
-            bgp_table = bgp_table,
-            time = time,
-            simulation = simulation,
-            last_run = last_run
-        )
-        plugin._execute()
-
-    backend.close()
-
-
-def run_simulation(folder):
-    files = os.listdir(folder)
-    files = [os.path.join(folder, f) for f in files] # add path to each file
-
-    total_runs = len(files)
-    count = 0
-
-    last_run = False
-
-    for f in files:
-        time = "-".join(f.split('.')[0].split('-')[1:])
-        if count + 1 == total_runs:
-            last_run = True
-        bgp_controller(f, time, simulation=True, last_run=last_run)
-        count += 1
+    if config['log_to_stderr']:
+        logging.basicConfig(level=config['logging_level'], stream=sys.stderr)
+    if config['log_to_syslog']:
+        handler = logging.handlers.SysLogHandler(('127.0.0.1', config['syslog_server_port']))
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
 
 def cli():
     args = configure_parser()
 
     content = open(args.config, 'r')
-    global conf
-    conf = yaml.load(content)
+    config = yaml.load(content)
 
-    if args.action == 'simulate':
-        simulation = True
-        run_simulation(conf['pmacct_data_folder'])
-    elif args.action == 'run':
-        simulation = False
-        time = datetime.now().strftime('%Y%m%d-%H%M')
-        bgp_controller(conf['pmacct_data_file'], time)
-'''
+    configure_logging(config)
 
-def cli():
-    args = configure_parser()
-
-    bgp_controller = BGPController(args.config)
+    bgp_controller = BGPController(config)
 
     if args.action == 'simulate':
         bgp_controller.simulate()

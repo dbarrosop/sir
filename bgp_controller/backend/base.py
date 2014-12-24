@@ -1,4 +1,6 @@
 
+# TODO Add methods and document
+
 class Backend:
 
     def __init__(self, conf):

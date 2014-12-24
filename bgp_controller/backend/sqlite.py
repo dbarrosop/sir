@@ -1,21 +1,26 @@
 from base import Backend
 import sqlite3 as lite
 from bgp_controller.prefix_table import Prefix, PrefixTable
+from datetime import timedelta
 
 import os
 
-# TODO Add a cleaning method to delete acct and best_prefixes
+import logging
+logger = logging.getLogger('sir')
+
 # TODO Save BGP in SQL?
 
 class SQLite(Backend):
 
     def open(self):
+        logger.info('action=OPEN_BACKEND backend=SQLITE file=%s' % self.conf['backend_options']['sqlite_file'])
         if not os.path.isfile(self.conf['backend_options']['sqlite_file']):
             raise Exception("Database file doesn't exist: %s" % self.conf['sqlite_file'])
 
         self.con = lite.connect(self.conf['backend_options']['sqlite_file'])
 
     def close(self):
+        logger.info('action=CLOSE_BACKEND backend=SQLITE file=%s')
         self.con.close()
 
     def _execute_query(self, query):
@@ -38,6 +43,7 @@ class SQLite(Backend):
         return pt
 
     def get_best_prefixes(self, start_time, end_time):
+        logger.debug('action=GET_BEST_PREFIXES start_time=%s end_time=%s' % (start_time, end_time))
         query = ("""
                          SELECT ip_dst, mask_dst, AVG(bytes), AVG(packets), stamp_updated
                          FROM acct
@@ -48,6 +54,7 @@ class SQLite(Backend):
         return self._get_pt(self._execute_query(query), self.conf['packet_sampling'])
 
     def get_raw_prefixes(self, start_time, end_time):
+        logger.debug('action=GET_RAW_PREFIXES start_time=%s end_time=%s' % (start_time, end_time))
         query = ("""
                          SELECT ip_dst, mask_dst, bytes, packets, stamp_updated
                          FROM acct
@@ -62,6 +69,7 @@ class SQLite(Backend):
         return self._get_pt(self._execute_query(query), self.conf['packet_sampling'])
 
     def get_previous_prefixes(self, start_time, end_time):
+        logger.debug('action=GET_PREVIOUS_PREFIXES start_time=%s end_time=%s' % (start_time, end_time))
         query = ("""
                          SELECT ip_dst, mask_dst, bytes, packets, stamp_updated
                          FROM best_prefixes
@@ -74,6 +82,7 @@ class SQLite(Backend):
         return self._get_pt(self._execute_query(query))
 
     def save_prefix_table(self, prefix_table, date):
+        logger.debug('action=SAVE_PREFIX_TABLE date=%s' % (date))
         cur = self.con.cursor()
 
         for prefix in prefix_table:
@@ -89,6 +98,8 @@ class SQLite(Backend):
         self.con.commit()
 
     def save_dict(self, data_dict, db_table):
+        logger.debug('action=SAVE_DICT db_table=%s' % (db_table))
+
         columns = tuple(data_dict.keys())
         values = tuple(data_dict.values())
 
@@ -104,9 +115,23 @@ class SQLite(Backend):
         return self._execute_query(query)
 
     def get_available_dates_in_range(self, start_time, end_time):
+        logger.debug('action=GET_AVAILABLE_DATES_IN_RANGE start_time=%s end_time=%s' % (start_time, end_time))
         query = ("""
                     SELECT stamp_updated FROM acct WHERE datetime(stamp_updated)
                     BETWEEN datetime('%s') AND datetime('%s')
                     GROUP BY stamp_updated;
                 """) % (start_time, end_time)
         return self._execute_query(query)
+
+    def _purge_databases(self, table, field, timestamp):
+        query = ( """ DELETE FROM %s WHERE %s < datetime('%s') """ ) % (table, field, timestamp)
+        self._execute_query(query)
+        self.con.commit()
+
+    def purge_data(self, current_time):
+        purge_time = current_time - timedelta(hours = self.conf['backend_options']['retention'] * 24)
+
+        logger.debug('action=PURGE_DATA date=%s' % (purge_time))
+
+        self._purge_databases('acct', 'stamp_updated', purge_time)
+        self._purge_databases('best_prefixes', 'stamp_updated', purge_time)

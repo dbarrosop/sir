@@ -1,7 +1,7 @@
 from base import PrefixPlugin
 
 import os
-from shutil import copyfile
+
 
 class Bird(PrefixPlugin):
     """
@@ -14,30 +14,27 @@ class Bird(PrefixPlugin):
     Requires:
         - new_pt
     Configuration:
-        - bird_policy_file: path to the file where to save the prefix list
+        - policy_file: path to the file where to save the prefix list
+        - reload_bird: Whether to reload bird or not.
     """
     skip_simulation = False
     run_once_during_simulations = True
 
     def run(self):
-        #previous_policy_file = self.conf['bird_previous_policy_file']
-        policy_file = self.conf['bird_policy_file']
-
-        #if previous_policy_file is not None:
-        #    if os.path.isfile(policy_file):
-        #        copyfile(policy_file, '%s.previous' % policy_file)
+        policy_file = self.conf['Bird']['policy_file']
 
         of = open(policy_file, 'w')
-        #header
+        # header
         of.write('function allow_prefixes() {\n  return net ~ [\n')
 
-        #allowed prefixes
+        # allowed prefixes
         for p in self.new_pt.get_prefixes()[0:-1]:
             of.write('    %s,\n' % p.get_prefix())
 
-        #last prefix does not have a comma
+        # last prefix does not have a comma
         of.write('    %s\n' % self.new_pt.get_prefixes()[-1].get_prefix())
         of.write('  ];\n}\n')
         of.close()
 
-        os.system("birdc configure")
+        if self.conf['Bird']['reload_bird']:
+            os.system("birdc configure")

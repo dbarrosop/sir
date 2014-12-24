@@ -1,27 +1,28 @@
 from pydoc import locate
-import yaml
 from datetime import datetime, timedelta
 
-# TODO Add logging
+import logging
+logger = logging.getLogger('sir')
 
 class BGPController:
-    def __init__(self, config_file):
-        content = open(config_file, 'r')
-        self.conf = yaml.load(content)
-
-        backend_class =  locate('bgp_controller.backend.%s' % self.conf['backend'])
+    def __init__(self, conf):
+        self.conf = conf
+        backend_class = locate('bgp_controller.backend.%s' % self.conf['backend'])
         self.backend = backend_class(self.conf)
 
     def run(self):
+        logger.info('action=RUN')
         start = datetime.now() - timedelta(hours = self.conf['history'])
         end = datetime.now()
 
         self.backend.open()
         self.process_prefixes(start, end)
         self.execute_plugins(time=end, simulation=False, last_run=True)
+        self.backend.purge_data(end)
         self.backend.close()
 
     def simulate(self):
+        logger.info('action=SIMULATE')
         start = datetime.strptime(self.conf['simulate']['start_date'], self.conf['simulate']['date_format'])
         end = datetime.strptime(self.conf['simulate']['end_date'], self.conf['simulate']['date_format'])
 
@@ -45,7 +46,7 @@ class BGPController:
         self.backend.close()
 
     def process_prefixes(self, start, end):
-        print start, end
+        logger.info('action=PROCESS_PREFIX start_date=%s end_date=%s' % (start, end))
 
         # The best prefix for the previous run
         self.prev_pt = self.backend.get_previous_prefixes(start, end)
@@ -59,6 +60,7 @@ class BGPController:
 
     def execute_plugins(self, time, simulation, last_run):
         for plugin in self.conf['plugins']:
+            logger.info('action=EXECUTE_PLUGIN plugin=%s' % plugin)
             plugin_class = locate('bgp_controller.plugins.%s' % plugin)
             plugin = plugin_class(
                 conf = self.conf,

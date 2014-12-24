@@ -6,9 +6,6 @@ import matplotlib
 
 matplotlib.use('Agg')
 
-# TODO make sure it runs in 'run' mode
-# FIXME Update documentation
-
 class RouteStatistics(PrefixPlugin):
     """
     Name:
@@ -27,11 +24,9 @@ class RouteStatistics(PrefixPlugin):
         - new_pt
         - time
     Configuration:
-        - route_statistics_file: Where to store the data
-        - route_statistics_png_file: Where to save the graph
-        - max_routes: Maximum routes allowed (for decoration)
-        - min_bytes: Min bytes necessary to consider a prefix eligible (for decoration)
-        - max_age: Maximum age a route can be present without any traffic (for decoration)
+        - db_table: Where to store/retrieve the data in the backend
+        - png_file: Where to save the graph
+        - plot_days: Days to plot
     """
 
     skip_simulation = False
@@ -102,11 +97,9 @@ class OffloadedBytes(PrefixPlugin):
         - prev_pt
         - time
     Configuration:
-        - draw_offloaded_bytes_file: Where to store the data
-        - draw_offloaded_bytes_png_file: Where to save the graph
-        - max_routes: Maximum routes allowed (for decoration)
-        - min_bytes: Min bytes necessary to consider a prefix eligible (for decoration)
-        - max_age: Maximum age a route can be present without any traffic (for decoration)
+        - db_table: Where to store/retrieve the data in the backend
+        - png_file: Where to save the graph
+        - plot_days: Days to plot
     """
 
     skip_simulation = False
