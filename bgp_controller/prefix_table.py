@@ -1,5 +1,3 @@
-import csv
-
 class Prefix:
     def __init__(self, prefix, mask, packets, bytes, date, sampling=1):
         self.prefix = prefix
@@ -32,6 +30,7 @@ class Prefix:
 
     def get_packets(self):
         return self.packets
+
 
 class PrefixTable:
     def __init__(self, packet_sampling=1):
@@ -82,16 +81,13 @@ class PrefixTable:
     def prefix_present(self, prefix):
         return prefix.get_prefix() in self.prefix_set
 
+    def get_prefixes(self):
+        return self.prefixes.values()
+
     '''
     def replace_prefix_table(self, dictionary):
         self.prefixes = dict(dictionary)
         self.prefix_set = set(self.prefixes.keys())
-
-    def get_prefixes(self):
-        return self.prefixes.values()
-
-
-
 
     def iteritems(self):
         for key, value in self.prefixes.iteritems():
