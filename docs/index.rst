@@ -12,6 +12,7 @@ Contents
    :maxdepth: 2
 
    users_guide/index
+   plugins/index
+   backends/index
    developers_guide/index
    api/index
-   plugins/index

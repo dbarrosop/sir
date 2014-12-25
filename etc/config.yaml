@@ -13,7 +13,7 @@ pmacct_bgp_folder: '/Users/dbarroso/Documents/workspace/pmacct_data/output/bgp'
 
 backend: 'sqlite.SQLite'
 backend_options:
-  sqlite_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/pmacct.db'
+  sqlite_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/pmacct.db' # Path to the SQLite database
   retention: 7 # Days to hold old data.
 
 simulate:

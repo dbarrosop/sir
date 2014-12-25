@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 import logging
 logger = logging.getLogger('sir')
 
+# TODO Send BGP Table
+
 class BGPController:
     def __init__(self, conf):
         self.conf = conf
@@ -52,11 +54,11 @@ class BGPController:
         self.prev_pt = self.backend.get_previous_prefixes(start, end)
 
         # The new best prefixes
-        self.new_pt = self.backend.get_best_prefixes(start, end)
+        self.new_pt = self.backend.get_best_prefixes(start, end, self.conf['max_routes'], self.conf['packet_sampling'])
         self.backend.save_prefix_table(self.new_pt, end)
 
         # Raw data from the last hour
-        self.raw_pt = self.backend.get_raw_prefixes(start, end)
+        self.raw_pt = self.backend.get_raw_prefixes(start, end, self.conf['packet_sampling'])
 
     def execute_plugins(self, time, simulation, last_run):
         for plugin in self.conf['plugins']:

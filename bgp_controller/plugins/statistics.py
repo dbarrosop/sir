@@ -1,7 +1,6 @@
 from base import PrefixPlugin
 
 import pandas as pd
-import os
 import matplotlib
 
 matplotlib.use('Agg')
@@ -14,7 +13,7 @@ class RouteStatistics(PrefixPlugin):
         David Barroso <dbarroso@spotify.com>
     Description:
         Keeps historical data of which prefixes are added, kept, removed, etc. on every run. The data is
-        saved on a CSV file with the following format::
+        saved in the backend with the following format::
 
             Time,Total,Kept,Added,Removed,Expired
 
@@ -48,20 +47,20 @@ class RouteStatistics(PrefixPlugin):
 
         raw_data = list()
 
-        for row in table:
+        for row in table[1:]:
             raw_data.append(
                 {
-                    'date': row[0],
-                    'total': row[1],
-                    'kept': row[2],
-                    'removed': row[3],
-                    'added': row[4],
+                    table[0][0]: row[0],
+                    table[0][1]: row[1],
+                    table[0][2]: row[2],
+                    table[0][3]: row[3],
+                    table[0][4]: row[4],
                 }
             )
         time_frame = self.conf['RouteStatistics']['plot_days']*24
         data = pd.DataFrame(raw_data)[-time_frame:]
         plot = data.plot(
-            x='date',
+            x='time',
             figsize = (9,9),
             grid=True,
             title='Route Statistics, max_routes: %s, history: %s' %
@@ -86,7 +85,7 @@ class OffloadedBytes(PrefixPlugin):
         David Barroso <dbarroso@spotify.com>
     Description:
         Keeps historical data of how much data is send and how much is offloaded. We consider that data is
-        offloaded when a prefix in raw_pt was present in prev_pt. The data saved on the CSV file has the
+        offloaded when a prefix in raw_pt was present in prev_pt. The data saved on the backend has the
         following format::
 
             Time,Total,Offloaded,%
@@ -112,20 +111,20 @@ class OffloadedBytes(PrefixPlugin):
 
         raw_data = list()
 
-        for row in table:
+        for row in table[1:]:
             raw_data.append(
                 {
-                    'date': row[0],
-                    'total_bytes': row[1],
-                    'offloaded': float(row[2]),
-                    'percentage': row[3],
+                    table[0][0]: row[0],
+                    table[0][1]: row[1],
+                    table[0][2]: float(row[2]),
+                    table[0][3]: row[3],
                 }
             )
         time_frame = self.conf['OffloadedBytes']['plot_days']*24
         data = pd.DataFrame(raw_data)[-time_frame:]
 
         plot = data.plot(
-            x='date',
+            x='time',
             secondary_y=['percentage'],
             figsize = (9,9),
             grid=True,

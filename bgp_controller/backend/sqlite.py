@@ -11,20 +11,32 @@ logger = logging.getLogger('sir')
 # TODO Save BGP in SQL?
 
 class SQLite(Backend):
+    """
+    Name:
+        SQLite
+    Author:
+        David Barroso <dbarroso@spotify.com>
+    Description:
+        This backend connects to a SQLite database.
+    Configuration:
+        * **sqlite_file** - Full path to the database file.
+        * **retention** - How many days to keep pmacct raw data and best_prefixes data.
+    """
 
     def open(self):
-        logger.info('action=OPEN_BACKEND backend=SQLITE file=%s' % self.conf['backend_options']['sqlite_file'])
-        if not os.path.isfile(self.conf['backend_options']['sqlite_file']):
+        logger.info('action=OPEN_BACKEND backend=SQLITE file=%s' % self.conf['sqlite_file'])
+        if not os.path.isfile(self.conf['sqlite_file']):
             raise Exception("Database file doesn't exist: %s" % self.conf['sqlite_file'])
 
-        self.con = lite.connect(self.conf['backend_options']['sqlite_file'])
+        self.con = lite.connect(self.conf['sqlite_file'])
 
     def close(self):
-        logger.info('action=CLOSE_BACKEND backend=SQLITE file=%s')
+        logger.info('action=CLOSE_BACKEND backend=SQLITE file=%s' % self.conf['sqlite_file'])
         self.con.close()
 
     def _execute_query(self, query):
         try:
+            self.con.row_factory = lite.Row
             cur = self.con.cursor()
             cur.execute(query)
             result = cur.fetchall()
@@ -42,7 +54,7 @@ class SQLite(Backend):
 
         return pt
 
-    def get_best_prefixes(self, start_time, end_time):
+    def get_best_prefixes(self, start_time, end_time, max_routes, packet_sampling):
         logger.debug('action=GET_BEST_PREFIXES start_time=%s end_time=%s' % (start_time, end_time))
         query = ("""
                          SELECT ip_dst, mask_dst, AVG(bytes), AVG(packets), stamp_updated
@@ -50,10 +62,10 @@ class SQLite(Backend):
                          WHERE datetime(stamp_updated) BETWEEN datetime('%s') AND datetime('%s')
                          GROUP BY ip_dst, mask_dst ORDER BY AVG(bytes) DESC
                          LIMIT %s;
-                """) % (start_time, end_time, self.conf['max_routes'])
-        return self._get_pt(self._execute_query(query), self.conf['packet_sampling'])
+                """) % (start_time, end_time, max_routes)
+        return self._get_pt(self._execute_query(query), packet_sampling)
 
-    def get_raw_prefixes(self, start_time, end_time):
+    def get_raw_prefixes(self, start_time, end_time, packet_sampling):
         logger.debug('action=GET_RAW_PREFIXES start_time=%s end_time=%s' % (start_time, end_time))
         query = ("""
                          SELECT ip_dst, mask_dst, bytes, packets, stamp_updated
@@ -66,7 +78,7 @@ class SQLite(Backend):
                               WHERE datetime(stamp_updated) BETWEEN datetime('%s') AND datetime('%s')
                          );
                 """) % (start_time, end_time, start_time, end_time)
-        return self._get_pt(self._execute_query(query), self.conf['packet_sampling'])
+        return self._get_pt(self._execute_query(query), packet_sampling)
 
     def get_previous_prefixes(self, start_time, end_time):
         logger.debug('action=GET_PREVIOUS_PREFIXES start_time=%s end_time=%s' % (start_time, end_time))
@@ -108,11 +120,15 @@ class SQLite(Backend):
         self.con.commit()
 
     def get_data_from_table(self, table, filter=None):
+        logging.debug('action=GET_DATA_FROM_TABLE table=%s filter=%s' % (table, filter))
         if filter is None:
             query = ("SELECT * FROM %s;") % table
         else:
             query = ("SELECT * FROM %s WHERE %s;") % (table, filter)
-        return self._execute_query(query)
+
+        result = self._execute_query(query)
+        result.insert(0, result[0].keys())
+        return result
 
     def get_available_dates_in_range(self, start_time, end_time):
         logger.debug('action=GET_AVAILABLE_DATES_IN_RANGE start_time=%s end_time=%s' % (start_time, end_time))
@@ -129,7 +145,7 @@ class SQLite(Backend):
         self.con.commit()
 
     def purge_data(self, current_time):
-        purge_time = current_time - timedelta(hours = self.conf['backend_options']['retention'] * 24)
+        purge_time = current_time - timedelta(hours = self.conf['retention'] * 24)
 
         logger.debug('action=PURGE_DATA date=%s' % (purge_time))
 
