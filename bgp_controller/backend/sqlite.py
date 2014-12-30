@@ -17,10 +17,16 @@ class SQLite(Backend):
     Author:
         David Barroso <dbarroso@spotify.com>
     Description:
-        This backend connects to a SQLite database.
+        This backend connects to a SQLite database. It will choose the best prefixes by the amount of data reported by pmacct.
     Configuration:
         * **sqlite_file** - Full path to the database file.
         * **retention** - How many days to keep pmacct raw data and best_prefixes data.
+    Example:
+        Configuration example::
+
+            backend_options:
+              sqlite_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/pmacct.db' # Path to the SQLite database
+              retention: 7 # Days to hold old data.
     """
 
     def open(self):

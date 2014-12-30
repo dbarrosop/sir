@@ -36,6 +36,8 @@ If you are writing a backend, please, follow this convention when documenting it
         Description of the backend
     Configuration:
         A list containing which configuration parameters are required and why.
+    Example:
+        A brief example on how to use it and configure it.
 
 Backend
 =======

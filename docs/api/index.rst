@@ -6,3 +6,4 @@ API Documentation
 
    prefix
    prefixtable
+   bgpc

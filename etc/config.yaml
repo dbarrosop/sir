@@ -18,8 +18,8 @@ backend_options:
 
 simulate:
   date_format: '%Y-%m-%d %H:%M:%S'
-  start_date: '2012-12-12 00:00:00'
-  end_date: '2015-12-20 00:00:00'
+  start_date: '2014-12-18 00:00:00'
+  end_date: '2014-12-20 00:00:00'
 
 # List of plugins to run
 plugins:
@@ -31,13 +31,13 @@ plugins:
 RouteStatistics:
   db_table: 'route_statistics'
   png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/route_statistics.png'
-  plot_days: 2
+  plot_days: 1
 
 # Used by plugin statistics.OffloadedBytes. See more details on the plugin documentation.
 OffloadedBytes:
   db_table: 'offloaded_bytes'
   png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/offloaded_bytes.png'
-  plot_days: 2
+  plot_days: 1
 
 # Used by plugin bird.Bird. See more details on the plugin documentation.
 Bird:

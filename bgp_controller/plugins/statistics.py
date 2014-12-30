@@ -26,6 +26,16 @@ class RouteStatistics(PrefixPlugin):
         - db_table: Where to store/retrieve the data in the backend
         - png_file: Where to save the graph
         - plot_days: Days to plot
+    Example:
+        Configuration example::
+
+            RouteStatistics:
+              db_table: 'route_statistics'
+              png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/route_statistics.png'
+              plot_days: 2
+
+        You can adapt the backend database to use this plugin by using the sql script provided in the folder
+        *'/sql/plugins/route_statistics.sql'*
     """
 
     skip_simulation = False
@@ -99,6 +109,17 @@ class OffloadedBytes(PrefixPlugin):
         - db_table: Where to store/retrieve the data in the backend
         - png_file: Where to save the graph
         - plot_days: Days to plot
+    Example:
+        Configuration example::
+
+            OffloadedBytes:
+              db_table: 'offloaded_bytes'
+              png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/offloaded_bytes.png'
+              plot_days: 2
+
+        You can adapt the backend database to use this plugin by using the sql script provided in the folder
+        *'/sql/plugins/offloaded_bytes.sql'*
+
     """
 
     skip_simulation = False

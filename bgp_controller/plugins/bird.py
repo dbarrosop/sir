@@ -16,6 +16,12 @@ class Bird(PrefixPlugin):
     Configuration:
         - policy_file: path to the file where to save the prefix list
         - reload_bird: Whether to reload bird or not.
+    Example:
+        Configuration example::
+
+            Bird:
+              policy_file: '/Users/dbarroso/Documents/workspace/pmacct_data/allow_prefixes.bird'
+              reload_bird: True
     """
     skip_simulation = False
     run_once_during_simulations = True

@@ -68,7 +68,6 @@ Documenting the Plugin
 
 For convenience we will document every plugin using the class docstring. We will follow the following format for standarization::
 
-    """
     Name:
         Name of the plugin
     Author:
@@ -79,7 +78,9 @@ For convenience we will document every plugin using the class docstring. We will
         A list containing which variables are required.
     Configuration:
         A list containing which configuration parameters are required and why.
-    """
+    Example:
+        A brief example on how to use it and configure it.
+
 
 Example
 =======

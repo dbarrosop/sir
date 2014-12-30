@@ -4,4 +4,8 @@ Users Guide
 .. toctree::
    :maxdepth: 2
 
-   first_steps
+   introduction
+   requirements
+   features
+   configuration
+   operations
