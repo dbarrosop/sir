@@ -27,6 +27,7 @@ Variables
 When you plugin is called it will contain the following variables:
 
     - **conf**: A dictionary containing all the parameters set on the configuration file.
+    - **backend** An instance of the backend. Useful to store and retrieve data from the backend.
     - **data_file**: Filename of the pmacct file we are processing
     - **raw_pt**: A PrefixTable containing all prefixes that have been processed
     - **new_pt**: A PrefixTable containing only the prefixes that have passed our criteria
@@ -36,23 +37,50 @@ When you plugin is called it will contain the following variables:
     - **simulation**: True if we are running a simulation.
     - **last_run**: True if it is the last iteration of the simulation or if it's not a simulation.
 
+Configuration Options
+=====================
+
+If you need to add configuration variables for your backend like connection string, username, password,
+or others, you can specify them in the configuration file inside a dictionary. For example::
+
+    RouteStatistics:
+      db_table: 'route_statistics'
+      png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/route_statistics.png'
+      plot_days: 2
+
+You will be able to access those variables as 'self.conf[variable_name]'. For example::
+
+    >>> print self.conf['RouteStatistics']['plot_days']
+    2
+
+Backend Methods
+===============
+
+There are two useful methods that backends have to provide that are useful for writing plugins. These are:
+
+   * :py:meth:`bgp_controller.backend.base.Backend.save_dict`
+   * :py:meth:`bgp_controller.backend.base.Backend.get_data_from_table`
+
+Check the :py:class:`~bgp_controller.backend.base.Backend` documentation for more info on how to use those methods.
+
 Documenting the Plugin
 ======================
 
 For convenience we will document every plugin using the class docstring. We will follow the following format for standarization::
 
-    """
     Name:
         Name of the plugin
     Author:
-        Author Name <Author email>
+        Author's Name <Author's email>
     Description:
         Description of what the module does
     Requires:
-        A list containing with variables are required.
+        A list containing which variables are required.
     Configuration:
-        A list containing with configuration parameters are required and why.
-    """
+        A list containing which configuration parameters are required and why.
+    Example:
+        A brief example on how to use it and configure it.
+
 
 Example
 =======
@@ -60,9 +88,11 @@ Example
 To wrap up, check the following plugin as an example::
 
     from base import PrefixPlugin
-    import os
-    from shutil import copyfile
 
+    import pandas as pd
+    import matplotlib
+
+    matplotlib.use('Agg')
 
     class RouteStatistics(PrefixPlugin):
         """
@@ -72,66 +102,67 @@ To wrap up, check the following plugin as an example::
             David Barroso <dbarroso@spotify.com>
         Description:
             Keeps historical data of which prefixes are added, kept, removed, etc. on every run. The data is
-            saved on a CSV file with the following format:
+            saved on a CSV file with the following format::
+
                 Time,Total,Kept,Added,Removed,Expired
+
             In addition it will generate a graph for better visualization.
         Requires:
             - prev_pt
             - new_pt
             - time
         Configuration:
-            - route_statistics_file: Where to store the data
-            - route_statistics_png_file: Where to save the graph
-            - max_routes: Maximum routes allowed (for decoration)
-            - min_bytes: Min bytes necessary to consider a prefix eligible (for decoration)
-            - max_age: Maximum age a route can be present without any traffic (for decoration)
+            - db_table: Where to store/retrieve the data in the backend
+            - png_file: Where to save the graph
+            - plot_days: Days to plot
         """
 
-        # We want to run the plugin during simulations
         skip_simulation = False
-        # We want to run it on every iteration
         run_once_during_simulations = False
 
         def process_data(self):
-            # We can add our own methods for clarity and reusability
+            data = dict()
+            data['time'] = self.time.strftime('%Y-%m-%d %H:%M:%S')
+            data['total'] = len(self.new_pt)
+            data['kept'] = len(self.new_pt.common_prefixes(self.prev_pt))
+            data['removed'] = len(self.prev_pt.missing_prefixes(self.new_pt)) - self.new_pt.expired_prefixes
+            data['added'] = len(self.new_pt.missing_prefixes(self.prev_pt))
 
-            total = len(self.new_pt)
-            kept = len(self.new_pt.common_prefixes(self.prev_pt))
-            removed = len(self.prev_pt.missing_prefixes(self.new_pt)) - self.new_pt.expired_prefixes
-            added = len(self.new_pt.missing_prefixes(self.prev_pt))
-
-            if os.path.exists(self.conf['route_statistics_file']):
-                add_headers = False
-            else:
-                add_headers = True
-
-            with open(self.conf['route_statistics_file'], "a") as f:
-                if add_headers:
-                    line = 'Time,Total,Kept,Added,Removed,Expired\n'
-                    f.write(line)
-                line = '%s, %s, %s, %s, %s, %s\n' % (self.time, total, kept, added, removed, self.new_pt.expired_prefixes)
-                f.write(line)
-                f.close()
+            self.backend.save_dict(data, self.conf['RouteStatistics']['db_table'])
 
         def plot(self):
-            # We can add our own methods for clarity and reusability
             pd.set_option('display.mpl_style', 'default')
-            data = pd.read_csv(self.conf['route_statistics_file'])
+            table = self.backend.get_data_from_table(self.conf['RouteStatistics']['db_table'])
+
+            raw_data = list()
+
+            for row in table[1:]:
+                raw_data.append(
+                    {
+                        table[0][0]: row[0],
+                        table[0][1]: row[1],
+                        table[0][2]: row[2],
+                        table[0][3]: row[3],
+                        table[0][4]: row[4],
+                    }
+                )
+            time_frame = self.conf['RouteStatistics']['plot_days']*24
+            data = pd.DataFrame(raw_data)[-time_frame:]
             plot = data.plot(
-                x='Time',
+                x='time',
                 figsize = (9,9),
                 grid=True,
-                title='Route Statistics, max_routes: %s, min_bytes: %s, max_age: %s' %
-                      (self.conf['max_routes'], self.conf['min_bytes'], self.conf['max_age']),
+                title='Route Statistics, max_routes: %s, history: %s' %
+                      (self.conf['max_routes'], self.conf['history']),
                 legend=True,
             )
             fig = plot.get_figure()
-            fig.savefig(self.conf['route_statistics_png_file'])
+            fig.savefig(self.conf['RouteStatistics']['png_file'])
 
         def run(self):
-            # The run method is triggered by the BGP controller
             self.process_data()
 
-            # Only plot the graph if it's the last run
             if self.last_run:
                 self.plot()
+
+

@@ -1,34 +1,45 @@
-max_age: 48 # Maximum age a route can be present without any traffic
-csv_delimiter: ";" # Delimiter used by pmacct on the CSV file
-max_routes: 1500 # Maximum routes allowed
-min_bytes: 0 # 
+history: 72
+max_routes: 30000 # Maximum routes allowed
 packet_sampling: 10000 # Packet sampling configured on the flow agent
 
-# Where to get the latest file from pmmact. Used in "run" mode
-pmacct_data_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/simpleoutput-latest.txt'
-# Where all the files are located. Used in "simulate" mode
-pmacct_data_folder: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows'
+logging_level: DEBUG
+log_to_syslog: False
+syslog_server_ip: 127.0.0.1
+syslog_server_port: 514
+log_to_stderr: True
+
 # Where pmacct stores the BGP feed
 pmacct_bgp_folder: '/Users/dbarroso/Documents/workspace/pmacct_data/output/bgp'
 
+backend: 'sqlite.SQLite'
+backend_options:
+  sqlite_file: '/Users/dbarroso/Documents/workspace/pmacct_data/output/flows/pmacct.db' # Path to the SQLite database
+  retention: 7 # Days to hold old data.
+
+simulate:
+  date_format: '%Y-%m-%d %H:%M:%S'
+  start_date: '2014-12-18 00:00:00'
+  end_date: '2014-12-20 00:00:00'
+
 # List of plugins to run
 plugins:
-  - 'prefix_data.SavePrefixData'
   - 'statistics.RouteStatistics'
   - 'statistics.OffloadedBytes'
   - 'bird.Bird'
 
-# Used by plugin prefix_data.SavePrefixData. See more details on the plugin documentation.
-latest_data_file: '/Users/dbarroso/Documents/workspace/pmacct_data/statistics/latest_data.csv'
-preserve_data_files: False
-
 # Used by plugin statistics.RouteStatistics. See more details on the plugin documentation.
-route_statistics_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/route_statistics.csv'
-route_statistics_png_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/route_statistics.png'
+RouteStatistics:
+  db_table: 'route_statistics'
+  png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/route_statistics.png'
+  plot_days: 1
 
 # Used by plugin statistics.OffloadedBytes. See more details on the plugin documentation.
-draw_offloaded_bytes_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/offloaded_bytes.csv'
-draw_offloaded_bytes_png_file: '/Users/dbarroso/Documents/workspace/pmacct_data//statistics/offloaded_bytes.png'
+OffloadedBytes:
+  db_table: 'offloaded_bytes'
+  png_file: '/Users/dbarroso/Documents/workspace/pmacct_data/offloaded_bytes.png'
+  plot_days: 1
 
 # Used by plugin bird.Bird. See more details on the plugin documentation.
-bird_policy_file: '/Users/dbarroso/Documents/workspace/pmacct_data/allow_prefixes.bird'
+Bird:
+  policy_file: '/Users/dbarroso/Documents/workspace/pmacct_data/allow_prefixes.bird'
+  reload_bird: False
