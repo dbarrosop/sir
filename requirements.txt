@@ -1,3 +1,2 @@
-PyYAML
-pandas
-matplotlib
+django==1.8.3
+Jinja2

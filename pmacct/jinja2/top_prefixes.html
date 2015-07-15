@@ -1,0 +1,54 @@
+<script src="/static/scripts/Chart.js"></script>
+
+<h1>Top Prefixes for the last {{hours}} hours</h1>
+
+<h2>Top 10 Graph</h2>
+
+<canvas id="top_asns" width="1000" height="400"></canvas>
+
+<script>
+var flowData = {
+	labels : [ {% for d in dates %}"{{d}}",{% endfor %} ],
+	datasets : [
+
+{% for f in top_flows %}
+
+{
+  label : "{{ f['label'] }}",
+  fillColor : "rgba(0,0,0,0)",
+  strokeColor : "#ACC26D",
+  pointColor : "#fff",
+  pointStrokeColor : "#9DB86D",
+  data : [ {% for d in f['data'] %}{{ d }}, {% endfor %} ]
+},
+
+{% endfor %}
+	]
+}
+
+var flows = document.getElementById('top_asns').getContext('2d');
+new Chart(flows).Line(flowData, {
+    animation: false,
+    multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>",
+  }
+);
+</script>
+
+<h2>Table</h2>
+
+<table style="width:75%">
+  <tr>
+    <th>prefix</th>
+    <th>sum_bytes</th>
+    <th>AS</th>
+  </tr>
+
+{% for f in flows %}
+<tr>
+  <td>{{f['ip_dst']}}/{{f['mask_dst']}}</td>
+  <td>{{f['sum_bytes']}}</td>
+  <td>{{f['as_dst']}}</td>
+</tr>
+{% endfor %}
+
+</table>

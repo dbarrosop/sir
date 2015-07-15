@@ -56,3 +56,5 @@ target/
 .DS_Store
 files/*
 .idea
+
+db.sqlite3
