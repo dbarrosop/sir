@@ -1,4 +1,6 @@
 from flask import render_template
+import time
+
 
 def start_page(g, request):
     return render_template('api/start_page.html')
@@ -15,6 +17,7 @@ def top_prefixes(g, request):
         'start_time': start_time,
         'end_time': end_time,
         'top_prefixes': db.aggregate_per_prefix(start_time, end_time, limit=limit_prefixes),
+        'request_time': getattr(g, 'request_time')(),
     }
     return data
 
@@ -28,5 +31,6 @@ def top_asns(g, request):
         'start_time': start_time,
         'end_time': end_time,
         'top_asns': db.aggregate_per_as(start_time, end_time),
+        'request_time': getattr(g, 'request_time')(),
     }
     return data

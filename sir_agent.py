@@ -6,6 +6,8 @@ from helpers import basic
 
 from flask import Flask, request, g, render_template, jsonify, make_response, abort
 
+import time
+
 app = Flask(__name__)
 app.config.from_object('settings')
 
@@ -19,6 +21,8 @@ app.config.from_object('settings')
 def before_request():
     g.db = SQLite3Helper(app.config['DATABASE'])
     g.db.connect()
+    g.request_start_time = time.time()
+    g.request_time = lambda: float("%.5f" % (time.time() - g.request_start_time))
 
 @app.teardown_request
 def teardown_request(exception):
