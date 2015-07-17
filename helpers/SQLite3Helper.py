@@ -2,18 +2,21 @@ import sqlite3 as lite
 import os
 from datetime import datetime
 
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
 
+
 class SQLite3Helper:
+
     def __init__(self, database):
         if not os.path.isfile(database):
             raise Exception("Database file doesn't exist: %s" % database)
 
-        self.database=database
+        self.database = database
         self.conn = None
 
     def connect(self):
@@ -57,6 +60,7 @@ class SQLite3Helper:
                     GROUP by ip_dst,mask_dst
                     ORDER BY SUM(bytes) DESC
                 '''
+
         if limit > 0:
             query += 'LIMIT %d' % limit
         query += ';'
@@ -86,6 +90,7 @@ class SQLite3Helper:
                     GROUP by as_dst
                     ORDER BY SUM(bytes) DESC;
                 '''
+
         return self._execute_query(query, [start_time, end_time])
 
     def get_dates(self):
@@ -97,7 +102,9 @@ class SQLite3Helper:
                     from acct
                     WHERE datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
                 '''
-        return [datetime.strptime(d['stamp_updated'], '%Y-%m-%d %H:%M:%S') for d in self._execute_query(query, [start_time, end_time])]
+
+        return [datetime.strptime(d['stamp_updated'], '%Y-%m-%d %H:%M:%S')
+                for d in self._execute_query(query, [start_time, end_time])]
 
     def get_total_traffic(self, start_time, end_time):
         query = ''' SELECT SUM(bytes) as sum_bytes
@@ -105,6 +112,7 @@ class SQLite3Helper:
                     WHERE
                     datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
                 '''
+
         return self._execute_query(query, [start_time, end_time])[0]['sum_bytes']
 
     def offloaded_bytes(self, num_prefixes, start_time, end_time):
@@ -118,11 +126,7 @@ class SQLite3Helper:
                         LIMIT %d
                     );
                 ''' % num_prefixes
-        args = {
-            'start_time': start_time,
-            'end_time': end_time,
-            'num_prefixes': num_prefixes,
-        }
+        args = {'start_time': start_time, 'end_time': end_time, 'num_prefixes': num_prefixes,}
         return self._execute_query(query, args)[0]['sum_bytes']
 
     def timeseries_per_as(self, start_time, end_time, asn):
@@ -135,6 +139,7 @@ class SQLite3Helper:
                     GROUP by as_dst, stamp_updated
                     ORDER BY stamp_updated ASC;
                 '''
+
         return [r['sum_bytes'] for r in self._execute_query(query, [start_time, end_time, asn])]
 
     def timeseries_per_prefix(self, start_time, end_time, prefix):
@@ -148,4 +153,5 @@ class SQLite3Helper:
                     GROUP by ip_dst, stamp_updated
                     ORDER BY stamp_updated ASC;
                 '''
+
         return [r['sum_bytes'] for r in self._execute_query(query, [start_time, end_time, ip_dst, mask_dst])]

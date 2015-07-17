@@ -1,5 +1,6 @@
 from flask import render_template
 
+
 def _init_context_dates(db, request):
     context = dict()
     dates = db.get_dates()
@@ -9,8 +10,10 @@ def _init_context_dates(db, request):
     context['end_time'] = request.form.get('end_time', context['avail_end_time'])
     return context
 
+
 def start_page(g, request):
     return render_template('views/start_page.html')
+
 
 def offloaded_traffic(g, request):
     db = getattr(g, 'db', None)
@@ -24,10 +27,12 @@ def offloaded_traffic(g, request):
         context['percentage'] = 0.0
     elif request.method == 'POST':
         context['total_bytes'] = db.get_total_traffic(context['start_time'], context['end_time'])
-        context['offloaded_bytes'] = db.offloaded_bytes(context['num_prefixes'], context['start_time'], context['end_time'])
-        context['percentage'] = float(context['offloaded_bytes'])*100.0 / float(context['total_bytes'])
+        context['offloaded_bytes'
+               ] = db.offloaded_bytes(context['num_prefixes'], context['start_time'], context['end_time'])
+        context['percentage'] = float(context['offloaded_bytes']) * 100.0 / float(context['total_bytes'])
 
     return render_template('views/offloaded_traffic.html', **context)
+
 
 def aggregate(g, request, field):
     db = getattr(g, 'db', None)
@@ -57,6 +62,7 @@ def aggregate(g, request, field):
         context['time_series'] = time_series
 
     return render_template('views/analytics_aggregate.html', **context)
+
 
 def simulate(g, request):
     db = getattr(g, 'db', None)
