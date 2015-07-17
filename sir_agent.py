@@ -1,10 +1,19 @@
 from helpers.SQLite3Helper import SQLite3Helper
-from helpers import analytics
 
-from flask import Flask, request, g, render_template
+from helpers import views
+from helpers import api
+from helpers import basic
+
+from flask import Flask, request, g, render_template, jsonify, make_response, abort
 
 app = Flask(__name__)
 app.config.from_object('settings')
+
+###################
+###################
+####  BASIC  ######
+###################
+###################
 
 @app.before_request
 def before_request():
@@ -17,33 +26,53 @@ def teardown_request(exception):
     if db is not None:
         db.close()
 
-@app.route('/view', strict_slashes=False)
+@app.route('/', strict_slashes=False)
+def start_page():
+    return basic.start_page(g, request)
+
+###################
+###################
+####  VIEWS  ######
+###################
+###################
+
+@app.route('/views', strict_slashes=False)
 def view_help():
-    return render_template('view/help.html')
+    return views.start_page(g, request)
 
-@app.route('/view/aggregate_per_as', methods=['GET', 'POST'])
-def view_aggregate_per_as():
-    db = getattr(g, 'db', None)
-    context = analytics.aggregate(db, request, 'as')
-    return render_template('view/analytics_aggregate.html', **context)
-
-@app.route('/view/aggregate_per_prefix', methods=['GET', 'POST'])
-def view_aggregate_per_prefix():
-    db = getattr(g, 'db', None)
-    context = analytics.aggregate(db, request, 'prefix')
-    return render_template('view/analytics_aggregate.html', **context)
-
-@app.route('/view/offloaded_traffic', methods=['GET', 'POST'])
+@app.route('/views/offloaded_traffic', methods=['GET', 'POST'])
 def view_offloaded_traffic():
-    db = getattr(g, 'db', None)
-    context = analytics.offloaded_traffic(db, request)
-    return render_template('view/offloaded_traffic.html', **context)
+    return views.offloaded_traffic(g, request)
 
-@app.route('/view/simulate', methods=['GET', 'POST'])
+@app.route('/views/aggregate_per_as', methods=['GET', 'POST'])
+def view_aggregate_per_as():
+    return views.aggregate(g, request, 'as')
+
+@app.route('/views/aggregate_per_prefix', methods=['GET', 'POST'])
+def view_aggregate_per_prefix():
+    return views.aggregate(g, request, 'prefix')
+
+@app.route('/views/simulate', methods=['GET', 'POST'])
 def view_simulate():
-    db = getattr(g, 'db', None)
-    context = analytics.view_simulate(db, request)
-    return render_template('view/simulate.html', **context)
+    return views.simulate(g, request)
+
+###################
+###################
+######  API  ######
+###################
+###################
+
+@app.route('/api/v1.0', strict_slashes=False)
+def api_help():
+    return api.start_page(g, request)
+
+@app.route('/api/v1.0/top_prefixes', methods=['GET'])
+def api_top_prefixes():
+    return jsonify(api.top_prefixes(g, request))
+
+@app.route('/api/v1.0/top_asns', methods=['GET'])
+def api_top_asns():
+    return jsonify(api.top_asns(g, request))
 
 if __name__ == '__main__':
     app.run()

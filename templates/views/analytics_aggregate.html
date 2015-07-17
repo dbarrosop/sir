@@ -1,0 +1,29 @@
+{% import 'views/includes/forms.html' as forms %}
+{% import 'views/includes/graphs.html' as graphs %}
+
+<script src="/static/scripts/Chart.js"></script>
+
+<h1>Top {{title}}</h1>
+
+{{ forms.time_range(avail_start_time, avail_end_time, start_time, end_time) }}
+
+<h2>Top 10 Graph</h2>
+
+{{ graphs.top_ten(time_series_times, time_series) }}
+
+<h2>Table</h2>
+
+<table style="width:75%">
+  <tr>
+    <th>{{title}}</th>
+    <th>sum_bytes</th>
+  </tr>
+
+  {% for f in flow_aggr %}
+  <tr>
+    <td>{{ f['key'] }}</td>
+    <td>{{ f['sum_bytes'] }}</td>
+  </tr>
+  {% endfor %}
+
+</table>

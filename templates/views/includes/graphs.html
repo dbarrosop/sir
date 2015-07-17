@@ -1,14 +1,4 @@
-<script src="/static/scripts/Chart.js"></script>
-
-<h1>Top {{title}}</h1>
-
-<form method="post">
-  start_time: <input min="{{avail_start_time}}" max="{{avail_end_time}}" type="datetime-local" name="start_time" value={{start_time}}>
-  end_time: <input min="{{avail_start_time}}" max="{{avail_end_time}}" type="datetime-local" name="end_time" value={{end_time}}>
-  <input type="submit" value="submit">
-</form>
-
-<h2>Top 10 Graph</h2>
+{% macro top_ten(time_series_times, time_series) -%}
 
 <canvas id="top_asns" width="1000" height="400"></canvas>
 
@@ -37,7 +27,7 @@ var flowData = {
   strokeColor : colors[{{loop.index0}}],
   pointColor : colors[{{loop.index0}}],
   pointStrokeColor : colors[{{loop.index0}}],
-  data : [ {% for d in data %}{{ d[0] }}, {% endfor %} ]
+  data : [ {% for d in data %}{{ d }}, {% endfor %} ]
 },
 
 {% endfor %}
@@ -52,19 +42,4 @@ new Chart(flows).Line(flowData, {
 );
 </script>
 
-<h2>Table</h2>
-
-<table style="width:75%">
-  <tr>
-    <th>{{title}}</th>
-    <th>sum_bytes</th>
-  </tr>
-
-  {% for f in flow_aggr %}
-  <tr>
-    <td>{{f[0]}}</td>
-  <td>{{f[1]}}</td>
-  </tr>
-  {% endfor %}
-
-</table>
+{%- endmacro %}

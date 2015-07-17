@@ -2,6 +2,12 @@ import sqlite3 as lite
 import os
 from datetime import datetime
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
 class SQLite3Helper:
     def __init__(self, database):
         if not os.path.isfile(database):
@@ -12,7 +18,7 @@ class SQLite3Helper:
 
     def connect(self):
         self.conn = lite.connect(database=self.database)
-        self.conn.row_factory = lite.Row
+        self.conn.row_factory = dict_factory
 
     def close(self):
         if self.conn is not None:
@@ -20,7 +26,6 @@ class SQLite3Helper:
 
     def _execute_query(self, query, args=()):
         try:
-            self.conn.row_factory = lite.Row
             cur = self.conn.cursor()
             cur.execute(query, args)
             result = cur.fetchall()
@@ -28,79 +33,82 @@ class SQLite3Helper:
             raise Exception('The following query failed:\n%s' % query)
         return result
 
+    def aggregate_per_prefix(self, start_time, end_time, limit=0):
+        """ Given a time range aggregates bytes per prefix.
+
+            Args:
+                start_time: A string representing the starting time of the time range
+                end_time: A string representing the ending time of the time range
+                limit: An optional integer. If it's >0 it will limit the amount of prefixes returned.
+
+            Returns:
+                A list of prefixes sorted by sum_bytes. For example:
+
+                [
+                        {'key': '192.168.1.0/25', 'sum_bytes': 3000},
+                        {'key': '192.213.1.0/25', 'sum_bytes': 2000},
+                        {'key': '231.168.1.0/25', 'sum_bytes': 1000},
+                ]
+        """
+        query = ''' SELECT ip_dst||'/'||mask_dst as key, SUM(bytes) as sum_bytes
+                    from acct
+                    WHERE
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    GROUP by ip_dst,mask_dst
+                    ORDER BY SUM(bytes) DESC
+                '''
+        if limit > 0:
+            query += 'LIMIT %d' % limit
+        query += ';'
+        return self._execute_query(query, [start_time, end_time])
+
+    def aggregate_per_as(self, start_time, end_time):
+        """ Given a time range aggregates bytes per ASNs.
+
+            Args:
+                start_time: A string representing the starting time of the time range
+                end_time: A string representing the ending time of the time range
+
+            Returns:
+                A list of prefixes sorted by sum_bytes. For example:
+
+                [
+                        {'key': '6500', 'sum_bytes': 3000},
+                        {'key': '2310', 'sum_bytes': 2000},
+                        {'key': '8182', 'sum_bytes': 1000},
+                ]
+        """
+
+        query = ''' SELECT as_dst as key, SUM(bytes) as sum_bytes
+                    from acct
+                    WHERE
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    GROUP by as_dst
+                    ORDER BY SUM(bytes) DESC;
+                '''
+        return self._execute_query(query, [start_time, end_time])
+
     def get_dates(self):
-        query = '''SELECT DISTINCT stamp_updated from acct;'''
-        return [datetime.strptime(d[0], '%Y-%m-%d %H:%M:%S') for d in self._execute_query(query)]
+        query = '''SELECT DISTINCT stamp_updated from acct ORDER BY stamp_updated ASC;'''
+        return [datetime.strptime(d['stamp_updated'], '%Y-%m-%d %H:%M:%S') for d in self._execute_query(query)]
 
     def get_dates_in_range(self, start_time, end_time):
         query = ''' SELECT DISTINCT stamp_updated
                     from acct
                     WHERE datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
                 '''
-        return [datetime.strptime(d[0], '%Y-%m-%d %H:%M:%S') for d in self._execute_query(query, [start_time, end_time])]
-
-    def aggregate_data_per_field(self, start_time, end_time):
-        query = ''' SELECT as_dst,SUM(bytes)
-                    from acct
-                    WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
-                    GROUP by as_dst
-                    ORDER BY SUM(bytes) DESC;
-                '''
-        return self._execute_query(query, [start_time, end_time])
-
-    def aggregate_per_as(self, start_time, end_time):
-        query = ''' SELECT as_dst,SUM(bytes)
-                    from acct
-                    WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
-                    GROUP by as_dst
-                    ORDER BY SUM(bytes) DESC;
-                '''
-        return self._execute_query(query, [start_time, end_time])
-
-    def timeseries_per_as(self, start_time, end_time, asn):
-        query = ''' SELECT SUM(bytes)
-                    from acct
-                    WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
-                    AND
-                    as_dst = ?
-                    GROUP by as_dst, stamp_updated;
-                '''
-        return self._execute_query(query, [start_time, end_time, asn])
-
-    def aggregate_per_prefix(self, start_time, end_time):
-        query = ''' SELECT ip_dst,SUM(bytes)
-                    from acct
-                    WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
-                    GROUP by ip_dst
-                    ORDER BY SUM(bytes) DESC;
-                '''
-        return self._execute_query(query, [start_time, end_time])
-
-    def timeseries_per_prefix(self, start_time, end_time, prefix):
-        query = ''' SELECT SUM(bytes)
-                    from acct
-                    WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
-                    AND
-                    ip_dst = ?
-                    GROUP by ip_dst, stamp_updated;
-                '''
-        return self._execute_query(query, [start_time, end_time, prefix])
+        return [datetime.strptime(d['stamp_updated'], '%Y-%m-%d %H:%M:%S') for d in self._execute_query(query, [start_time, end_time])]
 
     def get_total_traffic(self, start_time, end_time):
-        query = ''' SELECT SUM(bytes)
+        query = ''' SELECT SUM(bytes) as sum_bytes
                     FROM acct
                     WHERE
                     datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
                 '''
-        return self._execute_query(query, [start_time, end_time])[0][0]
+        return self._execute_query(query, [start_time, end_time])[0]['sum_bytes']
 
     def offloaded_bytes(self, num_prefixes, start_time, end_time):
-        query = ''' SELECT SUM(bytes) FROM (
+        query = ''' SELECT SUM(bytes) as sum_bytes FROM (
                         SELECT ip_dst, mask_dst, SUM(bytes) AS bytes
                         from acct
                         WHERE
@@ -115,4 +123,29 @@ class SQLite3Helper:
             'end_time': end_time,
             'num_prefixes': num_prefixes,
         }
-        return self._execute_query(query, args)[0][0]
+        return self._execute_query(query, args)[0]['sum_bytes']
+
+    def timeseries_per_as(self, start_time, end_time, asn):
+        query = ''' SELECT SUM(bytes) as sum_bytes
+                    from acct
+                    WHERE
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    AND
+                    as_dst = ?
+                    GROUP by as_dst, stamp_updated
+                    ORDER BY stamp_updated ASC;
+                '''
+        return [r['sum_bytes'] for r in self._execute_query(query, [start_time, end_time, asn])]
+
+    def timeseries_per_prefix(self, start_time, end_time, prefix):
+        ip_dst, mask_dst = prefix.split('/')
+        query = ''' SELECT SUM(bytes) as sum_bytes
+                    from acct
+                    WHERE
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    AND
+                    ip_dst = ? AND mask_dst = ?
+                    GROUP by ip_dst, stamp_updated
+                    ORDER BY stamp_updated ASC;
+                '''
+        return [r['sum_bytes'] for r in self._execute_query(query, [start_time, end_time, ip_dst, mask_dst])]
