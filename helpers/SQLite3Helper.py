@@ -36,7 +36,7 @@ class SQLite3Helper:
             raise Exception('The following query failed:\n%s' % query)
         return result
 
-    def aggregate_per_prefix(self, start_time, end_time, limit=0):
+    def aggregate_per_prefix(self, start_time, end_time, limit=0, net_masks='', exclude_net_masks=False):
         """ Given a time range aggregates bytes per prefix.
 
             Args:
@@ -48,22 +48,30 @@ class SQLite3Helper:
                 A list of prefixes sorted by sum_bytes. For example:
 
                 [
-                        {'key': '192.168.1.0/25', 'sum_bytes': 3000},
-                        {'key': '192.213.1.0/25', 'sum_bytes': 2000},
-                        {'key': '231.168.1.0/25', 'sum_bytes': 1000},
+                        {'key': '192.168.1.0/25', 'sum_bytes': 3000, 'as_dst': 345},
+                        {'key': '192.213.1.0/25', 'sum_bytes': 2000, 'as_dst': 123},
+                        {'key': '231.168.1.0/25', 'sum_bytes': 1000, 'as_dst': 321},
                 ]
         """
-        query = ''' SELECT ip_dst||'/'||mask_dst as key, SUM(bytes) as sum_bytes
+        if net_masks == '':
+            net_mask_filter = ''
+        elif not exclude_net_masks:
+            net_mask_filter = 'AND mask_dst IN ({})'.format(net_masks)
+        elif exclude_net_masks:
+            net_mask_filter = 'AND mask_dst NOT IN ({})'.format(net_masks)
+
+        query = ''' SELECT ip_dst||'/'||mask_dst as key, SUM(bytes) as sum_bytes, as_dst
                     from acct
                     WHERE
                     datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    {}
                     GROUP by ip_dst,mask_dst
                     ORDER BY SUM(bytes) DESC
-                '''
+                '''.format(net_mask_filter)
 
         if limit > 0:
             query += 'LIMIT %d' % limit
-        query += ';'
+
         return self._execute_query(query, [start_time, end_time])
 
     def aggregate_per_as(self, start_time, end_time):

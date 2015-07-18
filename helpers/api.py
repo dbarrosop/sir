@@ -1,6 +1,7 @@
 from flask import render_template
 import yaml
 
+
 def start_page(g, request):
     context = dict()
     with open('helpers/api_documentation.yaml', 'r') as stream:
@@ -15,13 +16,20 @@ def top_prefixes(g, request):
     start_time = request.args.get('start_time')
     end_time = request.args.get('end_time')
     limit_prefixes = int(request.args.get('limit_prefixes', 0))
+    net_masks = request.args.get('net_masks', '')
+    exclude_net_masks = request.args.get('exclude_net_masks', False)
 
     data = {
         'limit_prefixes': limit_prefixes,
         'start_time': start_time,
         'end_time': end_time,
-        'top_prefixes': db.aggregate_per_prefix(start_time, end_time,
-                                                limit=limit_prefixes),
+        'top_prefixes': db.aggregate_per_prefix(
+            start_time, end_time,
+            limit=limit_prefixes,
+            net_masks=net_masks,
+            exclude_net_masks=exclude_net_masks),
+        'net_masks': net_masks,
+        'exclude_net_masks': exclude_net_masks,
         'request_time': getattr(g, 'request_time')(),
     }
     return data
