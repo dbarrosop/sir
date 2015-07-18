@@ -1,8 +1,12 @@
 from flask import render_template
-
+import yaml
 
 def start_page(g, request):
-    return render_template('api/start_page.html')
+    context = dict()
+    with open('helpers/api_documentation.yaml', 'r') as stream:
+        context['documentation'] = yaml.load(stream)
+
+    return render_template('api/start_page.html', **context)
 
 
 def top_prefixes(g, request):

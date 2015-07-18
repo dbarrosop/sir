@@ -1,0 +1,30 @@
+---
+- endpoint: /api/v1.0/top_prefixes
+  arguments:
+    limit_prefixes: Optional. Number of top prefixes to retrieve.
+    start_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Starting time of the range.
+    end_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Ending time of the range.
+  returns:
+        start_time: start_time used in the call.
+        end_time: end_time used in the call.
+        limit_prefixes: limit_prefixes used in the call.
+        request_time: Time in miliseconds needed to process the request.
+        top_asns: A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+  notes: >
+    Example:
+    </br></br>
+    http://127.0.0.1:5000/api/v1.0/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+
+- endpoint: /api/v1.0/top_asns
+  arguments:
+    start_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Starting time of the range.
+    end_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Ending time of the range.
+  returns:
+    start_time: start_time used in the call.
+    end_time: end_time used in the call.
+    request_time: Time in miliseconds needed to process the request.
+    top_asns: A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+  notes: >
+    Example:
+    </br></br>
+    http://127.0.0.1:5000/api/v1.0/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00

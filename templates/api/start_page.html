@@ -2,19 +2,30 @@
 
 <h2 class='title'>API v1.0 Help</h2>
 
-<table style="width:75%">
-  <tr>
-    <th>URL</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><a href='{{ url_for('api_top_prefixes')}}'>{{ url_for('api_top_prefixes')}}</a></td>
-    <td>http://127.0.0.1:5000/api/v1.0/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00</td>
-  </tr>
-  <tr>
-    <td><a href='{{ url_for('api_top_asns')}}'>{{ url_for('api_top_asns')}}</a></td>
-    <td>http://127.0.0.1:5000/api/v1.0/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00</td>
-  </tr>
-</table>
+<ul class='api_documentation'>
+{% for endpoint in documentation %}
+  <li class='endpoint'>{{ endpoint['endpoint'] }}</li>
+  <ul class='endpoint'>
+    <li class='documentation_key'>
+      <em class='documentation_key'>Arguments:</em>
+        <ul class='endpoint_arguments'>
+          {% for key, value in endpoint['arguments'].iteritems() %}
+            <li class='argument_element'><em class='argument'>{{key}}:</em> {{value}}
+            </li>
+          {% endfor %}
+        </ul>
+    </li>
+    <li class='documentation_key'><em class='documentation_key'>Returns:</em>
+      <ul class='endpoint_arguments'>
+        {% for key, value in endpoint['returns'].iteritems() %}
+          <li class='argument_element'><em class='argument'>{{key}}:</em> {{value}}
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+    <li class='documentation_key'><em class='documentation_key'>Notes:</em> {{ endpoint['notes']|safe }}</li>
+  </ul>
+{% endfor %}
+</ul>
 
 {% include 'includes/footer.html' %}

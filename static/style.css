@@ -80,3 +80,21 @@ th {
 td {
   padding: 0.5em 0.5em;
 }
+
+li.endpoint {
+  padding-top: 2em;
+  color: blue;
+  list-style-type: none;
+}
+li.documentation_key {
+  padding-top: 1em;
+}
+
+em.documentation_key {
+  font-style: normal;
+  font-weight: bold;
+}
+
+em.argument {
+  color: red;
+}
