@@ -158,7 +158,7 @@ class SQLite3Helper:
                     datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
                     AND
                     ip_dst = ? AND mask_dst = ?
-                    GROUP by ip_dst, stamp_updated
+                    GROUP by ip_dst, mask_dst, stamp_updated
                     ORDER BY stamp_updated ASC;
                 '''
 

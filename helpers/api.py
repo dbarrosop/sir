@@ -20,17 +20,23 @@ def top_prefixes(g, request):
     exclude_net_masks = request.args.get('exclude_net_masks', False)
 
     data = {
-        'limit_prefixes': limit_prefixes,
-        'start_time': start_time,
-        'end_time': end_time,
-        'top_prefixes': db.aggregate_per_prefix(
-            start_time, end_time,
-            limit=limit_prefixes,
-            net_masks=net_masks,
-            exclude_net_masks=exclude_net_masks),
-        'net_masks': net_masks,
-        'exclude_net_masks': exclude_net_masks,
-        'request_time': getattr(g, 'request_time')(),
+        'result': {
+            'top_prefixes': db.aggregate_per_prefix(
+                start_time, end_time,
+                limit=limit_prefixes,
+                net_masks=net_masks,
+                exclude_net_masks=exclude_net_masks),
+        },
+        'parameters': {
+            'limit_prefixes': limit_prefixes,
+            'start_time': start_time,
+            'end_time': end_time,
+            'net_masks': net_masks,
+            'exclude_net_masks': exclude_net_masks,
+        },
+        'meta': {
+            'request_time': getattr(g, 'request_time')(),
+        },
     }
     return data
 
@@ -42,9 +48,15 @@ def top_asns(g, request):
     end_time = request.args.get('end_time')
 
     data = {
+        'result': {
+            'top_asns': db.aggregate_per_as(start_time, end_time),
+        },
+        'parameters': {
         'start_time': start_time,
         'end_time': end_time,
-        'top_asns': db.aggregate_per_as(start_time, end_time),
-        'request_time': getattr(g, 'request_time')(),
+        },
+        'meta': {
+            'request_time': getattr(g, 'request_time')(),
+        },
     }
     return data

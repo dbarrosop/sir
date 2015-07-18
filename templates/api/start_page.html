@@ -2,6 +2,48 @@
 
 <h2 class='title'>API v1.0 Help</h2>
 
+Below you can find the documentation for the API:
+
+<code>
+  {
+    "meta": {
+      "request_time": 1.08919
+    },
+    "parameters": {
+      "end_time": "2015-07-14T14:00",
+      "exclude_net_masks": "1",
+      "limit_prefixes": 10,
+      "net_masks": "20,24",
+      "start_time": "2015-07-13T14:00"
+    },
+    "result": {
+      "top_prefixes": [
+        {
+          "as_dst": 39651,
+          "key": "83.248.0.0/13",
+          "sum_bytes": 796793065
+        },
+        {
+          "as_dst": 1299,
+          "key": "0.0.0.0/0",
+          "sum_bytes": 625270883
+        },
+        {
+          "as_dst": 43650,
+          "key": "194.14.177.240/29",
+          "sum_bytes": 413039426
+        },
+        {
+          "as_dst": 44034,
+          "key": "79.138.128.0/17",
+          "sum_bytes": 257769774
+        },
+        ...
+      ]
+    }
+  }
+</code>
+
 <ul class='api_documentation'>
 {% for endpoint in documentation %}
   <li class='endpoint'>{{ endpoint['endpoint'] }}</li>
