@@ -6,7 +6,7 @@
 
 from helpers.SQLite3Helper import SQLite3Helper
 
-from helpers import views
+from helpers import analytics
 from helpers import api
 from helpers import basic
 
@@ -46,34 +46,34 @@ def start_page():
 
 ###################
 ###################
-####  VIEWS  ######
+###  ANALYTICS  ###
 ###################
 ###################
 
 
-@app.route('/views', strict_slashes=False)
-def view_help():
-    return views.start_page(g, request)
+@app.route('/analytics', strict_slashes=False)
+def analytics_help():
+    return analytics.start_page(g, request)
 
 
-@app.route('/views/offloaded_traffic', methods=['GET', 'POST'])
-def view_offloaded_traffic():
-    return views.offloaded_traffic(g, request)
+@app.route('/analytics/offloaded_traffic', methods=['GET', 'POST'])
+def analytics_offloaded_traffic():
+    return analytics.offloaded_traffic(g, request)
 
 
-@app.route('/views/aggregate_per_as', methods=['GET', 'POST'])
-def view_aggregate_per_as():
-    return views.aggregate(g, request, 'as')
+@app.route('/analytics/aggregate_per_as', methods=['GET', 'POST'])
+def analytics_aggregate_per_as():
+    return analytics.aggregate(g, request, 'as')
 
 
-@app.route('/views/aggregate_per_prefix', methods=['GET', 'POST'])
-def view_aggregate_per_prefix():
-    return views.aggregate(g, request, 'prefix')
+@app.route('/analytics/aggregate_per_prefix', methods=['GET', 'POST'])
+def analytics_aggregate_per_prefix():
+    return analytics.aggregate(g, request, 'prefix')
 
 
-@app.route('/views/simulate', methods=['GET', 'POST'])
-def view_simulate():
-    return views.simulate(g, request)
+@app.route('/analytics/simulate', methods=['GET', 'POST'])
+def analytics_simulate():
+    return analytics.simulate(g, request)
 
 ###################
 ###################

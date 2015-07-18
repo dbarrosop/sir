@@ -12,7 +12,7 @@ def _init_context_dates(db, request):
 
 
 def start_page(g, request):
-    return render_template('views/start_page.html')
+    return render_template('analytics/start_page.html')
 
 
 def offloaded_traffic(g, request):
@@ -31,7 +31,7 @@ def offloaded_traffic(g, request):
                ] = db.offloaded_bytes(context['num_prefixes'], context['start_time'], context['end_time'])
         context['percentage'] = float(context['offloaded_bytes']) * 100.0 / float(context['total_bytes'])
 
-    return render_template('views/offloaded_traffic.html', **context)
+    return render_template('analytics/offloaded_traffic.html', **context)
 
 
 def aggregate(g, request, field):
@@ -61,7 +61,7 @@ def aggregate(g, request, field):
 
         context['time_series'] = time_series
 
-    return render_template('views/analytics_aggregate.html', **context)
+    return render_template('analytics/analytics_aggregate.html', **context)
 
 
 def simulate(g, request):
@@ -85,4 +85,4 @@ def simulate(g, request):
 
         context['time_series'] = time_series
 
-    return render_template('views/simulate.html', **context)
+    return render_template('analytics/simulate.html', **context)

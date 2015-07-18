@@ -1,0 +1,28 @@
+{% include 'includes/header.html' %}
+
+<h2 class='title'>Analytics</h2>
+
+<table class='help'>
+  <tr>
+    <th>URL</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><a href='{{ url_for('analytics_offloaded_traffic')}}'>{{ url_for('analytics_offloaded_traffic')}}</a></td>
+    <td>Check how much traffic you would offload with a certain number of prefixes during a period of time.</td>
+  </tr>
+  <tr>
+    <td><a href='{{ url_for('analytics_aggregate_per_as')}}'>{{ url_for('analytics_aggregate_per_as')}}</a></td>
+    <td>With this analytics you can aggregate traffic per AS during a period of time.</td>
+  </tr>
+  <tr>
+    <td><a href='{{ url_for('analytics_aggregate_per_prefix')}}'>{{ url_for('analytics_aggregate_per_prefix')}}</a></td>
+    <td>With this analytics you can aggregate traffic per prefix during a period of time.</td>
+  </tr>
+  <tr>
+    <td><a href='{{ url_for('analytics_simulate')}}'>{{ url_for('analytics_simulate')}}</a></td>
+    <td>Given a period of time and a maximum number of prefixes it will simulate how SIR should perform.</td>
+  </tr>
+</table>
+
+{% include 'includes/footer.html' %}
