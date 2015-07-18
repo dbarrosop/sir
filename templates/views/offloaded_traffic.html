@@ -1,8 +1,21 @@
-<h1>Offloaded Traffic</h1>
+{% include 'includes/header.html' %}
 
-{% import 'views/includes/forms.html' as forms %}
+<h2 class='title'>Offloaded Traffic</h2>
+
+{% import 'includes/forms.html' as forms %}
 {{ forms.time_range(avail_start_time, avail_end_time, start_time, end_time, num_prefixes) }}
 
-Total: {{ '{0:,d}'.format(total_bytes) }}</br>
-Offloaded: {{ '{0:,d}'.format(offloaded_bytes) }}</br>
-%: {{ percentage }}</br>
+<table class='data'>
+  <tr>
+    <th>Total</th>
+    <th>Offloaded</th>
+    <th>%</th>
+  </tr>
+  <tr>
+    <td>{{ '{0:,d}'.format(total_bytes) }}</td>
+    <td>{{ '{0:,d}'.format(offloaded_bytes) }}</td>
+    <td>{{ percentage }}</td>
+  </tr>
+</table>
+
+{% include 'includes/footer.html' %}

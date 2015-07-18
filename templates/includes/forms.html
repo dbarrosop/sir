@@ -1,5 +1,5 @@
 {% macro time_range(avail_start_time, avail_end_time, start_time, end_time, num_prefixes=False) -%}
-<form method="post">
+<form method="post" class='time_range'>
   start_time: <input min="{{avail_start_time}}" max="{{avail_end_time}}" type="datetime-local" name="start_time" value={{start_time}}>
   end_time: <input min="{{avail_start_time}}" max="{{avail_end_time}}" type="datetime-local" name="end_time" value={{end_time}}>
   {% if num_prefixes %}num_prefixes: <input type="number" name="num_prefixes" value="{{num_prefixes}}">{% endif %}

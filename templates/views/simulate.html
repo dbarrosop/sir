@@ -1,9 +1,13 @@
+{% include 'includes/header.html' %}
+
 <script src="/static/scripts/Chart.js"></script>
 
-<h1>Run Simulation</h1>
+<h2 class='title'>Run Simulation</h2>
 
-{% import 'views/includes/forms.html' as forms %}
+{% import 'includes/forms.html' as forms %}
 {{ forms.time_range(avail_start_time, avail_end_time, start_time, end_time, num_prefixes) }}
 
-{% import 'views/includes/graphs.html' as graphs %}
+{% import 'includes/graphs.html' as graphs %}
 {{ graphs.top_ten(time_series_times, time_series) }}
+
+{% include 'includes/footer.html' %}

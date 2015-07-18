@@ -1,19 +1,21 @@
-{% import 'views/includes/forms.html' as forms %}
-{% import 'views/includes/graphs.html' as graphs %}
+{% include 'includes/header.html' %}
+
+{% import 'includes/forms.html' as forms %}
+{% import 'includes/graphs.html' as graphs %}
 
 <script src="/static/scripts/Chart.js"></script>
 
-<h1>Top {{title}}</h1>
+<h2 class='title'>Top {{title}}</h2>
 
 {{ forms.time_range(avail_start_time, avail_end_time, start_time, end_time) }}
 
-<h2>Top 10 Graph</h2>
+<h3 class='title'>Top 10 Graph</h3>
 
 {{ graphs.top_ten(time_series_times, time_series) }}
 
-<h2>Table</h2>
+<h3 class='title'>Table</h3>
 
-<table style="width:75%">
+<table class='data'>
   <tr>
     <th>{{title}}</th>
     <th>sum_bytes</th>
@@ -27,3 +29,5 @@
   {% endfor %}
 
 </table>
+
+{% include 'includes/footer.html' %}
