@@ -1,17 +1,44 @@
 {% include 'includes/header.html' %}
 
-<h2 class='title'>API v1.0 Help</h2>
+<h2 class='title'>API v1.0 Documentation</h2>
 
-Below you can find the documentation for the API:
 
-<code>
+You can interact with the agent using a RESTful API. This API gives you full access to the agent and its data.
+
+<h4 class='endpoint_documentation'>Variables</h3>
+
+When reading this documentation you will find variables in two forms:
+
+<ul>
+  <li class='argument_element'><em class='argument'>&ltvariable&gt:</em> Variables that are between &lt&gt have to be replaced by their values in the URL. For example, <code>/api/v1.0/variables/categories/&ltcategory&gt</code> will turn into <code>/api/v1.0/variables/categories/my_category</code>.</li>
+  <li class='argument_element'><em class='argument'>variable:</em> Variables that are NOT enclosed by &lt&gt:
+    <ul>
+      <li class='argument_element'>If the method is a GET variables that are between &lt&gt have to be replaced by their values in the URL. For example, <code>/api/v1.0/variables/categories/&ltcategory&gt</code> will turn into <code>/api/v1.0/variables/categories/my_category</code>.</li>
+      <li class='argument_element'>If the method is a POST or a PUT variables variables that are between &lt&gt have to sent as a JSON object.</li>
+    </ul></li>
+</ul>
+
+<h4 class='endpoint_documentation'>Responses</h3>
+
+All the responses from the agent will be in JSON format and will include three sections:
+
+<ul>
+  <li><em>meta</em>: Metainformation about the response. For example, request_time.</li>
+  <li><em>parameters</em>: The parameters used for the call.</li>
+  <li><em>result</em>: The result of the call.</li>
+</ul>
+
+For example, for the following call you will get the following response:
+
+<pre><code>/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24</code></pre>
+<pre><code class="json">
   {
     "meta": {
-      "request_time": 1.08919
+      "request_time": 6.26074
     },
     "parameters": {
       "end_time": "2015-07-14T14:00",
-      "exclude_net_masks": "1",
+      "exclude_net_masks": false,
       "limit_prefixes": 10,
       "net_masks": "20,24",
       "start_time": "2015-07-13T14:00"
@@ -19,55 +46,71 @@ Below you can find the documentation for the API:
     "result": {
       "top_prefixes": [
         {
-          "as_dst": 39651,
-          "key": "83.248.0.0/13",
-          "sum_bytes": 796793065
-        },
-        {
-          "as_dst": 1299,
-          "key": "0.0.0.0/0",
-          "sum_bytes": 625270883
+          "as_dst": 43650,
+          "key": "194.14.177.0/24",
+          "sum_bytes": 650537594
         },
         {
           "as_dst": 43650,
-          "key": "194.14.177.240/29",
-          "sum_bytes": 413039426
-        },
-        {
-          "as_dst": 44034,
-          "key": "79.138.128.0/17",
-          "sum_bytes": 257769774
+          "key": "194.132.162.0/24",
+          "sum_bytes": 336810887
         },
         ...
+        {
+          "as_dst": 197301,
+          "key": "80.71.128.0/20",
+          "sum_bytes": 5106731
+        }
       ]
     }
-  }
-</code>
+  }</code></pre>
 
-<ul class='api_documentation'>
-{% for endpoint in documentation %}
-  <li class='endpoint'>{{ endpoint['endpoint'] }}</li>
-  <ul class='endpoint'>
-    <li class='documentation_key'>
-      <em class='documentation_key'>Arguments:</em>
-        <ul class='endpoint_arguments'>
-          {% for key, value in endpoint['arguments'].iteritems() %}
-            <li class='argument_element'><em class='argument'>{{key}}:</em> {{value}}
-            </li>
-          {% endfor %}
-        </ul>
+{% for section, endpoints in documentation.iteritems() %}
+
+<h3 class='title'>{{ section }} Endpoint</h3>
+
+  {% for endpoint in endpoints %}
+<h4 class='endpoint_documentation'>{{ endpoint['endpoint']}}</h4>
+
+    {% for method in endpoint['methods'] %}
+<h5 class='endpoint_documentation'>{{method['method']}}</h5>
+
+<em class='endpoint_documentation'>Description:</em>
+
+<div class='endpoint_documentation'>
+{{ method['description']|safe }}
+</div>
+
+<em class='endpoint_documentation'>Arguments:</em>
+<ul class='endpoint_documentation'>
+      {% for key, value in method['arguments'].iteritems() %}
+    <li class='argument_element'><em class='argument'>{{key}}:</em> {{value}}
     </li>
-    <li class='documentation_key'><em class='documentation_key'>Returns:</em>
-      <ul class='endpoint_arguments'>
-        {% for key, value in endpoint['returns'].iteritems() %}
-          <li class='argument_element'><em class='argument'>{{key}}:</em> {{value}}
-          </li>
-        {% endfor %}
-      </ul>
-    </li>
-    <li class='documentation_key'><em class='documentation_key'>Notes:</em> {{ endpoint['notes']|safe }}</li>
-  </ul>
-{% endfor %}
+      {% endfor %}
 </ul>
+
+<em class='endpoint_documentation'>Returns:</em>
+<ul class='endpoint_documentation'>
+      {% for key, value in method['returns'].iteritems() %}
+    <li class='argument_element'><em class='argument'>{{key}}:</em> {{value}}
+    </li>
+      {% endfor %}
+</ul>
+
+<em class='endpoint_documentation'>Examples:</em>
+<ul class='endpoint_documentation'>
+      {% for example in method['examples'] %}
+    <li class='argument_element'>http://127.0.0.1:5000{{ endpoint['endpoint'] }}{{example}}
+    </li>
+      {% endfor %}
+</ul>
+
+
+    {% endfor %}
+
+  {% endfor %}
+
+
+{% endfor %}
 
 {% include 'includes/footer.html' %}

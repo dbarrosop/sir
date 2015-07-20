@@ -26,6 +26,7 @@ h3.title {
   color: #000;
   background-color: #24CF5F;
   padding: 5px 5px;
+  margin-bottom: 0.5em;
 }
 
 nav {
@@ -81,20 +82,40 @@ td {
   padding: 0.5em 0.5em;
 }
 
-li.endpoint {
-  padding-top: 2em;
-  color: blue;
-  list-style-type: none;
-}
-li.documentation_key {
-  padding-top: 1em;
+/* DOCUMENTATION STARTS */
+h4.endpoint_documentation {
+  padding: 0.5em 0.5em;
+  background-color: #DDD;
+  padding-left: 2em;
 }
 
-em.documentation_key {
+h5.endpoint_documentation {
+  padding: 0.5em 0.5em;
+  background-color: #CCC;
+  padding-left: 3em;
+  font-size: 110%;
+}
+
+em.endpoint_documentation {
+  padding: 1em 1em;
   font-style: normal;
   font-weight: bold;
+}
+
+div.endpoint_documentation {
+  padding: 1em 3em;
+}
+
+ul.endpoint_documentation {
+  padding: 0.5em 3em;
+}
+
+ li.argument_element {
+  margin-left: 1em;
 }
 
 em.argument {
   color: red;
 }
+
+/* DOCUMENTATION ENDS */

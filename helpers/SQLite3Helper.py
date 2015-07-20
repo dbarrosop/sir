@@ -27,11 +27,15 @@ class SQLite3Helper:
         if self.conn is not None:
             self.conn.close()
 
-    def _execute_query(self, query, args=()):
+    def _execute_query(self, query, args=(), commit=False):
         try:
             cur = self.conn.cursor()
             cur.execute(query, args)
-            result = cur.fetchall()
+
+            if commit:
+                result = self.conn.commit()
+            else:
+                result = cur.fetchall()
         except lite.OperationalError:
             raise Exception('The following query failed:\n%s' % query)
         return result
@@ -163,3 +167,35 @@ class SQLite3Helper:
                 '''
 
         return [r['sum_bytes'] for r in self._execute_query(query, [start_time, end_time, ip_dst, mask_dst])]
+
+    def put_variables(self, name, content, category, extra_vars):
+        query = ''' INSERT INTO variables VALUES (?, ?, ?, ?); '''
+        self._execute_query(query, [name, content, category, str(extra_vars)], commit=True)
+
+    def get_variables(self):
+        query = ''' SELECT * FROM variables '''
+        return self._execute_query(query)
+
+    def get_variable(self, category, name):
+        query = ''' SELECT * FROM variables WHERE category = ? AND name = ?; '''
+        return self._execute_query(query, [category, name])[0]
+
+    def update_variable(self, old_name, old_category, name, content, category, extra_vars):
+        query = ''' UPDATE variables
+                    SET name = ?, content = ?, category = ?, extra_vars = ?
+                    WHERE name = ? AND category = ?;
+                '''
+        self._execute_query(query, [name, content, category, str(extra_vars), old_name, old_category], commit=True)
+
+    def delete_variable(self, category, name):
+        query = ''' DELETE FROM variables WHERE name = ? AND category = ?;
+                '''
+        self._execute_query(query, [name, category], commit=True)
+
+    def get_categories(self):
+        query = ''' SELECT DISTINCT category FROM variables'''
+        return [c['category'] for c in self._execute_query(query, [])]
+
+    def filter_variables_category(self, category):
+        query = ''' SELECT * FROM variables WHERE category = ?; '''
+        return self._execute_query(query, [category])

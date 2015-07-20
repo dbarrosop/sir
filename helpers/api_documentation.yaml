@@ -1,30 +1,161 @@
 ---
-- endpoint: /api/v1.0/top_prefixes
-  arguments:
-    start_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Starting time of the range.
-    end_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Ending time of the range.
-    limit_prefixes: Optional. Number of top prefixes to retrieve.
-    net_masks: Optional. List of prefix lengths to filter in or out.
-    exclude_net_masks: Optional. If set to 1 it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
-  returns:
-        top_asns: A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
-  notes: >
-    Example:
-    </br></br>
-    http://127.0.0.1:5000/api/v1.0/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
-    </br></br>
-    http://127.0.0.1:5000/api/v1.0/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
-    </br></br>
-    http://127.0.0.1:5000/api/v1.0/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24&exclude_net_masks=1
+Analytics:
+  - endpoint: /api/v1.0/analytics/top_prefixes
+    methods:
+      - method: GET
+        arguments:
+          start_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Starting time of the range.
+          end_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Ending time of the range.
+          limit_prefixes: Optional. Number of top prefixes to retrieve.
+          net_masks: Optional. List of prefix lengths to filter in or out.
+          exclude_net_masks: Optional. If set to 1 it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
+        examples:
+          - ?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+          - ?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
+          - ?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24&exclude_net_masks=1
+        returns:
+              top_asns: A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+        description: >
+          Retrieves TOP prefixes sorted by the amount of bytes that they consumed during the specified period of time.
 
 
-- endpoint: /api/v1.0/top_asns
-  arguments:
-    start_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Starting time of the range.
-    end_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Ending time of the range.
-  returns:
-    top_asns: A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
-  notes: >
-    Example:
-    </br></br>
-    http://127.0.0.1:5000/api/v1.0/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+  - endpoint: /api/v1.0/analytics/top_asns
+    methods:
+      - method: GET
+        arguments:
+          start_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Starting time of the range.
+          end_time: Mandatory. Datetime in unicode string following the format '%Y-%m-%d %H:%M:%S'. Ending time of the range.
+        examples:
+          - ?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+        returns:
+          top_asns: A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+        description: >
+          Retrieves TOP ASN's sorted by the amount of bytes that they consumed during the specified period of time.
+
+Variables:
+  - endpoint: /api/v1.0/variables
+    methods:
+      - method: GET
+        arguments: {}
+        examples:
+          - ''
+        returns:
+              variables: A list of all the variables.
+        description: >
+          Retrieves all the variables in the system.
+      - method: POST
+        arguments:
+          name: Name of the variable.
+          content: Content of the variable.
+          category: Category of the variable.
+          extra_vars: Use this field to add extra data to your variable. It is recommended to use a JSON string
+        examples: []
+        returns:
+              variable: The variable that was just created
+        description: >
+          You can create a variable from the CLI with curl like this: <pre><code>curl -i -H "Content-Type: application/json" -X POST -d '{"name": "test_var", "content": "whatever", "category": "development", "extra_vars": {"ads": "qwe", "asd": "zxc"}}' http://127.0.0.1:5000/api/v1.0/variables</code></pre>
+  - endpoint: /api/v1.0/variables/categories
+    methods:
+      - method: GET
+        arguments: {}
+        examples:
+          - ''
+        returns:
+              categories: A list of all the categories.
+        description: >
+          Retrieves all the categories in the system.
+  - endpoint: /api/v1.0/variables/categories/<category>
+    methods:
+      - method: GET
+        arguments:
+          <category>: Category you want to query
+        examples:
+          - ''
+        returns:
+              categories: A list of variables belonging to <category>.
+        description: >
+          Retrieves all the variables the belong to &ltcategory&gt in the system.
+  - endpoint: /api/v1.0/variables/categories/<category>/<name>
+    methods:
+      - method: GET
+        arguments:
+          <category>: Category of the variable you want to retrieve.
+          <name>: Name of the variable you want to retrieve.
+        examples:
+          - ''
+        returns:
+              categories: A list of variables belonging to <category>.
+        description: >
+          Retrieves the variable with &ltname&gt and &ltcategory&gt.
+      - method: PUT
+        arguments:
+          <category>: Category of the variable you want to modify.
+          <name>: Name of the variable you want to modify.
+          name: Optional. New name.
+          content: Optional. New content.
+          category: Optional. New category.
+          extra_vars: Optional. New extra_vars.
+        examples:
+          - ''
+        returns:
+              variable: The variable with the new data.
+        description: >
+          This API call allows you to modify all of some of the values of a variable. For example, you can update the <em>name</em> and the <em>extra_vars</em> of a variable with the following command:
+          <pre><code>
+          curl -i -H "Content-Type: application/json" -X PUT -d '{"name": "location", "extra_vars": "{'my_param1': 'my_value1', 'my_param2': 'my_value2'}"}' http://127.0.0.1:5000/api/v1.0/variables/categories/general_information/loctaion
+
+           HTTP/1.0 200 OK
+           Content-Type: application/json
+           Content-Length: 341
+           Server: Werkzeug/0.10.4 Python/2.7.8
+           Date: Mon, 20 Jul 2015 11:49:08 GMT
+
+          {
+            "meta": {
+              "request_time": 0.00172
+            },
+            "parameters": {
+              "categories": "general_information",
+              "name": "loction"
+            },
+            "result": {
+              "variable": {
+                "category": "general_information",
+                "content": "linx",
+                "extra_vars": "{my_param1: my_value1, my_param2: my_value2}",
+                "name": "location"
+              }
+            }
+          }
+          </code></pre>
+      - method: DELETE
+        arguments:
+          <category>: Category of the variable you want to delete.
+          <name>: Name of the variable you want to delete.
+        examples:
+          - ''
+        returns:
+              variable: 1 if everything went fine.
+        description: >
+          Deletes a variable. For example:
+          <pre><code>
+          curl -i -X DELETE http://127.0.0.1:5000/api/v1.0/variables/categories/deveopment/test_vara
+            HTTP/1.0 200 OK
+            Content-Type: application/json
+            Content-Length: 166
+            Server: Werkzeug/0.10.4 Python/2.7.8
+            Date: Mon, 20 Jul 2015 12:03:32 GMT
+
+          {
+            "meta": {
+              "request_time": 0.08804
+            },
+            "parameters": {
+              "categories": "deveopment",
+              "name": "test_vara"
+            },
+            "result": {
+              "variable": 1
+            }
+          }
+          </code></pre>

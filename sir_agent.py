@@ -1,6 +1,12 @@
-#TODO Store arbitrary data by key, value, category, extra_vars
+#TODO Variables primary key name and category and modify calls
+#TODO Browse variables
+#TODO metrics
+#TODO Improve building the response of the API and documentation
+#TODO Python API
+#TODO Build first app
 #TODO Expose raw BGP
 #TODO Expose raw flows
+#TODO Catch errors in API
 
 
 from helpers.SQLite3Helper import SQLite3Helper
@@ -86,14 +92,34 @@ def api_help():
     return api.start_page(g, request)
 
 
-@app.route('/api/v1.0/top_prefixes', methods=['GET'])
+@app.route('/api/v1.0/analytics/top_prefixes', methods=['GET'])
 def api_top_prefixes():
     return jsonify(api.top_prefixes(g, request))
 
 
-@app.route('/api/v1.0/top_asns', methods=['GET'])
+@app.route('/api/v1.0/analytics/top_asns', methods=['GET'])
 def api_top_asns():
     return jsonify(api.top_asns(g, request))
+
+
+@app.route('/api/v1.0/variables', methods=['GET', 'POST'])
+def api_variables():
+    return jsonify(api.variables(g, request))
+
+
+@app.route('/api/v1.0/variables/categories', methods=['GET'])
+def api_variables_category():
+    return jsonify(api.variables_category(g, request))
+
+
+@app.route('/api/v1.0/variables/categories/<category>', methods=['GET'])
+def api_variables_filter_by_category(category):
+    return jsonify(api.variables_filter_by_category(g, request, category))
+
+
+@app.route('/api/v1.0/variables/categories/<category>/<name>', methods=['GET', 'PUT', 'DELETE'])
+def api_variables_name(category, name):
+    return jsonify(api.api_variables_name(g, request, category, name))
 
 
 if __name__ == '__main__':
