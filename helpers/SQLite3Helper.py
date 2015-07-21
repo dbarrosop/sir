@@ -178,7 +178,7 @@ class SQLite3Helper:
 
     def get_variable(self, category, name):
         query = ''' SELECT * FROM variables WHERE category = ? AND name = ?; '''
-        return self._execute_query(query, [category, name])[0]
+        return self._execute_query(query, [category, name])
 
     def update_variable(self, old_name, old_category, name, content, category, extra_vars):
         query = ''' UPDATE variables
@@ -199,3 +199,11 @@ class SQLite3Helper:
     def filter_variables_category(self, category):
         query = ''' SELECT * FROM variables WHERE category = ?; '''
         return self._execute_query(query, [category])
+
+    def get_flows(self, start_time, end_time):
+        query = ''' SELECT ip_dst, mask_dst, bytes, packets, as_dst, stamp_updated
+                            FROM acct
+                            WHERE
+                            datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
+                '''
+        return self._execute_query(query, [start_time, end_time])

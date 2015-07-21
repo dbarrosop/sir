@@ -1,4 +1,5 @@
 from flask import render_template
+from flask import g
 
 
 def _init_context_dates(db, request):
@@ -11,11 +12,11 @@ def _init_context_dates(db, request):
     return context
 
 
-def start_page(g, request):
+def start_page(request):
     return render_template('analytics/start_page.html')
 
 
-def offloaded_traffic(g, request):
+def offloaded_traffic(request):
     db = getattr(g, 'db', None)
     context = _init_context_dates(db, request)
 
@@ -34,7 +35,7 @@ def offloaded_traffic(g, request):
     return render_template('analytics/offloaded_traffic.html', **context)
 
 
-def aggregate(g, request, field):
+def aggregate(request, field):
     db = getattr(g, 'db', None)
     context = _init_context_dates(db, request)
 
@@ -64,7 +65,7 @@ def aggregate(g, request, field):
     return render_template('analytics/analytics_aggregate.html', **context)
 
 
-def simulate(g, request):
+def simulate(request):
     db = getattr(g, 'db', None)
     context = _init_context_dates(db, request)
 

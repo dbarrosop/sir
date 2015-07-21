@@ -119,3 +119,14 @@ em.argument {
 }
 
 /* DOCUMENTATION ENDS */
+
+div.alert {
+  padding: 1em 1em;
+  margin:0 auto;
+  margin-top: 1em; margin-bottom: 1em;
+  text-align: center;
+  width: 90%;
+  background-color: #FFCC00;
+  border-radius: 10px;
+  border: 2px solid red;
+}

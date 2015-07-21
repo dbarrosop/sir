@@ -1,8 +1,10 @@
 from flask import render_template
+from flask import g
+
 import yaml
 
 
-def start_page(g, request):
+def start_page(request):
     context = dict()
     with open('api_doc/api_documentation.yaml', 'r') as stream:
         context['documentation'] = yaml.load(stream)

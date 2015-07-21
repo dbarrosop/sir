@@ -1,0 +1,37 @@
+{% include 'includes/header.html' %}
+
+<h2 class='title'>Browse Variables</h2>
+
+<form action="" method="get" class='time_range'>
+  <select name="category" value="{{filter_category}}">
+    {% for category in categories %}
+    {% if filter_category == category %}
+    <option value = "{{ category }}" selected>{{ category }}</option>
+    {% else %}
+    <option value = "{{ category }}">{{ category }}</option>
+    {% endif %}
+    {% endfor %}
+  </select>
+  <input type="submit" value="Filter">
+</form>
+
+<table class='data'>
+  <tr>
+    <th>category</th>
+    <th>name</th>
+    <th>content</th>
+    <th>extra_vars</th>
+    {#<th>action</th>#}
+  </tr>
+  {% for variable in variables %}
+  <tr>
+    <td>{{ variable['category'] }}</td>
+    <td>{{ variable['name'] }}</td>
+    <td>{{ variable['content'] }}</td>
+    <td><pre><code>{{ variable['extra_vars'] }}</code></pre></td>
+    {#<td><a href="{{ url_for('edit_variable', category=variable['category'], name=variable['name'])}}">Edit</a>|Delete</td>#}
+  </tr>
+{% endfor%}
+</table>
+
+{% include 'includes/footer.html' %}

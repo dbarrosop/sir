@@ -1,4 +1,8 @@
-def _variables_post(g, request):
+from flask import g
+import helpers.api
+
+
+def _variables_post(request):
     # curl -i -H "Content-Type: application/json" -X POST -d '{"name": "test", "content": "this_is_a_test", "category": "development", "extra_vars": {"ads": "qwe", "asd": "zxc"}}' http://127.0.0.1:5000/api/v1.0/variables
     db = getattr(g, 'db')
 
@@ -9,64 +13,47 @@ def _variables_post(g, request):
 
     db.put_variables(name, content, category, extra_vars)
 
-    data = {
-        'result': {
-            'variable': db.get_variable(category, name),
-        },
-        'parameters': {
-            'name': name,
-            'content': content,
-            'category': category,
-            'extra_vars': str(extra_vars),
-        },
-        'meta': {
-            'request_time': getattr(g, 'request_time')(),
-        },
+    result = db.get_variable(category, name)
+    parameters = {
+        'name': name,
+        'content': content,
+        'category': category,
+        'extra_vars': str(extra_vars),
     }
-    return data
+    return helpers.api.build_api_response(result, error=False, **parameters)
 
-def _variables_get(g, request):
+
+def _variables_get(request):
     db = getattr(g, 'db')
-    data = {
-        'result': {
-            'variables': db.get_variables(),
-        },
-        'parameters': {},
-        'meta': {
-            'request_time': getattr(g, 'request_time')(),
-        },
-    }
-    return data
+    result = db.get_variables()
+    parameters = {}
+    return helpers.api.build_api_response(result, error=False, **parameters)
 
-def variables(g, request):
+
+def variables(request):
     if request.method == 'GET':
-        return _variables_get(g, request)
+        return _variables_get(request)
     elif request.method == 'POST':
-        return _variables_post(g, request)
+        return _variables_post(request)
 
-def _api_variables_var_id_get(g, request, name):
+
+def _api_variables_var_id_get(request, name):
     db = getattr(g, 'db')
-    data = {
-        'result': {
-            'variable': db.get_variable(name),
-        },
-        'parameters': {
-            'name': name,
-        },
-        'meta': {
-            'request_time': getattr(g, 'request_time')(),
-        },
+    result = db.get_variable(name)
+    parameters = {
+        'name': name,
     }
-    return data
+    return helpers.api.build_api_response(result, error=False, **parameters)
 
-def api_variables_name(g, request, category, name):
+
+def api_variables_name(request, category, name):
     db = getattr(g, 'db')
 
     if request.method == 'GET':
         result = db.get_variable(category, name)
     elif request.method == 'PUT':
         # curl -i -H "Content-Type: application/json" -X PUT -d '{"name": "test", "content": "this_is_a_testa", "category": "development", "extra_vars": {"ads": "qwe", "asd": "zxc"}}' http://127.0.0.1:5000/api/v1.0/variables/test
-        variable = db.get_variable(category, name)
+        variable = db.get_variable(category, name)[0]
         new_name = request.json.get('name', variable['name'])
         new_content = request.json.get('content', variable['content'])
         new_category = request.json.get('category', variable['category'])
@@ -75,48 +62,27 @@ def api_variables_name(g, request, category, name):
         result = db.get_variable(new_category, new_name)
     elif request.method == 'DELETE':
         db.delete_variable(category, name)
-        result = 1
+        result = []
 
-    data = {
-        'result': {
-            'variable': result,
-        },
-        'parameters': {
-            'name': name,
-            'categories': category,
-        },
-        'meta': {
-            'request_time': getattr(g, 'request_time')(),
-        },
+    result = result
+    parameters = {
+        'name': name,
+        'categories': category,
     }
-    return data
+    return helpers.api.build_api_response(result, error=False, **parameters)
 
 
-def variables_category(g, request):
+def variables_category(request):
     db = getattr(g, 'db')
-    data = {
-        'result': {
-            'categories': db.get_categories(),
-        },
-        'parameters': {},
-        'meta': {
-            'request_time': getattr(g, 'request_time')(),
-        },
-    }
-    return data
+    result = db.get_categories()
+    parameters = {}
+    return helpers.api.build_api_response(result, error=False, **parameters)
 
 
-def variables_filter_by_category(g, request, category):
+def variables_filter_by_category(request, category):
     db = getattr(g, 'db')
-    data = {
-        'result': {
-            'variables': db.filter_variables_category(category),
-        },
-        'parameters': {
-            'categories': category,
-        },
-        'meta': {
-            'request_time': getattr(g, 'request_time')(),
-        },
+    result = db.filter_variables_category(category)
+    parameters = {
+        'categories': category,
     }
-    return data
+    return helpers.api.build_api_response(result, error=False, **parameters)
