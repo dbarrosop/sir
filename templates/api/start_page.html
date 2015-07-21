@@ -23,9 +23,9 @@ When reading this documentation you will find variables in two forms:
 All the responses from the agent will be in JSON format and will include three sections:
 
 <ul>
-  <li><em>meta</em>: Metainformation about the response. For example, request_time.</li>
+  <li><em>meta</em>: Metainformation about the response. For example, request_time, length of the response or if there was any error.</li>
   <li><em>parameters</em>: The parameters used for the call.</li>
-  <li><em>result</em>: The result of the call.</li>
+  <li><em>result</em>: The result of the call or a description of the error if there was any.</li>
 </ul>
 
 For example, for the following call you will get the following response:
@@ -34,7 +34,9 @@ For example, for the following call you will get the following response:
 <pre><code class="json">
   {
     "meta": {
-      "request_time": 6.26074
+      "error": false,
+      "length": 10,
+      "request_time": 11.99163
     },
     "parameters": {
       "end_time": "2015-07-14T14:00",
@@ -43,26 +45,19 @@ For example, for the following call you will get the following response:
       "net_masks": "20,24",
       "start_time": "2015-07-13T14:00"
     },
-    "result": {
-      "top_prefixes": [
-        {
-          "as_dst": 43650,
-          "key": "194.14.177.0/24",
-          "sum_bytes": 650537594
-        },
-        {
-          "as_dst": 43650,
-          "key": "194.132.162.0/24",
-          "sum_bytes": 336810887
-        },
-        ...
-        {
-          "as_dst": 197301,
-          "key": "80.71.128.0/20",
-          "sum_bytes": 5106731
-        }
-      ]
-    }
+    "result": [
+      {
+        "as_dst": 43650,
+        "key": "194.14.177.0/24",
+        "sum_bytes": 650537594
+      },
+      ...
+      {
+        "as_dst": 197301,
+        "key": "80.71.128.0/20",
+        "sum_bytes": 5106731
+      }
+    ]
   }</code></pre>
 
 {% for section, endpoints in documentation.iteritems() %}
@@ -91,10 +86,7 @@ For example, for the following call you will get the following response:
 
 <em class='endpoint_documentation'>Returns:</em>
 <ul class='endpoint_documentation'>
-      {% for key, value in method['returns'].iteritems() %}
-    <li class='argument_element'><em class='argument'>{{key}}:</em> {{value}}
-    </li>
-      {% endfor %}
+    <li class='argument_element'>{{method['returns']}}</li>
 </ul>
 
 <em class='endpoint_documentation'>Examples:</em>
