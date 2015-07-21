@@ -1,17 +1,22 @@
-#TODO Expose raw flows, delete flows
-#TODO Expose raw BGP
-#TODO Python API
-#TODO Build first app
-#TODO UI to Add, Edit, delete variables
-#TODO metrics
-#TODO Improve building the response of the API and documentation
-#TODO Catch errors in API
+# TODO Build first app
+# TODO Expose raw flows, delete flows
+# TODO Expose raw BGP
+# TODO UI to Add, Edit, delete variables
+# TODO metrics
+# TODO Improve building the response of the API and documentation
+# TODO Catch errors in API
 
 from helpers.SQLite3Helper import SQLite3Helper
 
-import variables.api, variables.views
-import analytics.api, analytics.views
-import api_doc.views
+import variables.api
+import variables.views
+
+import analytics.api
+import analytics.views
+
+import api.api
+import api.views
+
 import pmacct_data.api
 
 from flask import Flask, request, g, jsonify, render_template
@@ -23,7 +28,7 @@ app.config.from_object('settings')
 
 ###################
 ###################
-####  BASIC  ######
+#  BASIC  #########
 ###################
 ###################
 
@@ -50,7 +55,7 @@ def start_page():
 
 ###################
 ###################
-###  ANALYTICS  ###
+#  ANALYTICS  #####
 ###################
 ###################
 
@@ -79,6 +84,7 @@ def analytics_aggregate_per_prefix():
 def analytics_simulate():
     return analytics.views.simulate(request)
 
+
 @app.route('/api/v1.0/analytics/top_prefixes', methods=['GET'])
 def api_top_prefixes():
     return jsonify(analytics.api.top_prefixes(request))
@@ -90,18 +96,23 @@ def api_top_asns():
 
 ###################
 ###################
-######  API  ######
+#  API  ###########
 ###################
 ###################
 
 
-@app.route('/api/v1.0', strict_slashes=False)
+@app.route('/api/documentation', strict_slashes=False)
 def api_help():
-    return api_doc.views.start_page(request)
+    return api.views.start_page(request)
+
+
+@app.route('/api/v1.0/methods')
+def api_capabilities():
+    return jsonify(api.api.methods(request))
 
 ###################
 ###################
-###  VARIABLES  ###
+#  VARIABLES  #####
 ###################
 ###################
 
@@ -115,6 +126,7 @@ def browse_variables():
 def edit_variable(category, name):
     return variables.views.edit_variable(request, category, name)
 '''
+
 
 @app.route('/api/v1.0/variables', methods=['GET', 'POST'])
 def api_variables():
@@ -137,19 +149,20 @@ def api_variables_name(category, name):
 
 ###################
 ###################
-##  PMACCT_DATA  ##
+#  PMACCT_DATA  ###
 ###################
 ###################
+
 
 @app.route('/api/v1.0/pmacct/dates', methods=['GET'])
 def pmacct_data_get_dates():
-    #http://127.0.0.1:5000/api/v1.0/pmacct/dates
     return jsonify(pmacct_data.api.get_dates(request))
+
 
 @app.route('/api/v1.0/pmacct/flows', methods=['GET'])
 def pmacct_data_get_flows():
-    #http://127.0.0.1:5000/api/v1.0/pmacct/flows?start_time=2015-07-14T10:00&end_time=2015-07-14T14:01
     return jsonify(pmacct_data.api.get_flows(request))
+
 
 if __name__ == '__main__':
     app.run()
