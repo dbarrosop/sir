@@ -1,7 +1,7 @@
 SDN Internet Router (sir)
 =========================
 
-SIR is an agent that you can run with any switch (either inside the switch or in some server close to the switch). The agent includes [pmacct](http://www.pmacct.net/) which allows you to correlate flows with the BGP table.
+SIR is an agent that you can run with any switch/router (either inside the switch or in some server close to the switch). The agent includes [pmacct](http://www.pmacct.net/) which allows you to correlate flows with the BGP table.
 
 
 s tool in combination with [pmacct](http://www.pmacct.net/) allows you to get the full BGP feed from your upstream providers/peers and install on the FIB only the relevant prefixes for you. The main benefit of this approach is that you will not need a very expensive router to do peering. A cheap and very fast switch might be enough.
