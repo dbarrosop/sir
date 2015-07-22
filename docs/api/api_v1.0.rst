@@ -87,9 +87,9 @@ _________
 
 * **start_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Starting time of the range.
 * **end_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Ending time of the range.
-* **exclude_net_masks**: Optional. If set to any value it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
 * **limit_prefixes**: Optional. Number of top prefixes to retrieve.
 * **net_masks**: Optional. List of prefix lengths to filter in or out.
+* **exclude_net_masks**: Optional. If set to any value it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
 
 Returns
 _______
@@ -136,3 +136,247 @@ Examples
     :linenos:
 
     http://127.0.0.1:5000/api/v1.0/analytics/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+
+Variables Endpoint
+******************
+
+/api/v1.0/variables
+===================
+
+GET
+---
+
+Description
+___________
+
+Retrieves all the variables in the system.
+
+Arguments
+_________
+
+Returns
+_______
+
+A list of all the variables.
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/variables
+
+POST
+----
+
+Description
+___________
+
+You can create a variable from the CLI with curl like this:
+
+.. code-block:: html
+    :linenos:
+
+    curl -i -H "Content-Type: application/json" -X POST -d '{"name": "test_var", "content": "whatever", "category": "development", "extra_vars": {"ads": "qwe", "asd": "zxc"}}' http://127.0.0.1:5000/api/v1.0/variables
+
+Arguments
+_________
+
+* **content**: Content of the variable.
+* **category**: Category of the variable.
+* **name**: Name of the variable.
+* **extra_vars**: Use this field to add extra data to your variable. It is recommended to use a JSON string
+
+Returns
+_______
+
+The variable that was just created.
+
+Examples
+________
+
+/api/v1.0/variables/categories
+==============================
+
+GET
+---
+
+Description
+___________
+
+Retrieves all the categories in the system.
+
+Arguments
+_________
+
+Returns
+_______
+
+A list of all the categories.
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/variables/categories
+
+/api/v1.0/variables/categories/<category>
+=========================================
+
+GET
+---
+
+Description
+___________
+
+Retrieves all the variables the belong to <category> in the system.
+
+Arguments
+_________
+
+* **<category>**: Category you want to query
+
+Returns
+_______
+
+A list of variables belonging to <category>.
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/variables/categories/<category>
+
+/api/v1.0/variables/categories/<category>/<name>
+================================================
+
+GET
+---
+
+Description
+___________
+
+Retrieves the variable with <name> and <category>.
+
+Arguments
+_________
+
+* **<category>**: Category of the variable you want to retrieve.
+* **<name>**: Name of the variable you want to retrieve.
+
+Returns
+_______
+
+A list of variables belonging to <category>.
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
+
+PUT
+---
+
+Description
+___________
+
+This API call allows you to modify all of some of the values of a variable. For example, you can update the name and the extra_vars of a variable with the following command:
+
+.. code-block:: json
+    :linenos:
+
+     curl -i -H "Content-Type: application/json" -X PUT -d '{"name": "test_varc", "extra_vars": "{'my_param1': 'my_value1', 'my_param2': 'my_value2'}"}' http://127.0.0.1:5000/api/v1.0/variables/categories/development/test_vara HTTP/1.0 200 OK Content-Type: application/json Content-Length: 358 Server: Werkzeug/0.10.4 Python/2.7.8 Date: Tue, 21 Jul 2015 10:16:22 GMT
+     {
+      "meta": {
+        "error": false,
+        "length": 1,
+        "request_time": 0.0055
+      },
+      "parameters": {
+        "categories": "development",
+        "name": "test_vara"
+      },
+      "result": [
+        {
+          "category": "development",
+          "content": "whatever",
+          "extra_vars": "{my_param1: my_value1, my_param2: my_value2}",
+          "name": "test_varc"
+        }
+      ]
+      }
+
+Arguments
+_________
+
+* **category**: Optional. New category.
+* **content**: Optional. New content.
+* **name**: Optional. New name.
+* **<name>**: Name of the variable you want to modify.
+* **<category>**: Category of the variable you want to modify.
+* **extra_vars**: Optional. New extra_vars.
+
+Returns
+_______
+
+The variable with the new data.
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
+
+DELETE
+------
+
+Description
+___________
+
+Deletes a variable. For example:
+
+.. code-block:: html
+    :linenos:
+
+     curl -i -X DELETE http://127.0.0.1:5000/api/v1.0/variables/categories/deveopment/test_vara HTTP/1.0 200 OK Content-Type: application/json Content-Length: 183 Server: Werkzeug/0.10.4 Python/2.7.8 Date: Tue, 21 Jul 2015 10:17:27 GMT
+     {
+      "meta": {
+        "error": false,
+        "length": 0,
+        "request_time": 0.0016
+      },
+      "parameters": {
+        "categories": "deveopment",
+        "name": "test_vara"
+      },
+      "result": []
+     }
+
+Arguments
+_________
+
+* **<category>**: Category of the variable you want to delete.
+* **<name>**: Name of the variable you want to delete.
+
+Returns
+_______
+
+An empty list
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
