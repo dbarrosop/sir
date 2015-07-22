@@ -1,6 +1,7 @@
 # TODO Build first app
+# TODO Update variables to only have extra_vars
 # TODO Expose raw flows, delete flows
-# TODO Expose raw BGP
+# TODO Expose raw BGP, delete raw BGP files
 # TODO UI to Add, Edit, delete variables
 # TODO metrics
 # TODO Improve building the response of the API and documentation
@@ -162,6 +163,11 @@ def pmacct_data_get_dates():
 @app.route('/api/v1.0/pmacct/flows', methods=['GET'])
 def pmacct_data_get_flows():
     return jsonify(pmacct_data.api.get_flows(request))
+
+
+@app.route('/api/v1.0/pmacct/bgp_prefixes', methods=['GET'])
+def pmacct_get_bgp_prefixes():
+    return jsonify(pmacct_data.api.get_bgp_prefixes(request))
 
 
 if __name__ == '__main__':

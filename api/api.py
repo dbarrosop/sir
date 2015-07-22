@@ -3,6 +3,7 @@ import helpers.api
 
 import yaml
 
+
 def methods(request):
     with open('api/api_documentation.yaml', 'r') as stream:
         documentation = yaml.load(stream)
