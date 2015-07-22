@@ -18,4 +18,4 @@ table to get the full BGP feed from your Service Provider or to peer with other 
    backends/index
    plugins/index
    developers_guide/index
-   api/sir_api
+   api/api-1_0
