@@ -2,31 +2,6 @@ API Documentation
 *****************
 
 .. raw:: html
-
-      <!DOCTYPE html>
-      <!-- saved from url=(0039)http://127.0.0.1:5000/api/documentation -->
-      <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>SIR</title>
-      <link rel="stylesheet" type="text/css" href="./sir_api_files/style.css">
-      <link rel="stylesheet" href="http://127.0.0.1:5000/static/highlight_styles/default.css">
-
-      <script src="./sir_api_files/highlight.pack.js"></script>
-      <script src="./sir_api_files/Chart.js"></script>
-
-      <script>hljs.initHighlightingOnLoad();</script>
-
-      <style type="text/css"></style><link rel="stylesheet" type="text/css" href="chrome-extension://pkehgijcmpdhfbdbbnkijodmdjhbjlgp/skin/socialwidgets.css"></head><body><h1 class="title">SIR - SDN Internet Router</h1>
-
-      <nav>
-        <a href="http://127.0.0.1:5000/">HOME</a> |
-        <a href="http://127.0.0.1:5000/analytics">ANALYTICS</a> |
-        <a href="http://127.0.0.1:5000/variables/browse">VARIABLES</a> |
-        <a href="./sir_api_files/sir_api.html">API v1.0 DOCS</a>
-      </nav>
-      <div class="page">
-
-      <h2 class="title">API v1.0 Documentation</h2>
-
-
       You can interact with the agent using a RESTful API. This API gives you full access to the agent and its data.
 
       <h4 class="endpoint_documentation">Variables</h4>
