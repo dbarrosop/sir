@@ -99,7 +99,7 @@ A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of
 Examples
 --------
 
-.. code-block::
+.. code-block:: html
     :linenos:
 
     http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
@@ -132,7 +132,7 @@ A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of by
 Examples
 --------
 
-.. code-block::
+.. code-block:: html
     :linenos:
 
     http://127.0.0.1:5000/api/v1.0/analytics/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
