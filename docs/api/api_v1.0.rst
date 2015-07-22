@@ -77,22 +77,62 @@ Analytics Endpoint
 GET
 ---
 
-Whatever
+Description
+___________
 
-POST
-----
+Retrieves TOP prefixes sorted by the amount of bytes that they consumed during the specified period of time.
 
-Whatever
+Arguments
+_________
 
-/api/v1.0/analytics/top_prefixes
-================================
+* **start_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Starting time of the range.
+* **end_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Ending time of the range.
+* **exclude_net_masks**: Optional. If set to any value it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
+* **limit_prefixes**: Optional. Number of top prefixes to retrieve.
+* **net_masks**: Optional. List of prefix lengths to filter in or out.
+
+Returns
+_______
+
+A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+
+Examples
+--------
+
+.. code-block::
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
+    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24&exclude_net_masks=1
+
+
+/api/v1.0/analytics/top_asns
+============================
 
 GET
 ---
 
-Whatever
+Description
+___________
 
-POST
-----
+Retrieves TOP ASN's sorted by the amount of bytes that they consumed during the specified period of time.
 
-Whatever
+Arguments
+_________
+
+* **start_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Starting time of the range.
+* **end_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Ending time of the range.
+
+Returns
+_______
+
+A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+
+Examples
+--------
+
+.. code-block::
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/analytics/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
