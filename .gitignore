@@ -59,4 +59,5 @@ files/*
 .idea
 
 db.sqlite3
-pmacct.db
+
+data/*
