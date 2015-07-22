@@ -2,6 +2,11 @@ API Documentation
 *****************
 
 .. raw:: html
+
+      <script src="./sir_api_files/highlight.pack.js"></script>
+
+      <script>hljs.initHighlightingOnLoad();</script>
+
       You can interact with the agent using a RESTful API. This API gives you full access to the agent and its data.
 
       <h4 class="endpoint_documentation">Variables</h4>
@@ -579,16 +584,3 @@ API Documentation
           </li>
 
       </ul>
-
-
-
-
-
-
-
-
-
-      </div>
-      <footer class="site-footer">
-        Unicorn productions.
-      </footer></body></html>
