@@ -1,8 +1,13 @@
+**********************
 API v1.0 Documentation
 **********************
 
+###
+API
+###
+
 Variables
-#########
+*********
 
 When reading this documentation you will find variables in two forms:
 
@@ -12,8 +17,7 @@ When reading this documentation you will find variables in two forms:
  * If the method is a POST or a PUT variables variables that are between <> have to sent as a JSON object.
 
 Responses
-#########
-
+*********
 
 All the responses from the agent will be in JSON format and will include three sections:
 
@@ -59,3 +63,36 @@ For example, for the following call you will get the following response:
         }
       ]
     }
+
+#########
+Endpoints
+#########
+
+Analytics Endpoint
+******************
+
+/api/v1.0/analytics/top_prefixes
+================================
+
+GET
+---
+
+Whatever
+
+POST
+----
+
+Whatever
+
+/api/v1.0/analytics/top_prefixes
+================================
+
+GET
+---
+
+Whatever
+
+POST
+----
+
+Whatever
