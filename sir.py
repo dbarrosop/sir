@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 # TODO Check if you are peering with a particular AS (WIP).
-# TODO Check if a particular network is present in the router (WIP).
+# TODO Rename analytics for peering
+# TODO Local Architecture
+# TODO Features, README, use cases, etc...
+# TODO Global Architecture
 # TODO Expose raw flows, delete flows
 # TODO Expose raw BGP, delete raw BGP files
 # TODO UI to Add, Edit, delete variables
@@ -12,6 +15,7 @@
 # TODO Catch errors in authentication???
 
 from helpers.SQLite3Helper import SQLite3Helper
+from helpers.FSHelper import FSHelper
 
 import variables.api
 import variables.views
@@ -44,6 +48,7 @@ def before_request():
     g.request_start_time = time.time()
     g.request_time = lambda: float("%.5f" %
                                    (time.time() - g.request_start_time))
+    g.fs = FSHelper(app.config['BGP_FOLDER'])
 
 
 @app.teardown_request
@@ -97,6 +102,12 @@ def api_top_prefixes():
 @app.route('/api/v1.0/analytics/top_asns', methods=['GET'])
 def api_top_asns():
     return jsonify(analytics.api.top_asns(request))
+
+
+@app.route('/api/v1.0/analytics/find_prefix/<prefix>/<pl>', methods=['GET'])
+def analytics_find_prefix(prefix, pl):
+    return jsonify(analytics.api.find_prefix(request, u'{}/{}'.format(prefix, pl)))
+
 
 ###################
 ###################
@@ -166,7 +177,7 @@ def pmacct_data_get_flows():
 
 @app.route('/api/v1.0/pmacct/bgp_prefixes', methods=['GET'])
 def pmacct_get_bgp_prefixes():
-    return jsonify(pmacct_data.api.get_bgp_prefixes(request, app.config['BGP_FOLDER']))
+    return jsonify(pmacct_data.api.get_bgp_prefixes(request))
 
 
 if __name__ == '__main__':

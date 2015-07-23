@@ -69,6 +69,78 @@ Endpoints
 Analytics Endpoint
 ******************
 
+/api/v1.0/analytics/find_prefix/<prefix>/<prefix_length>
+========================================================
+
+GET
+---
+
+Description
+___________
+
+Finds all prefixes in the system that contains the prefix ``<prefix>/<prefix_length>``
+
+Arguments
+_________
+
+* **<<prefix>>**: Mandatory. IP prefix of the network you want to find.
+* **<<prefix_length>>**: Mandatory. Prefix length of the network you want to find.
+* **date**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+
+Returns
+_______
+
+It will return a dictionary where keys are the IP's of the BGP peers peering with SIR. Each one will have a list of prefixes that contain the prefix queried.
+
+Examples
+--------
+
+::
+
+    $ curl http://127.0.0.1:5000/api/v1.0/analytics/find_prefix/192.2.3.1/32\?date\=2015-07-22T05:00:01
+    {
+      "meta": {
+        "error": false,
+        "length": 2,
+        "request_time": 1.88076
+      },
+      "parameters": {
+        "date": "2015-07-22T05:00:01",
+        "prefix": "192.2.3.1/32"
+      },
+      "result": {
+        "193.182.244.0": [
+          {
+            "as_path": "1299 3356",
+            "bgp_nexthop": "62.115.48.29",
+            "comms": "1299:20000 8403:100 8403:2001",
+            "event_type": "dump",
+            "ip_prefix": "192.2.0.0/16",
+            "local_pref": 100,
+            "origin": 0,
+            "peer_ip_src": "193.182.244.0"
+          }
+        ],
+        "193.182.244.64": [
+          {
+            "as_path": "1299 3356",
+            "bgp_nexthop": "80.239.132.249",
+            "comms": "1299:20000 8403:100 8403:2001",
+            "event_type": "dump",
+            "ip_prefix": "192.2.0.0/16",
+            "local_pref": 100,
+            "origin": 0,
+            "peer_ip_src": "193.182.244.64"
+          }
+        ]
+      }
+    }%
+
+
+
+
+
+
 /api/v1.0/analytics/top_prefixes
 ================================
 

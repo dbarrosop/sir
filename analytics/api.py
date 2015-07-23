@@ -1,6 +1,7 @@
 import helpers.api
 from flask import g
 
+
 def top_prefixes(request):
     # curl http://127.0.0.1:5000/api/v1.0/top_prefixes\?limit_prefixes=10\&start_time\=2015-07-13T14:00\&end_time\=2015-07-14T14:00
     db = getattr(g, 'db')
@@ -36,5 +37,18 @@ def top_asns(request):
     parameters = {
         'start_time': start_time,
         'end_time': end_time,
+    }
+    return helpers.api.build_api_response(result, error=False, **parameters)
+
+
+def find_prefix(request, prefix):
+    # curl http://127.0.0.1:5000/api/v1.0/top_asns\?start_time=2015-07-13T14:00\&end_time=2015-07-14T14:00
+    fs = getattr(g, 'fs')
+    date = request.args.get('date')
+    print date
+    result = fs.find_prefix(prefix, date)
+    parameters = {
+        'prefix': prefix,
+        'date': date,
     }
     return helpers.api.build_api_response(result, error=False, **parameters)

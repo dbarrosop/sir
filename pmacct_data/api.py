@@ -1,6 +1,5 @@
 import helpers.api
 from flask import g
-from helpers.FSHelper import FSHelper
 
 
 def get_dates(request):
@@ -17,8 +16,8 @@ def get_flows(request):
     return helpers.api.build_api_response(flows, error=False, start_time=start_time, end_time=end_time)
 
 
-def get_bgp_prefixes(request, bgp_folder):
-    fs = FSHelper(bgp_folder)
+def get_bgp_prefixes(request):
+    fs = getattr(g, 'fs')
     date = request.args.get('date')
     bgp_prefixes = fs.get_bgp_prefixes(date)
     return helpers.api.build_api_response(bgp_prefixes, error=False, date=date)
