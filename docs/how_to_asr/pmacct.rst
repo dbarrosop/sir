@@ -11,7 +11,7 @@ These are some of the dependancies that might need::
 
     apt-get install libpcap-dev libsqlite3-dev libjansson-dev zlib1g-dev
 
-And this is how to compile pmacct:
+And this is how to compile pmacct::
 
     dbarroso@lon3-nwmonitor-a2:~$ wget http://www.pmacct.net/pmacct-1.5.1.tar.gz
     --2015-07-23 09:25:46--  http://www.pmacct.net/pmacct-1.5.1.tar.gz
