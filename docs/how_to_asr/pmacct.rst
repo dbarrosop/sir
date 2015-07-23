@@ -168,7 +168,7 @@ To configure pmacct you will need to know the IP the ASR will use as source IP f
     nfacctd_ip: $ASR_SRC_IP
     nfacctd_time_new: true
 
-.. warning:: Don't forget to replace $ASR_SRC_IP with the IP your ASR will use for both netflow and BGP.
+.. warning:: Don't forget to replace ``$ASR_SRC_IP`` with the IP your ASR will use for both netflow and BGP.
 
 Now it's just a matter of starting pmacct::
 
