@@ -26,7 +26,7 @@ And this is how to compile pmacct::
 
     $ tar xzf pmacct-1.5.1.tar.gz
     $ cd pmacct-1.5.1
-    $ ./configure --enable-sqlite3 --enable-jansson --enable-ipv6 --prefix=/spotify/pmacct-1.5.1
+    $ ./configure --enable-sqlite3 --enable-jansson --enable-ipv6 --prefix=/pmacct-1.5.1
     creating cache ./config.cache
     checking for a BSD compatible install... /usr/bin/install -c
     checking whether build environment is sane... yes
@@ -138,16 +138,16 @@ And this is how to compile pmacct::
 Configuring pmacct
 ------------------
 
-To configure pmacct you will need to know the IP the ASR will use as source IP for both netflow and BGP. Once you know, paste the following configuration in the file ``/spotify/pmacct-1.5.0/etc/pmacct.conf``::
+To configure pmacct you will need to know the IP the ASR will use as source IP for both netflow and BGP. Once you know, paste the following configuration in the file ``/pmacct-1.5.1/etc/pmacct.conf``::
 
-    $ cd /spotify/pmacct-1.5.1
+    $ cd /pmacct-1.5.1
     $ sudo mkdir etc
     $ sudo vi etc/pmacct.conf
     daemonize: true
 
     plugins: sqlite3[simple]
 
-    sql_db[simple]: /spotify/pmacct-1.5.0/output/pmacct.db
+    sql_db[simple]: /pmacct-1.5.1/output/pmacct.db
     sql_refresh_time[simple]: 3600
     sql_history[simple]: 60m
     sql_history_roundoff[simple]: h
@@ -159,7 +159,7 @@ To configure pmacct you will need to know the IP the ASR will use as source IP f
     bgp_daemon: true
     bgp_daemon_ip: $ASR_SRC_IP
     bgp_daemon_max_peers: 2
-    bgp_table_dump_file: /spotify/pmacct-1.5.0/output/bgp-$peer_src_ip-%Y_%m_%dT%H_%M_%S.txt
+    bgp_table_dump_file: /pmacct-1.5.1/output/bgp-$peer_src_ip-%Y_%m_%dT%H_%M_%S.txt
     bgp_table_dump_refresh_time: 3600
 
     nfacctd_as_new: bgp
@@ -217,7 +217,7 @@ Now it's time to setup the database::
 
 Finally, it's just a matter of starting pmacct::
 
-    $ sudo /spotify/pmacct-1.5.1/sbin/nfacctd -f /spotify/pmacct-1.5.1/etc/pmacct.conf
+    $ sudo /pmacct-1.5.1/sbin/nfacctd -f /pmacct-1.5.1/etc/pmacct.conf
 
 Configuring the ASR
 -------------------
