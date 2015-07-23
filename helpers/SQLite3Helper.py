@@ -67,7 +67,7 @@ class SQLite3Helper:
         query = ''' SELECT ip_dst||'/'||mask_dst as key, SUM(bytes) as sum_bytes, as_dst
                     from acct
                     WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?, "+1 second")
                     {}
                     GROUP by ip_dst,mask_dst
                     ORDER BY SUM(bytes) DESC
@@ -98,7 +98,7 @@ class SQLite3Helper:
         query = ''' SELECT as_dst as key, SUM(bytes) as sum_bytes
                     from acct
                     WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?, "+1 second")
                     GROUP by as_dst
                     ORDER BY SUM(bytes) DESC;
                 '''
@@ -112,7 +112,9 @@ class SQLite3Helper:
     def get_dates_in_range(self, start_time, end_time):
         query = ''' SELECT DISTINCT stamp_updated
                     from acct
-                    WHERE datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
+                    WHERE
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?, "+1 second")
+                    ;
                 '''
 
         return [datetime.strptime(d['stamp_updated'], '%Y-%m-%d %H:%M:%S')
@@ -122,7 +124,8 @@ class SQLite3Helper:
         query = ''' SELECT SUM(bytes) as sum_bytes
                     FROM acct
                     WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?, "+1 second")
+                    ;
                 '''
 
         return self._execute_query(query, [start_time, end_time])[0]['sum_bytes']
@@ -132,7 +135,7 @@ class SQLite3Helper:
                         SELECT ip_dst, mask_dst, SUM(bytes) AS bytes
                         from acct
                         WHERE
-                        datetime(stamp_updated) BETWEEN datetime(:start_time) AND datetime(:end_time)
+                        datetime(stamp_updated) BETWEEN datetime(:start_time) AND datetime(:end_time, "+1 second")
                         GROUP BY ip_dst, mask_dst
                         ORDER BY SUM(bytes) DESC
                         LIMIT %d
@@ -145,7 +148,7 @@ class SQLite3Helper:
         query = ''' SELECT SUM(bytes) as sum_bytes
                     from acct
                     WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?, "+1 second")
                     AND
                     as_dst = ?
                     GROUP by as_dst, stamp_updated
@@ -159,7 +162,7 @@ class SQLite3Helper:
         query = ''' SELECT SUM(bytes) as sum_bytes
                     from acct
                     WHERE
-                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?)
+                    datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?, "+1 second")
                     AND
                     ip_dst = ? AND mask_dst = ?
                     GROUP by ip_dst, mask_dst, stamp_updated
@@ -204,6 +207,7 @@ class SQLite3Helper:
         query = ''' SELECT ip_dst, mask_dst, bytes, packets, as_dst, stamp_updated
                             FROM acct
                             WHERE
-                            datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?);
+                            datetime(stamp_updated) BETWEEN datetime(?) AND datetime(?, "+1 second")
+                            ;
                 '''
         return self._execute_query(query, [start_time, end_time])

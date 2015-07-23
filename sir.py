@@ -1,12 +1,13 @@
-# TODO Make sure end_date works fine and it´s included in queries
-# TODO Build first app
-# TODO Update variables to only have extra_vars
+# -*- coding: utf-8 -*-
+
 # TODO Expose raw flows, delete flows
 # TODO Expose raw BGP, delete raw BGP files
 # TODO UI to Add, Edit, delete variables
 # TODO metrics
 # TODO Improve building the response of the API and documentation
 # TODO Catch errors in API
+# TODO Catch errors in logging
+# TODO Catch errors in authentication???
 
 from helpers.SQLite3Helper import SQLite3Helper
 

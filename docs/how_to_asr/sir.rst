@@ -22,7 +22,7 @@ This is super easy to do. First clone SIR and install requirements::
     Requirement already up-to-date: itsdangerous>=0.21 in /lib/python2.7/site-packages (from flask->-r requirements.txt (line 1))
     Requirement already up-to-date: markupsafe in /lib/python2.7/site-packages (from Jinja2>=2.4->flask->-r requirements.txt (line 1))
 
-Now configure sir. Edit file ``settings.py``::
+Now configure SIR. Edit file ``settings.py``::
 
     DATABASE = '/pmacct-1.5.1/output/pmacct.db'         # Path to the db
     BGP_FOLDER = '/spotify/pmacct-1.5.1/output'         # Path to the folder where BGP info is
