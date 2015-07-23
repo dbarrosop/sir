@@ -158,7 +158,7 @@ To configure pmacct you will need to know the IP the ASR will use as source IP f
 
     bgp_daemon: true
     bgp_daemon_ip: $ASR_SRC_IP
-    bgp_daemon_max_peers: 2
+    bgp_daemon_max_peers: 1
     bgp_table_dump_file: /pmacct-1.5.1/output/bgp-$peer_src_ip-%Y_%m_%dT%H_%M_%S.txt
     bgp_table_dump_refresh_time: 3600
 
@@ -263,3 +263,5 @@ Configuring the ASR is relatively easy, you only have to configure netflow to se
         route-policy PASS out
 
 .. warning:: Don't forget to replace ``$PMACCT_IP`` with the IP of the server where you are running pmacct and ``$AS`` with your own AS.
+
+.. note:: If you want you can configure several ASR's pointing to the same SIR agent. The only thing you have to change is in pmacct's configuration the parameter ``bgp_daemon_max_peers`` to the number of ASR's that you are going to configure.
