@@ -130,6 +130,7 @@ Examples
 --------
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/analytics/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
 
 Variables Endpoint
@@ -158,6 +159,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/variables
 
 POST
@@ -169,6 +171,7 @@ ___________
 You can create a variable from the CLI with curl like this:
 
 ::
+
     curl -i -H "Content-Type: application/json" -X POST -d '{"name": "test_var", "content": "whatever", "category": "development", "extra_vars": {"ads": "qwe", "asd": "zxc"}}' http://127.0.0.1:5000/api/v1.0/variables
 
 Arguments
@@ -210,6 +213,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/variables/categories
 
 /api/v1.0/variables/categories/<category>
@@ -237,6 +241,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>
 
 /api/v1.0/variables/categories/<category>/<name>
@@ -265,6 +270,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
 
 PUT
@@ -318,6 +324,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
 
 DELETE
@@ -360,6 +367,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
 
 Pmacct Endpoint
@@ -388,6 +396,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/pmacct/dates
 
 /api/v1.0/pmacct/flows
@@ -416,6 +425,7 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/pmacct/flows?limit_prefixes=10&start_time=2015-07-14T14:00&end_time=2015-07-14T14:01
     http://127.0.0.1:5000/api/v1.0/pmacct/flows?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
 
@@ -444,4 +454,5 @@ Examples
 ________
 
 ::
+
     http://127.0.0.1:5000/api/v1.0/pmacct/bgp_prefixes?date=2015-07-16T11:00:01
