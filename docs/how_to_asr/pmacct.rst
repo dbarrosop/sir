@@ -218,3 +218,48 @@ Now it's time to setup the database::
 Finally, it's just a matter of starting pmacct::
 
     $ sudo /spotify/pmacct-1.5.1/sbin/nfacctd -f /spotify/pmacct-1.5.1/etc/pmacct.conf
+
+Configuring the ASR
+-------------------
+
+Configuring the ASR is relatively easy, you only have to configure netflow to send the flows that you want to process and BGP to send the prefixes you want to use for the aggregation. Here is an example::
+
+flow exporter-map PMACCT
+ version v9
+  options interface-table timeout 60
+  template data timeout 60
+ !
+ transport udp 9999
+ source Loopback0
+ destination $PMACCT_IP
+!
+flow monitor-map PMACCT-FMM
+ record ipv4
+ exporter PMACCT
+ cache timeout active 60
+ cache timeout inactive 15
+!
+sampler-map PMACCT
+ random 1 out-of 10000
+
+interface HundredGigE0/0/0/1
+ flow ipv4 monitor PMACCT-FMM sampler NFSEN egress
+
+route-policy PASS
+  pass
+end-policy
+
+route-policy BLOCK
+  drop
+end-policy
+
+router bgp $AS
+  neighbor $PMACCT_IP
+   remote-as $AS
+   description sto3-nwmonitor-a2
+   update-source Loopback0
+   address-family ipv4 unicast
+    route-policy BLOCK in
+    route-policy PASS out
+
+.. warning:: Don't forget to replace ``$PMACCT_IP`` with the IP of the server where you are running pmacct and $AS with your own AS.
