@@ -15,7 +15,4 @@ table to get the full BGP feed from your Service Provider or to peer with other 
 
    users_guide/index
    how_to_simple/index
-   backends/index
-   plugins/index
-   developers_guide/index
    api/api_v1.0
