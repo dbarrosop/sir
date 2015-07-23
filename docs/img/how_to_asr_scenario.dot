@@ -18,13 +18,13 @@ digraph SIR {
       sir;
     }
     ASR -> pmacct[label="netflow &\nBGP"]
-    pmacct -> sir[label="Flows aggr.\nper prefix\n&BGP"]
+    pmacct -> sir[label="Flows aggr.\nper prefix\n& BGP"]
 
     subgraph external {
       node [shape="ellipse"];
       peering_manager[fillcolor="#FFB6C1"];
 
-      peering_manager -> sir[label="gather data\nvia the API."];
+      peering_manager -> sir[label="gather data\nvia the API"];
     }
 
 }
