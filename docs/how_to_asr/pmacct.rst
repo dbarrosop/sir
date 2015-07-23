@@ -262,4 +262,4 @@ Configuring the ASR is relatively easy, you only have to configure netflow to se
         route-policy BLOCK in
         route-policy PASS out
 
-.. warning:: Don't forget to replace ``$PMACCT_IP`` with the IP of the server where you are running pmacct and $AS with your own AS.
+.. warning:: Don't forget to replace ``$PMACCT_IP`` with the IP of the server where you are running pmacct and ``$AS`` with your own AS.
