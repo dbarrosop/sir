@@ -243,7 +243,7 @@ Configuring the ASR is relatively easy, you only have to configure netflow to se
      random 1 out-of 10000
 
     interface HundredGigE0/0/0/1
-     flow ipv4 monitor SIR-FMM sampler NFSEN egress
+     flow ipv4 monitor SIR-FMM sampler SIR egress
 
     route-policy PASS
       pass
