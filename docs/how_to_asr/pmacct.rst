@@ -13,7 +13,7 @@ These are some of the dependancies that might need::
 
 And this is how to compile pmacct::
 
-    dbarroso@lon3-nwmonitor-a2:~$ wget http://www.pmacct.net/pmacct-1.5.1.tar.gz
+    $ wget http://www.pmacct.net/pmacct-1.5.1.tar.gz
     --2015-07-23 09:25:46--  http://www.pmacct.net/pmacct-1.5.1.tar.gz
     Connecting to 127.0.0.1:3128... connected.
     Proxy request sent, awaiting response... 200 OK
@@ -24,9 +24,9 @@ And this is how to compile pmacct::
 
     2015-07-23 09:25:46 (9.80 MB/s) - ‘pmacct-1.5.1.tar.gz’ saved [874563/874563]
 
-    dbarroso@lon3-nwmonitor-a2:~$ tar xzf pmacct-1.5.1.tar.gz
-    dbarroso@lon3-nwmonitor-a2:~$ cd pmacct-1.5.1 --
-    dbarroso@lon3-nwmonitor-a2:~/pmacct-1.5.1$ ./configure --enable-sqlite3 --enable-jansson --enable-ipv6 --prefix=/spotify/pmacct-1.5.1
+    $ tar xzf pmacct-1.5.1.tar.gz
+    $ cd pmacct-1.5.1
+    $ ./configure --enable-sqlite3 --enable-jansson --enable-ipv6 --prefix=/spotify/pmacct-1.5.1
     creating cache ./config.cache
     checking for a BSD compatible install... /usr/bin/install -c
     checking whether build environment is sane... yes
@@ -104,7 +104,7 @@ And this is how to compile pmacct::
     checking for mallopt... no
 
     PLATFORM ..... : x86_64
-    OS ........... : Linux 3.13.0-34-generic (lon3-nwmonitor-a2.lon3.spotify.net)
+    OS ........... : Linux 3.13.0-34-generic
     COMPILER ..... : gcc
     CFLAGS ....... : -O2 -g -O2
     LIBS ......... : -ljansson -lsqlite3 -lpcap  -ldl -lm -lz -lpthread
@@ -130,19 +130,19 @@ And this is how to compile pmacct::
     creating src/tee_plugin/Makefile
     creating src/isis/Makefile
     creating src/bmp/Makefile
-    dbarroso@lon3-nwmonitor-a2:~/pmacct-1.5.1$ make
+    $ make
     ... (output omitted for clarity)
-    dbarroso@lon3-nwmonitor-a2:~/pmacct-1.5.1$ sudo make install
+    $ sudo make install
     ... (output omitted for clarity)
-    dbarroso@lon3-nwmonitor-a2:~/pmacct-1.5.1$ cd /spotify/pmacct-1.5.1/
-    dbarroso@lon3-nwmonitor-a2:/spotify/pmacct-1.5.1$ ls
-    bin  sbin
 
 Configuring pmacct
 ------------------
 
 To configure pmacct you will need to know the IP the ASR will use as source IP for both netflow and BGP. Once you know, paste the following configuration in the file ``/spotify/pmacct-1.5.0/etc/pmacct.conf``::
 
+    $ cd /spotify/pmacct-1.5.1
+    $ sudo mkdir etc
+    $ sudo vi etc/pmacct.conf
     daemonize: true
 
     plugins: sqlite3[simple]
@@ -170,6 +170,51 @@ To configure pmacct you will need to know the IP the ASR will use as source IP f
 
 .. warning:: Don't forget to replace ``$ASR_SRC_IP`` with the IP your ASR will use for both netflow and BGP.
 
-Now it's just a matter of starting pmacct::
+Now it's time to setup the database::
 
-    sudo /spotify/pmacct-1.5.0/sbin/nfacctd -f /spotify/pmacct-1.5.0/etc/pmacct.conf
+    $ sudo mkdir output
+    $ sudo sqlite3 output/pmacct.db << EOF
+    CREATE TABLE 'acct' (
+    	'tag'	INT(8) NOT NULL DEFAULT 0,
+    	'class_id'	CHAR(16) NOT NULL DEFAULT ' ',
+    	'mac_src'	CHAR(17) NOT NULL DEFAULT '0:0:0:0:0:0',
+    	'mac_dst'	CHAR(17) NOT NULL DEFAULT '0:0:0:0:0:0',
+    	'vlan'	INT(4) NOT NULL DEFAULT 0,
+    	'as_src'	INT(8) NOT NULL DEFAULT 0,
+    	'as_dst'	INT(8) NOT NULL DEFAULT 0,
+    	'ip_src'	CHAR(15) NOT NULL DEFAULT '0.0.0.0',
+    	'ip_dst'	CHAR(15) NOT NULL DEFAULT '0.0.0.0',
+    	'mask_dst'	INTEGER(1) NOT NULL DEFAULT 0,
+    	'port_src'	INT(4) NOT NULL DEFAULT 0,
+    	'port_dst'	INT(4) NOT NULL DEFAULT 0,
+    	'tcp_flags'	INT(4) NOT NULL DEFAULT 0,
+    	'ip_proto'	CHAR(6) NOT NULL DEFAULT 0,
+    	'tos'	INT(4) NOT NULL DEFAULT 0,
+    	'packets'	INT NOT NULL,
+    	'bytes'	BIGINT NOT NULL,
+    	'flows'	INT NOT NULL DEFAULT 0,
+    	'stamp_inserted'	DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+    	'stamp_updated'	DATETIME,
+    	'collumn'	peer_as_srcINT(8) NOT NULL DEFAULT 0,
+    	'peer_as_dst'	INT(8) NOT NULL DEFAULT 0,
+    	'peer_as_src'	INT(8) NOT NULL DEFAULT 0,
+    	'peer_dst_ip'	TEXT NOT NULL DEFAULT '0.0.0.0',
+    	PRIMARY KEY(tag,class_id,mac_src,mac_dst,vlan,as_src,as_dst,ip_src,ip_dst,mask_dst,port_src,port_dst,ip_proto,tos,stamp_inserted)
+    );
+    CREATE TABLE 'variables' (
+    	'name'	TEXT,
+    	'content'	TEXT,
+    	'category'	TEXT,
+    	PRIMARY KEY(name,category)
+    );
+
+    CREATE INDEX acct_idx1 ON acct(stamp_updated);
+    CREATE INDEX acct_idx2 ON acct(stamp_updated, as_dst);
+    CREATE INDEX acct_idx3 ON acct(stamp_updated, ip_dst, mask_dst);
+
+    CREATE INDEX variables_idx1 ON variables(category);
+    EOF
+
+Finally, it's just a matter of starting pmacct::
+
+    $ sudo /spotify/pmacct-1.5.1/sbin/nfacctd -f /spotify/pmacct-1.5.1/etc/pmacct.conf
