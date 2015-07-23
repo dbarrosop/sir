@@ -1,11 +1,11 @@
-==================
-Configuring pmacct
-==================
+===============
+Enabling pmacct
+===============
 
-First, we have to install `pmacct <http://www.pmacct.net/>`_ with JSON and BGP support. Compiling pmacct for your specific distro is out of the scope of this document but you can find below some instructions on how to do it for a debian based distro.
+First, we have to install `pmacct <http://www.pmacct.net/>`_ with JSON, IPv6 and SQLite3 support. Compiling pmacct for your specific distro is out of the scope of this document but you can find below some instructions on how to do it for a debian based distro.
 
-Installing dependancies
------------------------
+Compiling pmacct
+----------------
 
 These are some of the dependancies that might need::
 
@@ -131,9 +131,45 @@ And this is how to compile pmacct::
     creating src/isis/Makefile
     creating src/bmp/Makefile
     dbarroso@lon3-nwmonitor-a2:~/pmacct-1.5.1$ make
-    ...
+    ... (output omitted for clarity)
     dbarroso@lon3-nwmonitor-a2:~/pmacct-1.5.1$ sudo make install
-    ...
+    ... (output omitted for clarity)
     dbarroso@lon3-nwmonitor-a2:~/pmacct-1.5.1$ cd /spotify/pmacct-1.5.1/
     dbarroso@lon3-nwmonitor-a2:/spotify/pmacct-1.5.1$ ls
     bin  sbin
+
+Configuring pmacct
+------------------
+
+To configure pmacct you will need to know the IP the ASR will use as source IP for both netflow and BGP. Once you know, paste the following configuration in the file ``/spotify/pmacct-1.5.0/etc/pmacct.conf``::
+
+    daemonize: true
+
+    plugins: sqlite3[simple]
+
+    sql_db[simple]: /spotify/pmacct-1.5.0/output/pmacct.db
+    sql_refresh_time[simple]: 3600
+    sql_history[simple]: 60m
+    sql_history_roundoff[simple]: h
+    sql_table[simple]: acct
+    sql_table_version[simple]: 9
+
+    aggregate: dst_net, dst_mask, dst_as
+
+    bgp_daemon: true
+    bgp_daemon_ip: $ASR_SRC_IP
+    bgp_daemon_max_peers: 2
+    bgp_table_dump_file: /spotify/pmacct-1.5.0/output/bgp-$peer_src_ip-%Y_%m_%dT%H_%M_%S.txt
+    bgp_table_dump_refresh_time: 3600
+
+    nfacctd_as_new: bgp
+    nfacctd_net: bgp
+    nfacctd_port: 9999
+    nfacctd_ip: $ASR_SRC_IP
+    nfacctd_time_new: true
+
+.. warning:: Don't forget to replace $ASR_SRC_IP with the IP your ASR will use for both netflow and BGP.
+
+Now it's just a matter of starting pmacct::
+
+    sudo /spotify/pmacct-1.5.0/sbin/nfacctd -f /spotify/pmacct-1.5.0/etc/pmacct.conf
