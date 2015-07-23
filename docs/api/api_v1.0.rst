@@ -13,25 +13,26 @@ When reading this documentation you will find variables in two forms:
 
 * **<variable>**: Variables that are between ``<>`` have to be replaced by their values in the URL. For example, ``/api/v1.0/variables/categories/<category>`` will turn into ``/api/v1.0/variables/categories/my_category``.
 * **variable**: Variables that are NOT enclosed by ``<>``:
- * If the method is a GET variables that are between <> have to be replaced by their values in the URL. For example, ``/api/v1.0/variables/categories/<category>`` will turn into ``/api/v1.0/variables/categories/my_category``.
- * If the method is a POST or a PUT variables variables that are between <> have to sent as a JSON object.
+ * If the method is a GET variables that are between ``<>`` have to be replaced by their values in the URL. For example, ``/api/v1.0/variables/categories/<category>`` will turn into ``/api/v1.0/variables/categories/my_category``.
+ * If the method is a POST or a PUT variables variables that are between ``<>`` have to be sent as a JSON object.
 
 Responses
 *********
 
 All the responses from the agent will be in JSON format and will include three sections:
 
-* **meta**: Meta information about the response. For example, ***request_time***, ***length*** of the response or if there was any ***error***.
+* **meta**: Meta information about the response. For example, *request_time*, *length* of the response or if there was any *error*.
 * **parameters**: The parameters used for the call.
 * **result**: The result of the call or a description of the error if there was any.
 
-For example, for the following call you will get the following response:
+For example, for the following call;
 
 .. code-block:: html
     :linenos:
 
     /api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
 
+You will get the following response:
 
 .. code-block:: json
     :linenos:
@@ -380,3 +381,93 @@ ________
     :linenos:
 
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
+
+Pmacct Endpoint
+***************
+
+/api/v1.0/pmacct/dates
+======================
+
+GET
+---
+
+Description
+___________
+
+Retrieves all the available dates in the system.
+
+Arguments
+_________
+
+Returns
+_______
+
+A list of all the available dates in the system
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/pmacct/dates
+
+/api/v1.0/pmacct/flows
+======================
+
+GET
+---
+
+Description
+___________
+
+Retrieves all the available dates in the system.
+
+Arguments
+_________
+
+* **start_time**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``. Starting time of the range.
+* **end_time**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``. Ending time of the range.
+
+Returns
+_______
+
+A list of all the available dates in the system
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/pmacct/flows?limit_prefixes=10&start_time=2015-07-14T14:00&end_time=2015-07-14T14:01
+    http://127.0.0.1:5000/api/v1.0/pmacct/flows?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+
+/api/v1.0/pmacct/bgp_prefixes
+=============================
+
+GET
+---
+
+Description
+___________
+
+Retrieves all the BGP prefixes in the system.
+
+Arguments
+_________
+
+* **date**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+
+Returns
+_______
+
+A list of all the available BGP prefixes in the system
+
+Examples
+________
+
+.. code-block:: html
+    :linenos:
+
+    http://127.0.0.1:5000/api/v1.0/pmacct/bgp_prefixes?date=2015-07-16T11:00:01
