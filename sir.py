@@ -107,10 +107,6 @@ def api_help():
     return api.views.start_page(request)
 
 
-@app.route('/api/v1.0/methods')
-def api_capabilities():
-    return jsonify(api.api.methods(request))
-
 ###################
 ###################
 #  VARIABLES  #####
