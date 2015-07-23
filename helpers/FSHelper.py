@@ -52,3 +52,20 @@ class FSHelper:
                             if ipp.prefixlen >= other_ipp.prefixlen:
                                 prefixes[n].append(data)
         return prefixes
+
+    def find_prefixes_asn(self, asn, date):
+        date = date.replace('-', '_').replace(':', '_')
+
+        prefixes = dict()
+
+        for n in self.neighbors:
+            prefixes[n] = list()
+            f = 'bgp-{}-{}'.format(n, date).replace('.', '_')
+
+            with open('{}/{}.txt'.format(self.base_path, f)) as f:
+                for line in f:
+                    if asn in line:
+                        data = json.loads(line)
+                        if asn in data['as_path'].split(' '):
+                            prefixes[n].append(data)
+        return prefixes

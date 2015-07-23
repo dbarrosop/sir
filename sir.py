@@ -109,6 +109,11 @@ def analytics_find_prefix(prefix, pl):
     return jsonify(analytics.api.find_prefix(request, u'{}/{}'.format(prefix, pl)))
 
 
+@app.route('/api/v1.0/analytics/find_prefixes_asn/<asn>', methods=['GET'])
+def analytics_find_prefixes_asn(asn):
+    return jsonify(analytics.api.find_prefixes_asn(request, asn))
+
+
 ###################
 ###################
 #  API  ###########

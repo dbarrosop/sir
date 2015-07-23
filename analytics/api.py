@@ -52,3 +52,16 @@ def find_prefix(request, prefix):
         'date': date,
     }
     return helpers.api.build_api_response(result, error=False, **parameters)
+
+
+def find_prefixes_asn(request, asn):
+    # curl http://127.0.0.1:5000/api/v1.0/top_asns\?start_time=2015-07-13T14:00\&end_time=2015-07-14T14:00
+    fs = getattr(g, 'fs')
+    date = request.args.get('date')
+    print date
+    result = fs.find_prefixes_asn(asn, date)
+    parameters = {
+        'asn': asn,
+        'date': date,
+    }
+    return helpers.api.build_api_response(result, error=False, **parameters)

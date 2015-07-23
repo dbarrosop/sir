@@ -69,6 +69,70 @@ Endpoints
 Analytics Endpoint
 ******************
 
+/api/v1.0/analytics/top_prefixes
+================================
+
+GET
+---
+
+Description
+___________
+
+Retrieves TOP prefixes sorted by the amount of bytes that they consumed during the specified period of time.
+
+Arguments
+_________
+
+* **start_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Starting time of the range.
+* **end_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Ending time of the range.
+* **limit_prefixes**: Optional. Number of top prefixes to retrieve.
+* **net_masks**: Optional. List of prefix lengths to filter in or out.
+* **exclude_net_masks**: Optional. If set to any value it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
+
+Returns
+_______
+
+A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+
+Examples
+--------
+
+::
+
+    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
+    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24&exclude_net_masks=1
+
+
+/api/v1.0/analytics/top_asns
+============================
+
+GET
+---
+
+Description
+___________
+
+Retrieves TOP ASN's sorted by the amount of bytes that they consumed during the specified period of time.
+
+Arguments
+_________
+
+* **start_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Starting time of the range.
+* **end_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Ending time of the range.
+
+Returns
+_______
+
+A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+
+Examples
+--------
+
+::
+
+    http://127.0.0.1:5000/api/v1.0/analytics/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+
 /api/v1.0/analytics/find_prefix/<prefix>/<prefix_length>
 ========================================================
 
@@ -134,15 +198,10 @@ Examples
           }
         ]
       }
-    }%
+    }
 
-
-
-
-
-
-/api/v1.0/analytics/top_prefixes
-================================
+/api/v1.0/analytics/find_prefixes_asn/<asn>
+===========================================
 
 GET
 ---
@@ -150,60 +209,82 @@ GET
 Description
 ___________
 
-Retrieves TOP prefixes sorted by the amount of bytes that they consumed during the specified period of time.
+Finds all prefixes in the system that traverses or originates in ``<asn>``
 
 Arguments
 _________
 
-* **start_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Starting time of the range.
-* **end_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Ending time of the range.
-* **limit_prefixes**: Optional. Number of top prefixes to retrieve.
-* **net_masks**: Optional. List of prefix lengths to filter in or out.
-* **exclude_net_masks**: Optional. If set to any value it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
+* **<<asn>>**: Mandatory. ASN you want to query.
+* **date**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
 
 Returns
 _______
 
-A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
+It will return a dictionary where keys are the IP's of the BGP peers peering with SIR. Each one will have a list of prefixes that traverses or originates in ``<asn>``
 
 Examples
 --------
 
 ::
 
-    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
-    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
-    http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24&exclude_net_masks=1
-
-
-/api/v1.0/analytics/top_asns
-============================
-
-GET
----
-
-Description
-___________
-
-Retrieves TOP ASN's sorted by the amount of bytes that they consumed during the specified period of time.
-
-Arguments
-_________
-
-* **start_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Starting time of the range.
-* **end_time**: Mandatory. Datetime in unicode string following the format ``%Y-%m-%dT%H:%M:%S``. Ending time of the range.
-
-Returns
-_______
-
-A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of bytes consumed during the specified time.
-
-Examples
---------
-
-::
-
-    http://127.0.0.1:5000/api/v1.0/analytics/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
+    curl http://127.0.0.1:5000/api/v1.0/analytics/find_prefixes_asn/345\?date\=2015-07-22T05:00:01
+    {
+      "meta": {
+        "error": false,
+        "length": 2,
+        "request_time": 1.15757
+      },
+      "parameters": {
+        "asn": "345",
+        "date": "2015-07-22T05:00:01"
+      },
+      "result": {
+        "193.182.244.0": [
+          {
+            "as_path": "1299 209 721 27064 575 306 345",
+            "bgp_nexthop": "62.115.48.29",
+            "comms": "1299:25000 8403:100 8403:2001",
+            "event_type": "dump",
+            "ip_prefix": "55.3.0.0/16",
+            "local_pref": 100,
+            "origin": 0,
+            "peer_ip_src": "193.182.244.0"
+          },
+          {
+            "as_path": "1299 209 721 27065 6025 345",
+            "bgp_nexthop": "62.115.48.29",
+            "comms": "1299:20000 8403:100 8403:2001",
+            "event_type": "dump",
+            "ip_prefix": "156.112.250.0/24",
+            "local_pref": 100,
+            "origin": 0,
+            "peer_ip_src": "193.182.244.0"
+          }
+        ],
+        "193.182.244.64": [
+          {
+            "as_path": "1299 209 721 27064 575 306 345",
+            "bgp_nexthop": "80.239.132.249",
+            "comms": "1299:25000 8403:100 8403:2001",
+            "event_type": "dump",
+            "ip_prefix": "55.3.0.0/16",
+            "local_pref": 100,
+            "origin": 0,
+            "peer_ip_src": "193.182.244.64"
+          },
+          {
+            "as_path": "1299 209 721 27065 6025 345",
+            "bgp_nexthop": "80.239.132.249",
+            "comms": "1299:20000 8403:100 8403:2001",
+            "event_type": "dump",
+            "ip_prefix": "156.112.250.0/24",
+            "local_pref": 100,
+            "origin": 0,
+            "peer_ip_src": "193.182.244.64"
+          }
+        ]
+      }
+    }
 
 Variables Endpoint
 ******************
