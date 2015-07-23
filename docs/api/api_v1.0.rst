@@ -440,6 +440,8 @@ ___________
 
 Retrieves all the BGP prefixes in the system.
 
+.. warning:: Do it only if need it. If you have the full feed this can return hundreds of MB of data.
+
 Arguments
 _________
 
