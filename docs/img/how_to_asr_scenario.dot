@@ -1,0 +1,30 @@
+digraph SIR {
+    graph [truecolor=True, bgcolor="#ffffff5f"]
+    node [shape="box", style="rounded,filled", fontname="Source Code Pro", fontsize=12]
+    edge [fontname="Source Code Pro", fontsize=10, style=dashed]
+
+    subgraph network {
+      IXP[label="Exchange Point", fillcolor="#F5F5DC"];
+      Transit[fillcolor="#FFDEAD"];
+      ASR[label="ASR", fillcolor="#5F9EA0", height=0.75, width=0.75];
+
+      Transit -> ASR[label="0.0.0.0/0", dir=none, style=solid];
+      IXP -> ASR[label="lots of\nprefixes", dir=none, style=solid];
+    }
+
+    subgraph cluster_1 {
+      node [shape="component"]
+      pmacct;
+      sir;
+    }
+    ASR -> pmacct[label="netflow &\nBGP"]
+    pmacct -> sir[label="Flows aggr.\nper prefix\n&BGP"]
+
+    subgraph external {
+      node [shape="ellipse"];
+      peering_manager[fillcolor="#FFB6C1"];
+
+      peering_manager -> sir[label="gather data"];
+    }
+
+}
