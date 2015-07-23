@@ -209,25 +209,26 @@ GET
 Description
 ___________
 
-Finds all prefixes in the system that traverses or originates in ``<asn>``
+Finds all prefixes in the system that traverses and/or originates in ``<asn>``
 
 Arguments
 _________
 
 * **<<asn>>**: Mandatory. ASN you want to query.
 * **date**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+* **origin_only**: Optional. If set to any value it will return only prefixes that originate in ``<asn>``.
 
 Returns
 _______
 
-It will return a dictionary where keys are the IP's of the BGP peers peering with SIR. Each one will have a list of prefixes that traverses or originates in ``<asn>``
+It will return a dictionary where keys are the IP's of the BGP peers peering with SIR. Each one will have a list of prefixes that traverses and/or originates in ``<asn>``
 
 Examples
 --------
 
 ::
 
-    curl http://127.0.0.1:5000/api/v1.0/analytics/find_prefixes_asn/345\?date\=2015-07-22T05:00:01
+    curl http://127.0.0.1:5000/api/v1.0/analytics/find_prefixes_asn/345\?date\=2015-07-22T05:00:01\&origin_only=1
     {
       "meta": {
         "error": false,
@@ -236,6 +237,7 @@ Examples
       },
       "parameters": {
         "asn": "345",
+        "origin_only": "1",
         "date": "2015-07-22T05:00:01"
       },
       "result": {

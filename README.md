@@ -11,8 +11,8 @@ The agent will expose a Web UI and an API that will allow you do things like:
 * Store and retrieve arbitrary data.
 * Get raw BGP from your router.
 * Get raw flow data from your router.
-* Check if you are peering with a particular AS (WIP).
-* Check if a particular network is present in the router (WIP).
+* Look for all the prefixes that traverses or originates in a particular ASN.
+* Check all the prefixes in the router that allows you to reach certain prefixes or IP.
 
 Applications
 ============

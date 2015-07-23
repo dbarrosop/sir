@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO Check if you are peering with a particular AS (WIP).
 # TODO Rename analytics for peering
 # TODO Local Architecture
 # TODO Features, README, use cases, etc...

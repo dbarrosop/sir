@@ -53,7 +53,7 @@ class FSHelper:
                                 prefixes[n].append(data)
         return prefixes
 
-    def find_prefixes_asn(self, asn, date):
+    def find_prefixes_asn(self, asn, date, originate_only=False):
         date = date.replace('-', '_').replace(':', '_')
 
         prefixes = dict()
@@ -66,6 +66,11 @@ class FSHelper:
                 for line in f:
                     if asn in line:
                         data = json.loads(line)
-                        if asn in data['as_path'].split(' '):
-                            prefixes[n].append(data)
+                        as_path = data['as_path'].split(' ')
+                        if originate_only:
+                            if asn == as_path[-1]:
+                                prefixes[n].append(data)
+                        else:
+                            if asn in as_path:
+                                prefixes[n].append(data)
         return prefixes
