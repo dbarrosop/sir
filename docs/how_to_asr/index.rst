@@ -7,8 +7,4 @@ How To: ASR's
 
 
    scenario
-   installing
    pmacct
-   sir
-   running
-   simulating
