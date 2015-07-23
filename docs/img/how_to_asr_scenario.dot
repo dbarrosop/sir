@@ -24,7 +24,7 @@ digraph SIR {
       node [shape="ellipse"];
       peering_manager[fillcolor="#FFB6C1"];
 
-      peering_manager -> sir[label="gather data"];
+      peering_manager -> sir[label="gather data\nvia the API."];
     }
 
 }
