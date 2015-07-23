@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO Check if you are peering with a particular AS (WIP).
+# TODO Check if a particular network is present in the router (WIP).
 # TODO Expose raw flows, delete flows
 # TODO Expose raw BGP, delete raw BGP files
 # TODO UI to Add, Edit, delete variables

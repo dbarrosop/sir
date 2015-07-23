@@ -10,4 +10,21 @@
 {% import 'includes/graphs.html' as graphs %}
 {{ graphs.top_ten(time_series_times, time_series) }}
 
+<table class='data'>
+  <tr>
+    <th>datetime</th>
+    <th>total_bytes</th>
+    <th>offloaded_bytes</th>
+    <th>%</th>
+  </tr>
+
+  {% for t in time_series['offloaded_bytes'] %}
+  <tr>
+    <td>{{ time_series_times[loop.index0] }}</td>
+    <td>{{ time_series['total_bytes'][loop.index0] }}</td>
+    <td>{{ time_series['offloaded_bytes'][loop.index0] }}</td>
+    <td>{{ time_series['offloaded_bytes'][loop.index0]*100/time_series['total_bytes'][loop.index0] }}</td>
+  </tr>
+  {% endfor %}
+
 {% include 'includes/footer.html' %}
