@@ -25,7 +25,7 @@ All the responses from the agent will be in JSON format and will include three s
 * **parameters**: The parameters used for the call.
 * **result**: The result of the call or a description of the error if there was any.
 
-For example, for the following call;
+For example, for the following call:
 
 .. code-block:: html
     :linenos:
@@ -187,7 +187,7 @@ _________
 * **content**: Content of the variable.
 * **category**: Category of the variable.
 * **name**: Name of the variable.
-* **extra_vars**: Use this field to add extra data to your variable. It is recommended to use a JSON string
+* **extra_vars**: Use this field to add extra data to your variable. It is recommended to use a JSON string.
 
 Returns
 _______
@@ -238,7 +238,7 @@ Retrieves all the variables the belong to <category> in the system.
 Arguments
 _________
 
-* **<category>**: Category you want to query
+* **<category>**: Category you want to query.
 
 Returns
 _______
@@ -372,7 +372,7 @@ _________
 Returns
 _______
 
-An empty list
+An empty list.
 
 Examples
 ________
@@ -402,7 +402,7 @@ _________
 Returns
 _______
 
-A list of all the available dates in the system
+A list of all the available dates in the system.
 
 Examples
 ________
@@ -432,7 +432,7 @@ _________
 Returns
 _______
 
-A list of all the available dates in the system
+A list of all the available dates in the system.
 
 Examples
 ________
@@ -462,7 +462,7 @@ _________
 Returns
 _______
 
-A list of all the available BGP prefixes in the system
+A list of all the available BGP prefixes in the system.
 
 Examples
 ________
