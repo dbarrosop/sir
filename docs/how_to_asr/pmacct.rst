@@ -224,7 +224,7 @@ Configuring the ASR
 
 Configuring the ASR is relatively easy, you only have to configure netflow to send the flows that you want to process and BGP to send the prefixes you want to use for the aggregation. Here is an example::
 
-    flow exporter-map PMACCT
+    flow exporter-map SIR
      version v9
       options interface-table timeout 60
       template data timeout 60
@@ -233,17 +233,17 @@ Configuring the ASR is relatively easy, you only have to configure netflow to se
      source Loopback0
      destination $PMACCT_IP
     !
-    flow monitor-map PMACCT-FMM
+    flow monitor-map SIR-FMM
      record ipv4
-     exporter PMACCT
+     exporter SIR
      cache timeout active 60
      cache timeout inactive 15
     !
-    sampler-map PMACCT
+    sampler-map SIR
      random 1 out-of 10000
 
     interface HundredGigE0/0/0/1
-     flow ipv4 monitor PMACCT-FMM sampler NFSEN egress
+     flow ipv4 monitor SIR-FMM sampler NFSEN egress
 
     route-policy PASS
       pass
@@ -256,7 +256,7 @@ Configuring the ASR is relatively easy, you only have to configure netflow to se
     router bgp $AS
       neighbor $PMACCT_IP
        remote-as $AS
-       description sto3-nwmonitor-a2
+       description SIR
        update-source Loopback0
        address-family ipv4 unicast
         route-policy BLOCK in
