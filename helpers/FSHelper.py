@@ -6,8 +6,7 @@ import json
 class FSHelper:
     def __init__(self, base_path='./data'):
         self.base_path = base_path
-        files = glob.glob('{}/bgp-*'.format(self.base_path))
-
+        files = [f.split('/')[-1] for f in glob.glob('{}/bgp-*'.format(self.base_path))]
         self.neighbors = set([n.split('-')[1].replace('_', '.') for n in files])
         dates = sorted(set([n.split('-')[2].replace('.txt', '') for n in files]))
         self.dates = [datetime.strptime(d, '%Y_%m_%dT%H_%M_%S') for d in dates]

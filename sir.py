@@ -1,3 +1,4 @@
+# TODO Make sure end_date works fine and it´s included in queries
 # TODO Build first app
 # TODO Update variables to only have extra_vars
 # TODO Expose raw flows, delete flows
@@ -15,7 +16,6 @@ import variables.views
 import analytics.api
 import analytics.views
 
-import api.api
 import api.views
 
 import pmacct_data.api
@@ -163,8 +163,8 @@ def pmacct_data_get_flows():
 
 @app.route('/api/v1.0/pmacct/bgp_prefixes', methods=['GET'])
 def pmacct_get_bgp_prefixes():
-    return jsonify(pmacct_data.api.get_bgp_prefixes(request))
+    return jsonify(pmacct_data.api.get_bgp_prefixes(request, app.config['BGP_FOLDER']))
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(app.config['BIND_IP'], app.config['PORT'])

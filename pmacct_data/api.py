@@ -15,8 +15,8 @@ def get_flows(request):
     flows = db.get_flows(start_time, end_time)
     return helpers.api.build_api_response(flows, error=False, start_time=start_time, end_time=end_time)
 
-def get_bgp_prefixes(request):
-    fs = FSHelper()
+def get_bgp_prefixes(request, bgp_folder):
+    fs = FSHelper(bgp_folder)
     date = request.args.get('date')
     bgp_prefixes = fs.get_bgp_prefixes(date)
     return helpers.api.build_api_response(bgp_prefixes, error=False, date=date)

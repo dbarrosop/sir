@@ -5,9 +5,12 @@ from flask import g
 def _init_context_dates(db, request):
     context = dict()
     dates = db.get_dates()
+
+    starting_time = min(len(dates), 25)
+
     context['avail_start_time'] = dates[0].strftime('%Y-%m-%dT%H:%M')
     context['avail_end_time'] = dates[-1].strftime('%Y-%m-%dT%H:%M')
-    context['start_time'] = request.form.get('start_time', dates[-25].strftime('%Y-%m-%dT%H:%M'))
+    context['start_time'] = request.form.get('start_time', dates[-starting_time].strftime('%Y-%m-%dT%H:%M'))
     context['end_time'] = request.form.get('end_time', context['avail_end_time'])
     return context
 
