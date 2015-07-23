@@ -7,7 +7,7 @@ First, we have to install `pmacct <http://www.pmacct.net/>`_ with JSON, IPv6 and
 Compiling pmacct
 ----------------
 
-These are some of the dependancies that might need::
+These are some of the dependancies that you might need::
 
     apt-get install libpcap-dev libsqlite3-dev libjansson-dev zlib1g-dev
 
