@@ -9,4 +9,4 @@ We can't run code in the ASR's so we are going to deploy the agent on a linux ma
 .. image:: ../img/how_to_asr_scenario.png
     :alt: how_to_asr_scenario
 
-Per se this is not very interesting, however, if you have a large network with several POP's having this agent on each location would give you a nice way of gathering and aggregating data.
+Per se this is not very interesting, however, if you have a large network with several POPs, having this agent on each location would give you a nice way of gathering and aggregating data.
