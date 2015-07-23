@@ -168,9 +168,9 @@ class SQLite3Helper:
 
         return [r['sum_bytes'] for r in self._execute_query(query, [start_time, end_time, ip_dst, mask_dst])]
 
-    def put_variables(self, name, content, category, extra_vars):
-        query = ''' INSERT INTO variables VALUES (?, ?, ?, ?); '''
-        self._execute_query(query, [name, content, category, str(extra_vars)], commit=True)
+    def put_variables(self, name, content, category):
+        query = ''' INSERT INTO variables VALUES (?, ?, ?); '''
+        self._execute_query(query, [name, content, category], commit=True)
 
     def get_variables(self):
         query = ''' SELECT * FROM variables '''
@@ -180,12 +180,12 @@ class SQLite3Helper:
         query = ''' SELECT * FROM variables WHERE category = ? AND name = ?; '''
         return self._execute_query(query, [category, name])
 
-    def update_variable(self, old_name, old_category, name, content, category, extra_vars):
+    def update_variable(self, old_name, old_category, name, content, category):
         query = ''' UPDATE variables
-                    SET name = ?, content = ?, category = ?, extra_vars = ?
+                    SET name = ?, content = ?, category = ?
                     WHERE name = ? AND category = ?;
                 '''
-        self._execute_query(query, [name, content, category, str(extra_vars), old_name, old_category], commit=True)
+        self._execute_query(query, [name, content, category, old_name, old_category], commit=True)
 
     def delete_variable(self, category, name):
         query = ''' DELETE FROM variables WHERE name = ? AND category = ?;
