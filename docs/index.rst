@@ -14,7 +14,6 @@ table to get the full BGP feed from your Service Provider or to peer with other 
    :maxdepth: 2
 
    users_guide/index
-   how_to_simple/index
    how_to_asr/index
    how_to_eos/index
    api/api_v1.0

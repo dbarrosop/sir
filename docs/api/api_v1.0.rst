@@ -25,10 +25,7 @@ All the responses from the agent will be in JSON format and will include three s
 * **parameters**: The parameters used for the call.
 * **result**: The result of the call or a description of the error if there was any.
 
-For example, for the following call:
-
-.. code-block:: html
-    :linenos:
+For example, for the following call::
 
     /api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
 
@@ -100,9 +97,7 @@ A list of prefixes sorted by sum_bytes. The attribute sum_bytes is the amount of
 Examples
 --------
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
     http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24
     http://127.0.0.1:5000/api/v1.0/analytics/top_prefixes?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00&net_masks=20,24&exclude_net_masks=1
@@ -133,9 +128,7 @@ A list of ASN's sorted by sum_bytes. The attribute sum_bytes is the amount of by
 Examples
 --------
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/analytics/top_asns?start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
 
 Variables Endpoint
@@ -163,9 +156,7 @@ A list of all the variables.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/variables
 
 POST
@@ -176,9 +167,7 @@ ___________
 
 You can create a variable from the CLI with curl like this:
 
-.. code-block:: html
-    :linenos:
-
+::
     curl -i -H "Content-Type: application/json" -X POST -d '{"name": "test_var", "content": "whatever", "category": "development", "extra_vars": {"ads": "qwe", "asd": "zxc"}}' http://127.0.0.1:5000/api/v1.0/variables
 
 Arguments
@@ -219,9 +208,7 @@ A list of all the categories.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/variables/categories
 
 /api/v1.0/variables/categories/<category>
@@ -248,9 +235,7 @@ A list of variables belonging to <category>.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>
 
 /api/v1.0/variables/categories/<category>/<name>
@@ -278,9 +263,7 @@ A list of variables belonging to <category>.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
 
 PUT
@@ -333,9 +316,7 @@ The variable with the new data.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
 
 DELETE
@@ -377,9 +358,7 @@ An empty list.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/variables/categories/<category>/<name>
 
 Pmacct Endpoint
@@ -407,9 +386,7 @@ A list of all the available dates in the system.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/pmacct/dates
 
 /api/v1.0/pmacct/flows
@@ -437,9 +414,7 @@ A list of all the available dates in the system.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/pmacct/flows?limit_prefixes=10&start_time=2015-07-14T14:00&end_time=2015-07-14T14:01
     http://127.0.0.1:5000/api/v1.0/pmacct/flows?limit_prefixes=10&start_time=2015-07-13T14:00&end_time=2015-07-14T14:00
 
@@ -467,7 +442,5 @@ A list of all the available BGP prefixes in the system.
 Examples
 ________
 
-.. code-block:: html
-    :linenos:
-
+::
     http://127.0.0.1:5000/api/v1.0/pmacct/bgp_prefixes?date=2015-07-16T11:00:01
