@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO UI for searching
 # TODO Local Architecture
 # TODO Features, README, use cases, etc...
 # TODO Global Architecture
@@ -9,6 +8,7 @@
 # TODO UI to Add, Edit, delete variables
 # TODO metrics
 # TODO Improve building the response of the API and documentation
+# TODO Cache ASNs from peering db
 # TODO Catch errors in API
 # TODO Catch errors in logging
 # TODO Catch errors in authentication???

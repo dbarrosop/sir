@@ -11,8 +11,9 @@ example, instruct your router which prefixes to install, allowing you to use a s
 table to get the full BGP feed from your Service Provider or to peer with other people.
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 2
 
-   how_to_asr/index
-   how_to_eos/index
-   api/api_v1.0
+  sir/index 
+  how_to_asr/index
+  how_to_eos/index
+  api/api_v1.0
