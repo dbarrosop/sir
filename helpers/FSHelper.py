@@ -32,7 +32,7 @@ class FSHelper:
 
     def find_prefix(self, prefix, date):
         ip_prefix_str = unicode(prefix)
-        search_string = '"{}.'.format(ip_prefix_str.split('.')[0])
+        search_string = '"ip_prefix": "{}.'.format(ip_prefix_str.split('.')[0])
         ipp = ipaddress.ip_network(ip_prefix_str)
 
         date = date.replace('-', '_').replace(':', '_')
