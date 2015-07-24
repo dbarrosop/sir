@@ -1,0 +1,29 @@
+digraph SIR {
+    graph [truecolor=True, bgcolor="#ffffff5f"]
+    node [shape="ellipse", style="rounded,filled", fontname="Source Code Pro", fontsize=12]
+    edge [fontname="Source Code Pro", fontsize=10, style=dashed]
+
+    subgraph network {
+      node [shape="box"]
+      router00[label="router00", fillcolor="#5F9EA0", height=0.75, width=0.75];
+    }
+
+    subgraph cluster_1 {
+      node [shape="component"]
+      pmacct;
+      SIR;
+    }
+
+    apps[fillcolor="#FFB6C1"];
+    user[fillcolor="#FFD8E4"];
+    monitoring_tool[fillcolor="#33D8E9"];
+
+
+    router00 -> pmacct[label="netflow &\nBGP"]
+    pmacct -> SIR[label="Flows aggr.\nper prefix\n& BGP"]
+
+    SIR -> apps [label="gathers data\nvia the API"];
+    SIR -> user [label="gathers data\nvia the\nWebUI/API"];
+
+    monitoring_tool -> SIR[label="Store metrics\nfor apps\nconsumption"];
+}

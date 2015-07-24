@@ -1,6 +1,6 @@
-*************************
-SDN Internet Router (SIR)
-*************************
+************
+Architecture
+************
 
 .. toctree::
   :maxdepth: 2

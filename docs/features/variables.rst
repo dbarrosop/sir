@@ -2,9 +2,6 @@
 Variables
 #########
 
-Variables
----------
-
 You can store in the agent and retrieve later any arbitrary data that you want. This is useful if you plan to write
 applications that consumes data via the API to perform some actions. For example, in the example below you can see
 a variable called ``fib_optimizer``. The data in the content is the actual configuration for that application. The
