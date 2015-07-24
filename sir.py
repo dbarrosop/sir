@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO Local Architecture
-# TODO Features, README, use cases, etc...
-# TODO Global Architecture
 # TODO Expose raw flows, delete flows
 # TODO Expose raw BGP, delete raw BGP files
 # TODO UI to Add, Edit, delete variables

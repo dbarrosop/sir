@@ -10,7 +10,7 @@ and take global decisions.
     :alt: global_architecture
 
 
-You could do things like:
+Once you have a global view of your global network and your traffic patterns you can do things like:
 
 * Send users to a location where you know you are peering the network that user belongs to.
 * Redirect users to another POP where his/her network is reachable.
