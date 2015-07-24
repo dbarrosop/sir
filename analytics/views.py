@@ -90,3 +90,39 @@ def simulate(request):
         context['time_series'] = time_series
 
     return render_template('analytics/simulate.html', **context)
+
+
+def find_prefix(request):
+    fs = getattr(g, 'fs', None)
+    context = dict()
+    context['available_dates'] = [d.strftime('%Y-%m-%dT%H:%M:01') for d in fs.get_available_dates()]
+
+    context['query_name'] = 'Prefix'
+    if request.method == 'GET':
+        context['query'] = ''
+        context['prefixes'] = dict()
+        context['date'] = context['available_dates'][-1]
+    elif request.method == 'POST':
+        context['date'] = request.form.get('date')
+        context['query'] = request.form.get('query')
+        context['prefixes'] = fs.find_prefix(context['query'], context['date'])
+    return render_template('analytics/find_prefix.html', **context)
+
+
+def find_prefix_asn(request):
+    fs = getattr(g, 'fs', None)
+    context = dict()
+    context['available_dates'] = [d.strftime('%Y-%m-%dT%H:%M:01') for d in fs.get_available_dates()]
+
+    context['query_name'] = 'ASN'
+    if request.method == 'GET':
+        context['query'] = ''
+        context['prefixes'] = dict()
+        context['origin_only'] = True
+        context['date'] = context['available_dates'][-1]
+    elif request.method == 'POST':
+        context['date'] = request.form.get('date')        
+        context['query'] = request.form.get('query')
+        context['origin_only'] = eval(request.form.get('origin_only', True))
+        context['prefixes'] = fs.find_prefixes_asn(context['query'], context['date'], context['origin_only'])
+    return render_template('analytics/find_prefix.html', **context)

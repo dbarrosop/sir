@@ -12,6 +12,9 @@ class FSHelper:
         dates = sorted(set([n.split('-')[2].replace('.txt', '') for n in files]))
         self.dates = [datetime.strptime(d, '%Y_%m_%dT%H_%M_%S') for d in dates]
 
+    def get_available_dates(self):
+        return self.dates
+
     def get_bgp_prefixes(self, date):
         date = date.replace('-', '_').replace(':', '_')
 
@@ -32,7 +35,7 @@ class FSHelper:
 
     def find_prefix(self, prefix, date):
         ip_prefix_str = unicode(prefix)
-        search_string = '"{}'.format(ip_prefix_str.split('.')[0])
+        search_string = '"{}.'.format(ip_prefix_str.split('.')[0])
         ipp = ipaddress.ip_network(ip_prefix_str)
 
         date = date.replace('-', '_').replace(':', '_')
