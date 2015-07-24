@@ -25,11 +25,8 @@ class FSHelper:
             f = 'bgp-{}-{}'.format(n, date).replace('.', '_')
 
             with open('{}/{}.txt'.format(self.base_path, f)) as data_file:
-                for line in data_file.readlines():
-                    data = json.loads(line)
-
-                    if data['event_type'] == 'dump':
-                        prefixes[n][data['ip_prefix']] = data
+                prefixes[n] = data_file.read()
+                data_file.close()
 
         return prefixes
 
