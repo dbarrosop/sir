@@ -37,4 +37,4 @@ Now you can start SIR and access it on the ``IP:PORT`` specified above.::
 
 Finally, you should look into exposing SIR via some application server. you can read more about it in the following link:
 
- * `<http://flask.pocoo.org/docs/0.10/deploying/wsgi-standalone/>`_
+ * `<http://flask.pocoo.org/docs/0.10/deploying/>`_
