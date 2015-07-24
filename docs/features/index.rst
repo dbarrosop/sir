@@ -11,3 +11,4 @@ you can do something with the API but not with the WebUI.
   :maxdepth: 2
 
   analytics
+  variables
