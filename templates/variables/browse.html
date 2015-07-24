@@ -20,7 +20,6 @@
     <th>category</th>
     <th>name</th>
     <th>content</th>
-    <th>extra_vars</th>
     {#<th>action</th>#}
   </tr>
   {% for variable in variables %}
@@ -28,7 +27,6 @@
     <td>{{ variable['category'] }}</td>
     <td>{{ variable['name'] }}</td>
     <td>{{ variable['content'] }}</td>
-    <td><pre><code>{{ variable['extra_vars'] }}</code></pre></td>
     {#<td><a href="{{ url_for('edit_variable', category=variable['category'], name=variable['name'])}}">Edit</a>|Delete</td>#}
   </tr>
 {% endfor%}
