@@ -14,14 +14,16 @@ This aggregated data could be sent to hadoop:
     :align: center
     :alt: sdcdn
 
-Once the data is in Hadoop you could try to analyze your global traffic pattern and redistribute users to:
+You could also add data from other sources. Things like:
+
+* Cost of each link.
+* Latency.
+* Load of each site.
+* Reliability.
+
+Once all the data is in Hadoop you could try to analyze your global traffic pattern and metrics and redistribute
+users to:
 
 * Minimize transit costs.
 * Maximize capacity usage.
 * Improve user experience.
-
-The possibilities are endless. You could combine this data with monitoring data and add other variables to the equation:
-
-* Latency
-* Load of the site
-* Reliability

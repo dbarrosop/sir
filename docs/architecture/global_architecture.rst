@@ -12,7 +12,7 @@ and take global decisions.
 
 Once you have a global view of your global network and your traffic patterns you can do things like:
 
-* Send users to a location where you know you are peering the network that user belongs to.
+* Send users to a location where you know you are peering with the network that user belongs to.
 * Redirect users to another POP where his/her network is reachable.
 * Redirect users based on cost, latency, bandwidth or any other metric.
 * Predict your global traffic patterns and optimize your capacity.

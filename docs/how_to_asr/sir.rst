@@ -31,6 +31,10 @@ Now configure SIR. Edit file ``settings.py``::
     BIND_IP = '0.0.0.0'                                 # IP you want to bind the service to
     PORT= 8080                                          # Port you want to bind the service to
 
-Finally, start SIR::
+Now you can start SIR and access it on the ``IP:PORT`` specified above.::
 
     $ sudo python sir.py
+
+Finally, you should look into exposing SIR via some application server. you can read more about it in the following link:
+
+ * `<http://flask.pocoo.org/docs/0.10/deploying/wsgi-standalone/>`_
