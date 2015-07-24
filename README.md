@@ -29,6 +29,11 @@ Applications
 
 This agent will give you some visibility about your network. You can use this data to better choose your network equipment, to do traffic engineering, capacity planning, peering decisions... anything you want. You can see some use cases in the following [link](http://sdn-internet-router-sir.readthedocs.org/en/latest/use_cases/index.html).
 
+Here is a list of links where you can get tools that leverages on SIR:
+
+* [pySIR](https://github.com/dbarrosop/pySIR) - This is a python API that helps you interact with the API. It implements all the API calls that the API supports. It's just a convenient of coding without taking care of the requests or having to handle errors.
+* [sir_tools](https://github.com/dbarrosop/sir_tools) - A collection of tools that takes advantage of SIR API to perform several operations.
+
 Documentation
 =============
 

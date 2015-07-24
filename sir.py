@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# TODO Complete pySIR
+# TODO Move applications outside
+
 # TODO Expose raw flows, delete flows
 # TODO Expose raw BGP, delete raw BGP files
 # TODO UI to Add, Edit, delete variables
