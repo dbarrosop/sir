@@ -1,0 +1,17 @@
+digraph SIR {
+    graph [truecolor=True, bgcolor="#ffffff5f"]
+    node [shape="ellipse", style="rounded,filled", fontname="Source Code Pro", fontsize=12]
+    edge [fontname="Source Code Pro", fontsize=10, style=dashed]
+
+    aggregator[fillcolor="#5F9EA0", height=0.75, width=0.75];
+    hadoop[shape="component", fillcolor="#FFF931", height=0.75, width=0.75];
+
+    sir_lon -> aggregator[label="BGP\n&\nTopN"];
+    sir_fra -> aggregator[label="BGP\n&\nTopN"];
+    sir_ash -> aggregator[label="BGP\n&\nTopN"];
+    sir_sjc -> aggregator[label="BGP\n&\nTopN"];
+    sir_jpn -> aggregator[label="BGP\n&\nTopN"];
+    sir_syd -> aggregator[label="BGP\n&\nTopN"];
+
+    aggregator -> hadoop[label="Aggregated Data"];
+}

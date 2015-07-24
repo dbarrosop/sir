@@ -2,24 +2,11 @@
 Use Cases
 *********
 
-A commodity switch as a Peering Router
-======================================
+Here are some use cases for SIR. I will elaborate more on this use cases and add new ones soon enough. If you have
+any don't hesitate to let me know.
 
-This is a simple and interesting use case. Once you start collecting data in your peering routers you will quickly
-realize that you don't use more than 30.000 prefixes daily. So why do you need a big and expensive router to hold
-the full routing table? Wouldn't be better and easier to hold the full routing table in the RIB and just install
-the routes you need in the FIB?
+.. toctree::
+  :maxdepth: 2
 
-With SIR you can easily see how many routes you need to offload your traffic and which routes you will need. Once
-you have this information it's just a matter of instructing your switch to accept those prefixes and keep the rest in
-memory.
-
-.. image:: peering_router.png
-    :align: center
-    :alt: peering_router
-
-You can do that in different ways, being SRD the most stable and simplest way. Soon I will share an app that leverages
-on SIR to convert a cheap Arista 7280 switch into a peering router.
-
-A Software Defined Content Delivery Network
-===========================================
+  peering_switch
+  sdcdn
