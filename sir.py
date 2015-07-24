@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# TODO Rename analytics for peering
+# TODO UI for searching
 # TODO Local Architecture
 # TODO Features, README, use cases, etc...
 # TODO Global Architecture
@@ -69,47 +69,47 @@ def start_page():
 
 
 @app.route('/analytics', strict_slashes=False)
-def analytics_help():
+def analytics_view_help():
     return analytics.views.start_page(request)
 
 
 @app.route('/analytics/offloaded_traffic', methods=['GET', 'POST'])
-def analytics_offloaded_traffic():
+def analytics_view_offloaded_traffic():
     return analytics.views.offloaded_traffic(request)
 
 
 @app.route('/analytics/aggregate_per_as', methods=['GET', 'POST'])
-def analytics_aggregate_per_as():
+def analytics_view_aggregate_per_as():
     return analytics.views.aggregate(request, 'as')
 
 
 @app.route('/analytics/aggregate_per_prefix', methods=['GET', 'POST'])
-def analytics_aggregate_per_prefix():
+def analytics_view_aggregate_per_prefix():
     return analytics.views.aggregate(request, 'prefix')
 
 
 @app.route('/analytics/simulate', methods=['GET', 'POST'])
-def analytics_simulate():
+def analytics_view_simulate():
     return analytics.views.simulate(request)
 
 
 @app.route('/api/v1.0/analytics/top_prefixes', methods=['GET'])
-def api_top_prefixes():
+def analytics_api_top_prefixes():
     return jsonify(analytics.api.top_prefixes(request))
 
 
 @app.route('/api/v1.0/analytics/top_asns', methods=['GET'])
-def api_top_asns():
+def analytics_api_top_asns():
     return jsonify(analytics.api.top_asns(request))
 
 
 @app.route('/api/v1.0/analytics/find_prefix/<prefix>/<pl>', methods=['GET'])
-def analytics_find_prefix(prefix, pl):
+def analytics_api_find_prefix(prefix, pl):
     return jsonify(analytics.api.find_prefix(request, u'{}/{}'.format(prefix, pl)))
 
 
 @app.route('/api/v1.0/analytics/find_prefixes_asn/<asn>', methods=['GET'])
-def analytics_find_prefixes_asn(asn):
+def analytics_api_find_prefixes_asn(asn):
     return jsonify(analytics.api.find_prefixes_asn(request, asn))
 
 
@@ -133,7 +133,7 @@ def api_help():
 
 
 @app.route('/variables/browse', methods=['GET'])
-def browse_variables():
+def browse_view_variables():
     return variables.views.browse_variables(request)
 
 '''
@@ -144,22 +144,22 @@ def edit_variable(category, name):
 
 
 @app.route('/api/v1.0/variables', methods=['GET', 'POST'])
-def api_variables():
+def variables_api_variables():
     return jsonify(variables.api.variables(request))
 
 
 @app.route('/api/v1.0/variables/categories', methods=['GET'])
-def api_variables_category():
+def variables_api_category():
     return jsonify(variables.api.variables_category(request))
 
 
 @app.route('/api/v1.0/variables/categories/<category>', methods=['GET'])
-def api_variables_filter_by_category(category):
+def variables_api_filter_by_category(category):
     return jsonify(variables.api.variables_filter_by_category(request, category))
 
 
 @app.route('/api/v1.0/variables/categories/<category>/<name>', methods=['GET', 'PUT', 'DELETE'])
-def api_variables_name(category, name):
+def variables_api_name(category, name):
     return jsonify(variables.api.api_variables_name(request, category, name))
 
 ###################
@@ -170,17 +170,17 @@ def api_variables_name(category, name):
 
 
 @app.route('/api/v1.0/pmacct/dates', methods=['GET'])
-def pmacct_data_get_dates():
+def pmacct_data_api_get_dates():
     return jsonify(pmacct_data.api.get_dates(request))
 
 
 @app.route('/api/v1.0/pmacct/flows', methods=['GET'])
-def pmacct_data_get_flows():
+def pmacct_data_api_get_flows():
     return jsonify(pmacct_data.api.get_flows(request))
 
 
 @app.route('/api/v1.0/pmacct/bgp_prefixes', methods=['GET'])
-def pmacct_get_bgp_prefixes():
+def pmacct_data_api_get_bgp_prefixes():
     return jsonify(pmacct_data.api.get_bgp_prefixes(request))
 
 
