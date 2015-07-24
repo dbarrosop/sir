@@ -1,0 +1,16 @@
+digraph SIR {
+    graph [truecolor=True, bgcolor="#ffffff5f"]
+    node [shape="ellipse", style="rounded,filled", fontname="Source Code Pro", fontsize=12]
+    edge [fontname="Source Code Pro", fontsize=10, style=dashed]
+
+    aggregator[fillcolor="#5F9EA0", height=0.75, width=0.75];
+
+    sir_lon -> aggregator;
+    sir_fra -> aggregator;
+    sir_ash -> aggregator;
+    sir_sjc -> aggregator;
+    sir_jpn -> aggregator;
+    sir_syd -> aggregator[label="Lots of Data!"];
+
+
+}
