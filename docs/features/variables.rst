@@ -9,9 +9,9 @@ application will retrieve the Top N prefixes via the API and install them in a c
 feature we can tweak the behavior of that application from a centralized management tool while allowing the device
 to run independently.
 
-Use this in any way you want. This will not influence how the agent performs. It's just a convenient way for you
-to store/retrieve some data for some applications that you might be running using the SIR API.
-
 .. image:: variables.png
     :align: center
     :alt: variables
+
+Use this in any way you want. This will not influence how the agent performs. It's just a convenient way for you
+to store/retrieve some data for some applications that you might be running using the SIR API.
