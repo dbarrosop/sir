@@ -1,0 +1,132 @@
+html, body {
+  margin: 0;
+  background-color: #fff;
+  font-family: verdana;
+  font-size: 14px;
+}
+
+h1.title, h2.title, h3.title {
+  margin: 0px;
+  text-align: center;
+  color: #fff;
+}
+
+h1.title {
+  padding: 0.5em 0.5em;
+  background-color: #24CF5F;
+}
+
+h2.title {
+  padding: 0.5em 0.5em;
+  background-color: #60DF8D;
+  margin-bottom: 1em;
+}
+
+h3.title {
+  color: #000;
+  background-color: #24CF5F;
+  padding: 5px 5px;
+  margin-bottom: 0.5em;
+}
+
+nav {
+  margin: 0px;
+  padding: 10px 10px;
+  margin-top: 0px;
+  background-color: #000;
+  text-align: center;
+  color: #fff;
+}
+
+nav a {
+  color: #fff;
+}
+
+form.time_range {
+  width: 100%;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+canvas.aggregate {
+  text-align: center;
+}
+
+footer {
+  margin-top: 1em;
+  background-color: #CDF4DB;
+  width: 100%;
+  bottom: 0;
+  padding: 1em 0em 1em 0em;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  align: center;
+}
+
+table, th, td {
+  border: 1px;
+  border-style: solid;
+  border-color: #24CF5F;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #60DF8D;
+  padding: 0.5em 0.5em;
+}
+
+td {
+  padding: 0.5em 0.5em;
+}
+
+/* DOCUMENTATION STARTS */
+h4.endpoint_documentation {
+  padding: 0.5em 0.5em;
+  background-color: #DDD;
+  padding-left: 2em;
+}
+
+h5.endpoint_documentation {
+  padding: 0.5em 0.5em;
+  background-color: #CCC;
+  padding-left: 3em;
+  font-size: 110%;
+}
+
+em.endpoint_documentation {
+  padding: 1em 1em;
+  font-style: normal;
+  font-weight: bold;
+}
+
+div.endpoint_documentation {
+  padding: 1em 3em;
+}
+
+ul.endpoint_documentation {
+  padding: 0.5em 3em;
+}
+
+ li.argument_element {
+  margin-left: 1em;
+}
+
+em.argument {
+  color: red;
+}
+
+/* DOCUMENTATION ENDS */
+
+div.alert {
+  padding: 1em 1em;
+  margin:0 auto;
+  margin-top: 1em; margin-bottom: 1em;
+  text-align: center;
+  width: 90%;
+  background-color: #FFCC00;
+  border-radius: 10px;
+  border: 2px solid red;
+}

@@ -1,70 +1,198 @@
-from bgp_controller.bgpc import BGPController
+# -*- coding: utf-8 -*-
 
-import argparse
-import yaml
-import sys
+# TODO Complete pySIR
+# TODO Move applications outside
 
-import logging
-logger = logging.getLogger('sir')
+# TODO Expose raw flows, delete flows
+# TODO Expose raw BGP, delete raw BGP files
+# TODO UI to Add, Edit, delete variables
+# TODO metrics
+# TODO Improve building the response of the API and documentation
+# TODO Cache ASNs from peering db
+# TODO Catch errors in API
+# TODO Catch errors in logging
+# TODO Catch errors in authentication???
 
+from helpers.SQLite3Helper import SQLite3Helper
+from helpers.FSHelper import FSHelper
 
-def configure_parser():
-    parser = argparse.ArgumentParser(
-        description="",
-    )
-    global_parser = argparse.ArgumentParser(add_help=False)
-    global_parser.add_argument(
-        '-c',
-        default='etc/config.yaml',
-        dest='config',
-        help='Configuration file. Default is config.yaml'
-    )
+import variables.api
+import variables.views
 
-    subparsers = parser.add_subparsers()
+import analytics.api
+import analytics.views
 
-    parser_simulate = subparsers.add_parser(
-        'simulate',
-        help='Connects to pmacct folder and runs a simulation',
-        parents=[global_parser]
-    )
-    parser_simulate.set_defaults(action='simulate')
+import api.views
 
-    parser_run = subparsers.add_parser(
-        'run',
-        help='Runs the controller',
-        parents=[global_parser]
-    )
-    parser_run.set_defaults(action='run')
+import pmacct_data.api
 
-    args = parser.parse_args()
-    return args
+from flask import Flask, request, g, jsonify, render_template
 
-def configure_logging(config):
-    formatter = logging.Formatter('program=sir severity_label=%(levelname)s severity=%(levelno)s %(message)s')
-    logger.setLevel(config['logging_level'])
+import time
 
-    if config['log_to_stderr']:
-        logging.basicConfig(level=config['logging_level'], stream=sys.stderr)
-    if config['log_to_syslog']:
-        handler = logging.handlers.SysLogHandler(('127.0.0.1', config['syslog_server_port']))
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+app = Flask(__name__)
+app.config.from_object('settings')
+
+###################
+###################
+#  BASIC  #########
+###################
+###################
 
 
-def cli():
-    args = configure_parser()
+@app.before_request
+def before_request():
+    g.db = SQLite3Helper(app.config['DATABASE'])
+    g.db.connect()
+    g.request_start_time = time.time()
+    g.request_time = lambda: float("%.5f" %
+                                   (time.time() - g.request_start_time))
+    g.fs = FSHelper(app.config['BGP_FOLDER'])
 
-    content = open(args.config, 'r')
-    config = yaml.load(content)
 
-    configure_logging(config)
+@app.teardown_request
+def teardown_request(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
 
-    bgp_controller = BGPController(config)
 
-    if args.action == 'simulate':
-        bgp_controller.simulate()
-    elif args.action == 'run':
-        bgp_controller.run()
+@app.route('/', strict_slashes=False)
+def start_page():
+    return render_template('basic/start_page.html')
 
-if __name__ == "__main__":
-    cli()
+###################
+###################
+#  ANALYTICS  #####
+###################
+###################
+
+
+@app.route('/analytics', strict_slashes=False)
+def analytics_view_help():
+    return analytics.views.start_page(request)
+
+
+@app.route('/analytics/offloaded_traffic', methods=['GET', 'POST'])
+def analytics_view_offloaded_traffic():
+    return analytics.views.offloaded_traffic(request)
+
+
+@app.route('/analytics/aggregate_per_as', methods=['GET', 'POST'])
+def analytics_view_aggregate_per_as():
+    return analytics.views.aggregate(request, 'as')
+
+
+@app.route('/analytics/aggregate_per_prefix', methods=['GET', 'POST'])
+def analytics_view_aggregate_per_prefix():
+    return analytics.views.aggregate(request, 'prefix')
+
+
+@app.route('/analytics/simulate', methods=['GET', 'POST'])
+def analytics_view_simulate():
+    return analytics.views.simulate(request)
+
+
+@app.route('/api/v1.0/analytics/top_prefixes', methods=['GET'])
+def analytics_api_top_prefixes():
+    return jsonify(analytics.api.top_prefixes(request))
+
+
+@app.route('/api/v1.0/analytics/top_asns', methods=['GET'])
+def analytics_api_top_asns():
+    return jsonify(analytics.api.top_asns(request))
+
+
+@app.route('/api/v1.0/analytics/find_prefix/<prefix>/<pl>', methods=['GET'])
+def analytics_api_find_prefix(prefix, pl):
+    return jsonify(analytics.api.find_prefix(request, u'{}/{}'.format(prefix, pl)))
+
+
+@app.route('/analytics/find_prefix', methods=['GET', 'POST'])
+def analytics_view_find_prefix():
+    return analytics.views.find_prefix(request)
+
+
+@app.route('/api/v1.0/analytics/find_prefixes_asn/<asn>', methods=['GET'])
+def analytics_api_find_prefixes_asn(asn):
+    return jsonify(analytics.api.find_prefixes_asn(request, asn))
+
+
+@app.route('/analytics/find_prefixes_asn', methods=['GET', 'POST'])
+def analytics_view_find_prefix_asn():
+    return analytics.views.find_prefix_asn(request)
+
+
+###################
+###################
+#  API  ###########
+###################
+###################
+
+
+@app.route('/api/documentation', strict_slashes=False)
+def api_help():
+    return api.views.start_page(request)
+
+
+###################
+###################
+#  VARIABLES  #####
+###################
+###################
+
+
+@app.route('/variables/browse', methods=['GET'])
+def browse_view_variables():
+    return variables.views.browse_variables(request)
+
+'''
+@app.route('/variables/edit/<category>/<name>', methods=['GET', 'POST', 'DELETE'])
+def edit_variable(category, name):
+    return variables.views.edit_variable(request, category, name)
+'''
+
+
+@app.route('/api/v1.0/variables', methods=['GET', 'POST'])
+def variables_api_variables():
+    return jsonify(variables.api.variables(request))
+
+
+@app.route('/api/v1.0/variables/categories', methods=['GET'])
+def variables_api_category():
+    return jsonify(variables.api.variables_category(request))
+
+
+@app.route('/api/v1.0/variables/categories/<category>', methods=['GET'])
+def variables_api_filter_by_category(category):
+    return jsonify(variables.api.variables_filter_by_category(request, category))
+
+
+@app.route('/api/v1.0/variables/categories/<category>/<name>', methods=['GET', 'PUT', 'DELETE'])
+def variables_api_name(category, name):
+    return jsonify(variables.api.api_variables_name(request, category, name))
+
+###################
+###################
+#  PMACCT_DATA  ###
+###################
+###################
+
+
+@app.route('/api/v1.0/pmacct/dates', methods=['GET'])
+def pmacct_data_api_get_dates():
+    return jsonify(pmacct_data.api.get_dates(request))
+
+
+@app.route('/api/v1.0/pmacct/flows', methods=['GET'])
+def pmacct_data_api_get_flows():
+    return jsonify(pmacct_data.api.get_flows(request))
+
+
+@app.route('/api/v1.0/pmacct/bgp_prefixes', methods=['GET'])
+def pmacct_data_api_get_bgp_prefixes():
+    return jsonify(pmacct_data.api.get_bgp_prefixes(request))
+
+
+if __name__ == '__main__':
+    app.run(app.config['BIND_IP'], app.config['PORT'])

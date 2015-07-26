@@ -1,0 +1,31 @@
+{% include 'includes/header.html' %}
+
+{% import 'includes/forms.html' as forms %}
+{% import 'includes/graphs.html' as graphs %}
+
+<h2 class='title'>Top {{title}}</h2>
+
+{{ forms.time_range(avail_start_time, avail_end_time, start_time, end_time) }}
+
+<h3 class='title'>Top 10 Graph</h3>
+
+{{ graphs.top_ten(time_series_times, time_series) }}
+
+<h3 class='title'>Table</h3>
+
+<table class='data'>
+  <tr>
+    <th>{{title}}</th>
+    <th>sum_bytes</th>
+  </tr>
+
+  {% for f in flow_aggr %}
+  <tr>
+    <td>{{ f['key'] }}</td>
+    <td>{{ f['sum_bytes'] }}</td>
+  </tr>
+  {% endfor %}
+
+</table>
+
+{% include 'includes/footer.html' %}

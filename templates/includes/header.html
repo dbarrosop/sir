@@ -1,0 +1,19 @@
+<!doctype html>
+<title>SIR</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='highlight_styles/default.css') }}">
+
+<script src="{{ url_for('static', filename='highlight.pack.js') }}"></script>
+<script src="/static/scripts/Chart.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<h1 class='title'>SIR - SDN Internet Router</h1>
+
+<nav>
+  <a href='{{ url_for('start_page')}}'>HOME</a> |
+  <a href='{{ url_for('analytics_view_help')}}'>ANALYTICS</a> |
+  <a href='{{ url_for('browse_view_variables')}}'>VARIABLES</a> |
+  <a href='http://sdn-internet-router-sir.readthedocs.org/' target="_blank">DOCUMENTATION</a>
+</nav>
+<div class="page">

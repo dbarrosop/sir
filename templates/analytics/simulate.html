@@ -1,0 +1,30 @@
+{% include 'includes/header.html' %}
+
+<script src="/static/scripts/Chart.js"></script>
+
+<h2 class='title'>Run Simulation</h2>
+
+{% import 'includes/forms.html' as forms %}
+{{ forms.time_range(avail_start_time, avail_end_time, start_time, end_time, num_prefixes) }}
+
+{% import 'includes/graphs.html' as graphs %}
+{{ graphs.top_ten(time_series_times, time_series) }}
+
+<table class='data'>
+  <tr>
+    <th>datetime</th>
+    <th>total_bytes</th>
+    <th>offloaded_bytes</th>
+    <th>%</th>
+  </tr>
+
+  {% for t in time_series['offloaded_bytes'] %}
+  <tr>
+    <td>{{ time_series_times[loop.index0] }}</td>
+    <td>{{ time_series['total_bytes'][loop.index0] }}</td>
+    <td>{{ time_series['offloaded_bytes'][loop.index0] }}</td>
+    <td>{{ time_series['offloaded_bytes'][loop.index0]*100/time_series['total_bytes'][loop.index0] }}</td>
+  </tr>
+  {% endfor %}
+
+{% include 'includes/footer.html' %}

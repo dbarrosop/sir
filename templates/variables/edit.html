@@ -1,0 +1,17 @@
+{% include 'includes/header.html' %}
+
+<h2 class='title'>Edit Variable</h2>
+
+<form action="" method="post" id="edit_variable">
+  category: <input type="text" name="category" value="{{variable['category']}}">
+  name: <input type="text" name="name" value="{{variable['name']}}">
+  content: <input type="text" name="content" value="{{variable['content']}}">
+  <input type="submit" value="Submit">
+</form>
+extra_vars:
+<br>
+<textarea name="extra_vars" form="edit_variable" rows="4" cols="50">{{variable['extra_vars']}}</textarea>
+
+{% if saved == true %}
+<div class="alert">Variable has been saved!!!</div>
+{% endif %}

@@ -1,0 +1,47 @@
+{% include 'includes/header.html' %}
+
+<h2 class='title'>Search for {{query_name}}: {{query}}</h2>
+
+<form method="post" class='time_range'>
+  date: <select name="date">
+  {% for d in available_dates %}
+    {% if d == date %}<option selected>{{d}}</option>
+    {% else %}<option>{{d}}</option>
+    {% endif %}
+  {% endfor %}
+  </select>
+  {% if query_name == 'ASN' %}
+  origin_as_only: <select name="origin_only">
+    <option selected>{{ origin_only }}</option>
+    <option>{{not origin_only}}</option>
+  </select>
+  {% endif %}
+  {{query_name}}: <input type="text" name="query" value="{{query}}">
+  <input type="submit" value="search">
+</form>
+
+<table class='data'>
+  <tr>
+    <th>peer_ip_src</th>
+    <th>ip_prefix</th>
+    <th>bgp_nexthop</th>
+    <th>as_path</th>
+    <th>local_pref</th>
+    <th>comms</th>
+  </tr>
+{% for neigh, prefixes in prefixes.iteritems() %}
+    {% for p in prefixes %}
+    <tr>
+      <td>{{ p['peer_ip_src'] }}</td>
+      <td>{{ p['ip_prefix'] }}</td>
+      <td>{{ p['bgp_nexthop'] }}</td>
+      <td>{{ p['as_path'] }}</td>
+      <td>{{ p['local_pref'] }}</td>
+      <td>{{ p['comms'] }}</td>
+    </tr>
+    {% endfor %}
+{% endfor %}
+</table>
+
+
+{% include 'includes/footer.html' %}

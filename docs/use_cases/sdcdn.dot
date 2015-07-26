@@ -1,0 +1,31 @@
+digraph SIR {
+    graph [truecolor=True, bgcolor="#ffffff5f"]
+    node [shape="ellipse", style="rounded,filled", fontname="Source Code Pro", fontsize=12]
+    edge [fontname="Source Code Pro", fontsize=10, style=dashed]
+
+    aggregator[shape="doubleoctagon", fillcolor="#5F9EA0", height=0.75, width=0.75];
+    hadoop[shape="component", fillcolor="#FAFAD2", height=0.75, width=0.75];
+    cdn_user_dispatcher[shape="rpromoter", fillcolor="#8FBC8F"];
+    u1, u2, u3, u4, u5, u6, u7, u8, u9, uN[shape="circle", fillcolor="#66CDAA"];
+    u1 -> sir_lon
+    u2 -> sir_lon
+    u3 -> sir_fra
+    u4 -> sir_fra
+    u5 -> sir_ash
+    u6 -> sir_ash
+    u7 -> sir_sjc
+    u8 -> sir_jpn
+    u9 -> sir_syd
+    uN -> sir_syd
+
+    sir_lon -> aggregator[label="BGP\n&\nTopN"];
+    sir_fra -> aggregator[label="BGP\n&\nTopN"];
+    sir_ash -> aggregator[label="BGP\n&\nTopN"];
+    sir_sjc -> aggregator[label="BGP\n&\nTopN"];
+    sir_jpn -> aggregator[label="BGP\n&\nTopN"];
+    sir_syd -> aggregator[label="BGP\n&\nTopN"];
+
+    aggregator -> hadoop[label=" Aggregated Data"];
+
+    hadoop -> cdn_user_dispatcher[label=" Distribute users to\nthese networks"];
+}
