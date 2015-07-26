@@ -46,7 +46,8 @@ that ASN as well.
     :alt: search_asn
 
 .. note:: ``peer_ip_src`` is useful if you are sending data to the agent from different routers as it shows the IP of
-          the router that provided those prefixes
+          the router that provided those prefixes. In this particular example we have two different routers sending data
+          to the same agent.
 
 Offloaded Traffic
 -----------------
