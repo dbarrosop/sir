@@ -8,13 +8,13 @@ many things:
 * How much throughput they need.
 * From where you can deliver your content to those networks.
 
-This aggregated data could be sent to hadoop:
+This aggregated data could be sent to hadoop to decide things like from which POP to serve your content to your users:
 
 .. image:: sdcdn.png
     :align: center
     :alt: sdcdn
 
-You could also add data from other sources. Things like:
+You could also add metrics from other sources. Metrics like:
 
 * Cost of each link.
 * Latency.
