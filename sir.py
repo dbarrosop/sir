@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 
 # TODO Complete pySIR
-# TODO Move applications outside
-
-# TODO Expose raw flows, delete flows
-# TODO Expose raw BGP, delete raw BGP files
+# TODO Delete old flows from the API
+# TODO delete raw BGP files from the API
 # TODO UI to Add, Edit, delete variables
 # TODO metrics
-# TODO Improve building the response of the API and documentation
 # TODO Cache ASNs from peering db
 # TODO Catch errors in API
-# TODO Catch errors in logging
-# TODO Catch errors in authentication???
+# TODO logging
+# TODO authentication???
+# TODO Evaluate influxdb
 
 from helpers.SQLite3Helper import SQLite3Helper
 from helpers.FSHelper import FSHelper
