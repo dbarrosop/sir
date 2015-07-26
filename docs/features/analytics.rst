@@ -31,7 +31,8 @@ it. You will not get only the longest prefix match but all the possible matches.
     :alt: search_prefix
 
 .. note:: ``peer_ip_src`` is useful if you are sending data to the agent from different routers as it shows the IP of
-          the router that provided those prefixes
+          the router that provided those prefixes. In this particular example we have two different routers sending data
+          to the same agent.
 
 Search ASN's
 ------------
