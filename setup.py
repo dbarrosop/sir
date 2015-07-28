@@ -20,14 +20,4 @@ setup(
     install_requires=reqs,
     include_package_data=True,
     zip_safe=False,
-    # Uncomment lines below when building RPM for EOS
-    # data_files=[
-    #     ('/etc/nginx/external_conf', ['deployment_files/eos/conf/sir_nginx.conf']),
-    #     ('/etc/uwsgi', ['deployment_files/eos/conf/sir_nginx.conf']),
-    #     ('/etc/uwsgi', ['deployment_files/eos/conf/sir_nginx.conf']),
-    #     ('/usr/bin', ['deployment_files/eos/bin/pmacct']),
-    #     ('/usr/sbin', ['deployment_files/eos/sbin/sfacctd']),
-    #     ('/lib', ['deployment_files/eos/lib/libjansson.so.4']),
-    #     ('/mnt/drive/sir/pmacct/etc/', ['deployment_files/eos/conf/pmacct.conf']),
-    # ]
 )
