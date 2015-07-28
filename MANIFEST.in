@@ -1,2 +1,5 @@
+include requirements.txt
+include README.md
+
 recursive-include sir/templates *
 recursive-include sir/static *
