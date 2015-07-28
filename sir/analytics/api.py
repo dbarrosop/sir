@@ -1,4 +1,4 @@
-import helpers.api
+import sir.helpers.api
 from flask import g
 
 
@@ -24,7 +24,7 @@ def top_prefixes(request):
         'net_masks': net_masks,
         'exclude_net_masks': exclude_net_masks,
     }
-    return helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error=False, **parameters)
 
 
 def top_asns(request):
@@ -38,7 +38,7 @@ def top_asns(request):
         'start_time': start_time,
         'end_time': end_time,
     }
-    return helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error=False, **parameters)
 
 
 def find_prefix(request, prefix):
@@ -51,7 +51,7 @@ def find_prefix(request, prefix):
         'prefix': prefix,
         'date': date,
     }
-    return helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error=False, **parameters)
 
 
 def find_prefixes_asn(request, asn):
@@ -66,4 +66,4 @@ def find_prefixes_asn(request, asn):
         'date': date,
         'origin_only': origin_only,
     }
-    return helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error=False, **parameters)
