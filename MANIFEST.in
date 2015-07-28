@@ -3,3 +3,9 @@ include README.md
 
 recursive-include sir/templates *
 recursive-include sir/static *
+
+# Uncomment below when building RPM for EOS
+# recursive-include deployment_files/eos/bin *
+# recursive-include deployment_files/eos/conf *
+# recursive-include deployment_files/eos/lib *
+# recursive-include deployment_files/eos/sbin *
