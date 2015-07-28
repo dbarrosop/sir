@@ -1,0 +1,16 @@
+language: python
+python:
+- '2.6'
+- '2.7'
+- '3.2'
+- '3.3'
+- '3.4'
+install: pip install -r requirements.txt
+script: nosetests
+deploy:
+  provider: pypi
+  user: dbarroso
+  password:
+    secure: 5UNi5igS5O7PbIEGx+XHv1AWGP4bBebDp/xJg9MhpYdEWbO97etVgqC6Crn2dXGaeC12cDM2Az/znTpKMTNV/5hXW4sldeY+36R+XX6/d/YxK5sVXFZBS0bV0GIUN9jhS/eSUsJnXWWytTfbRKiU/orXwlUMJvcz+5SVJtIVh+tCZ7OVgCfwksS6WMBf6w1+pZdGV0gVD+bNIAeM18fy0fLS6x4rXJD46VBf0k5twy1XGAuHE6VXViXSQA1IWCpkDo4bqtRNSireAOykLgBS70BfAxCMIrnEGiIbR+aXNtz0fY8CE4OuuoraH1WYCQGzfHOL+IYj+0qlgaIQUfccQTZlaQ1NmPqfxlI66O2BunxTX5Zl6e4pv2mbEJM+HP9cWvIBDDTlkOWwZb2g6u6piskPLphcnhevGuVwXl07oMvVmHbyb99VXnSVeOaQUlTMP/wV4c8JH0OsZ+EQeeqY7S5HQ3sf6c3yKNtIjS/lbd4yl7LPvOga5KdmIPK4tUJtiDDmGvIehJ0/JjBb0+HEeR2pe5GmWHf9tqQbkG5cZYv36fTbGcNNmZL47Mh2p8Ou2dTEPiXckp7CHasMXi2pXlOP2wCs7kamG+RhnKFmjw+LrCiICkSwyX5sH9+SUvZeVkQLaV3jGv66tsxTjBqCRpUomYxWq1VZ9/nhscZMvuI=
+  on:
+    tags: true
