@@ -8,3 +8,4 @@ How To: EOS (Manual method)
    scenario
    pmacct
    sir
+   accessing_sir
