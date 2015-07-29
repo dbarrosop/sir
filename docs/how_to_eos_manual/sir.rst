@@ -49,8 +49,3 @@ And finally you have to restart the HTTP server back in the EOS CLI. Assuming yo
     lab(config)#management api http-commands
     lab(config-mgmt-api-http-cmds)#shut
     lab(config-mgmt-api-http-cmds)#no shut
-
-Accessing SIR
--------------
-
-To access sir you just
