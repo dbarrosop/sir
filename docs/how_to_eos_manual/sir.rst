@@ -1,84 +1,51 @@
-::
-[dbarroso@peer00 sir]$ sudo ip netns exec ns-mgmtVRF wget -O v0.9.tar.gz https://github.com/dbarrosop/sir/archive/v0.9.tar.gz
---2015-07-27 10:33:59--  https://github.com/dbarrosop/sir/archive/v0.9.tar.gz
-Resolving github.com... 192.30.252.129
-Connecting to github.com|192.30.252.129|:443... connected.
-HTTP request sent, awaiting response... 302 Found
-Location: https://codeload.github.com/dbarrosop/sir/tar.gz/v0.9 [following]
---2015-07-27 10:33:59--  https://codeload.github.com/dbarrosop/sir/tar.gz/v0.9
-Resolving codeload.github.com... 192.30.252.144
-Connecting to codeload.github.com|192.30.252.144|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 2745299 (2.6M) [application/x-gzip]
-Saving to: `v0.9.tar.gz'
+============
+Enabling SIR
+============
 
-100%[=====================================================================================================================================================================================================>] 2,745,299   1.37M/s   in 1.9s
+Installing SIR
+--------------
 
-2015-07-27 10:34:01 (1.37 MB/s) - `v0.9.tar.gz' saved [2745299/2745299]
+Installing SIR is very easy. You can install it by using PIP as any other python package::
 
-[dbarroso@peer00 sir]$ tar xvzf v0.9.tar.gz
-sir-0.9/
-...
-sir-0.9/variables/views.py
-[dbarroso@peer00 sir]$ cd sir-0.9/
-[dbarroso@peer00 sir-0.9]$ sudo ip netns exec ns-mgmtVRF pip install -r requirements.txt
-Downloading/unpacking flask (from -r requirements.txt (line 1))
-  Downloading Flask-0.10.1.tar.gz (544kB): 544kB downloaded
-  Running setup.py (path:/tmp/pip_build_root/flask/setup.py) egg_info for package flask
+    spine01#bash
 
-    warning: no files found matching '*' under directory 'tests'
-    warning: no previously-included files matching '*.pyc' found under directory 'docs'
-    warning: no previously-included files matching '*.pyo' found under directory 'docs'
-    warning: no previously-included files matching '*.pyc' found under directory 'tests'
-    warning: no previously-included files matching '*.pyo' found under directory 'tests'
-    warning: no previously-included files matching '*.pyc' found under directory 'examples'
-    warning: no previously-included files matching '*.pyo' found under directory 'examples'
-    no previously-included directories found matching 'docs/_build'
-    no previously-included directories found matching 'docs/_themes/.git'
-Downloading/unpacking ipaddress (from -r requirements.txt (line 2))
-  Downloading ipaddress-1.0.14-py27-none-any.whl
-Downloading/unpacking Werkzeug>=0.7 (from flask->-r requirements.txt (line 1))
-  Downloading Werkzeug-0.10.4-py2.py3-none-any.whl (293kB): 293kB downloaded
-Downloading/unpacking Jinja2>=2.4 (from flask->-r requirements.txt (line 1))
-  Downloading Jinja2-2.8-py2.py3-none-any.whl (263kB): 263kB downloaded
-Downloading/unpacking itsdangerous>=0.21 (from flask->-r requirements.txt (line 1))
-  Downloading itsdangerous-0.24.tar.gz (46kB): 46kB downloaded
-  Running setup.py (path:/tmp/pip_build_root/itsdangerous/setup.py) egg_info for package itsdangerous
+    Arista Networks EOS shell
 
-    warning: no previously-included files matching '*' found under directory 'docs/_build'
-Downloading/unpacking MarkupSafe (from Jinja2>=2.4->flask->-r requirements.txt (line 1))
-  Downloading MarkupSafe-0.23.tar.gz
-  Running setup.py (path:/tmp/pip_build_root/MarkupSafe/setup.py) egg_info for package MarkupSafe
+    [dbarroso@spine01 ~]$ cd /tmp
+    [dbarroso@spine01 tmp]$ sudo ip netns exec ns-mgmtVRF pip install SIR
+    Downloading/unpacking SIR
+      Downloading SIR-0.10.tar.gz (79kB): 79kB downloaded
+      Running setup.py (path:/tmp/pip_build_root/SIR/setup.py) egg_info for package SIR
+    ...
+    Successfully installed SIR flask ipaddress Werkzeug Jinja2 itsdangerous MarkupSafe
+    Cleaning up...
 
-Installing collected packages: flask, ipaddress, Werkzeug, Jinja2, itsdangerous, MarkupSafe
-  Running setup.py install for flask
+Enabling SIR
+------------
 
-    warning: no files found matching '*' under directory 'tests'
-    warning: no previously-included files matching '*.pyc' found under directory 'docs'
-    warning: no previously-included files matching '*.pyo' found under directory 'docs'
-    warning: no previously-included files matching '*.pyc' found under directory 'tests'
-    warning: no previously-included files matching '*.pyo' found under directory 'tests'
-    warning: no previously-included files matching '*.pyc' found under directory 'examples'
-    warning: no previously-included files matching '*.pyo' found under directory 'examples'
-    no previously-included directories found matching 'docs/_build'
-    no previously-included directories found matching 'docs/_themes/.git'
-  Running setup.py install for itsdangerous
+Instead of running our own HTTP and/or application server we are just going to use the services that EOS is already
+using for their eAPI. For that you just have to copy a couple of configuration files that were provided in the same
+tar file you downloaded before::
 
-    warning: no previously-included files matching '*' found under directory 'docs/_build'
-  Running setup.py install for MarkupSafe
+    [dbarroso@spine01 tmp]$ sudo cp eos_files/sir_uwsgi.ini /etc/uwsgi/
+    [dbarroso@spine01 tmp]$ sudo cp eos_files/sir_nginx.conf /etc/nginx/external_conf/
 
-    building 'markupsafe._speedups' extension
-    gcc -pthread -fno-strict-aliasing -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector -fno-var-tracking -fno-var-tracking-assignments --param=ssp-buffer-size=4 -m32 -march=i686 -mtune=atom -fasynchronous-unwind-tables -O2 -D_GNU_SOURCE -fPIC -fwrapv -DNDEBUG -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector -fno-var-tracking -fno-var-tracking-assignments --param=ssp-buffer-size=4 -m32 -march=i686 -mtune=atom -fasynchronous-unwind-tables -O2 -D_GNU_SOURCE -fPIC -fwrapv -fPIC -I/usr/include/python2.7 -c markupsafe/_speedups.c -o build/temp.linux-x86_64-2.7/markupsafe/_speedups.o
-    unable to execute gcc: No such file or directory
-    ==========================================================================
-    WARNING: The C extension could not be compiled, speedups are not enabled.
-    Failure information, if any, is above.
-    Retrying the build without the C extension now.
+Now, copy the configuration file for SIR::
 
+    [dbarroso@spine01 tmp]$ sudo cp eos_files/sir_settings.py /mnt/drive/sir/settings.py
 
-    ==========================================================================
-    WARNING: The C extension could not be compiled, speedups are not enabled.
-    Plain-Python installation succeeded.
-    ==========================================================================
-Successfully installed flask ipaddress Werkzeug Jinja2 itsdangerous MarkupSafe
-Cleaning up...
+Starting the application server and SIR
+---------------------------------------
+
+To start SIR you just have to start application server::
+
+[dbarroso@spine01 tmp]$ sudo SIR_SETTINGS='/mnt/drive/sir/settings.py' immortalize --daemonize --log=/var/log/sir.uwsgi.log /usr/bin/uwsgi --ini /etc/uwsgi/sir_uwsgi.ini
+
+And finally you have to restart the HTTP server back in the EOS CLI::
+
+    [dbarroso@spine01 tmp]$ exit
+    logout
+    spine01#conf
+    spine01(config)#management api http-commands
+    spine01(config-mgmt-api-http-cmds)#shut
+    spine01(config-mgmt-api-http-cmds)#no shut

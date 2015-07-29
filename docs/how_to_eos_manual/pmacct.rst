@@ -12,66 +12,74 @@ can get in the following links:
 Getting pmacct
 --------------
 
-::
-    peer00.lon#bash
+First you have to get all the related configuration files and copy them to the correct location::
+
+    lab#bash
 
     Arista Networks EOS shell
 
-    [dbarroso@peer00 ~]$ mkdir /mnt/drive/sir
-    [dbarroso@peer00 ~]$ cd /mnt/drive/sir
-    [dbarroso@spine01 sir]$ sudo ip netns exec ns-mgmtVRF wget -O pmacct-1.5.0_eos4.tar.gz https://github.com/dbarrosop/sir/releases/download/v0.9/pmacct-1.5.0_eos4.tar.gz
-    --2015-07-27 09:44:42--  https://github.com/dbarrosop/sir/releases/download/v0.9/pmacct-1.5.0_eos4.tar.gz
-    Resolving github.com... 192.30.252.130
-    Connecting to github.com|192.30.252.130|:443... connected.
-    HTTP request sent, awaiting response... 302 Found
-    Location: https://s3.amazonaws.com/github-cloud/releases/27316436/a264b2d8-3452-11e5-9c86-ed1fae0d2f79.gz?response-content-disposition=attachment%3B%20filename%3Dpmacct-1.5.0_eos4.tar.gz&response-content-type=application/octet-stream&AWSAccessKeyId=AKIAISTNZFOVBIJMK3TQ&Expires=1437990342&Signature=cxgOmyn8BBVky2bZlzOs4ey2tC8%3D [following]
-    --2015-07-27 09:44:42--  https://s3.amazonaws.com/github-cloud/releases/27316436/a264b2d8-3452-11e5-9c86-ed1fae0d2f79.gz?response-content-disposition=attachment%3B%20filename%3Dpmacct-1.5.0_eos4.tar.gz&response-content-type=application/octet-stream&AWSAccessKeyId=AKIAISTNZFOVBIJMK3TQ&Expires=1437990342&Signature=cxgOmyn8BBVky2bZlzOs4ey2tC8%3D
-    Resolving s3.amazonaws.com... 54.231.33.16
-    Connecting to s3.amazonaws.com|54.231.33.16|:443... connected.
+    [dbarroso@lab ~]$ cd /tmp/
+    [dbarroso@lab tmp]$ sudo ip netns exec ns-mgmtVRF wget http://sdn-internet-router-sir.readthedocs.org/en/latest/_static/eos_files.tar.gz
+    --2015-07-28 13:30:35--  http://sdn-internet-router-sir.readthedocs.org/en/latest/_static/eos_files.tar.gz
+    Resolving sdn-internet-router-sir.readthedocs.org... 162.209.114.75
+    Connecting to sdn-internet-router-sir.readthedocs.org|162.209.114.75|:80... connected.
     HTTP request sent, awaiting response... 200 OK
-    Length: 4921495 (4.7M) [application/octet-stream]
-    Saving to: `pmacct-1.5.0_eos4.tar.gz'
+    Length: 1341140 (1.3M) [application/octet-stream]
+    Saving to: `eos_files.tar.gz'
 
-    100%[=====================================================================================================================================================================================================>] 4,921,495   1.79M/s   in 2.6s
+    100%[========================================================================================================================================================================================>] 1,341,140    833K/s   in 1.6s
 
-    2015-07-27 09:44:45 (1.79 MB/s) - `pmacct-1.5.0_eos4.tar.gz' saved [4921495/4921495]
+    2015-07-28 13:30:37 (833 KB/s) - `eos_files.tar.gz' saved [1341140/1341140]
 
-    [dbarroso@spine01 sir]$ tar xvzf pmacct-1.5.0_eos4.tar.gz
-    pmacct/
-    pmacct/bin/
-    pmacct/etc/
-    pmacct/lib/
-    pmacct/output/
-    pmacct/sbin/
-    pmacct/sbin/nfacctd
-    pmacct/sbin/pmacctd
-    pmacct/sbin/sfacctd
-    pmacct/sbin/start_pmacct.sh
-    pmacct/sbin/uacctd
-    pmacct/output/pmacct.db
-    pmacct/lib/libjansson.so.4
-    pmacct/etc/pmacct.conf
-    pmacct/bin/pmacct
+    [dbarroso@lab tmp]$ tar xvzf eos_files.tar.gz
+    eos_files/
+    eos_files/._.DS_Store
+    eos_files/.DS_Store
+    eos_files/pmacct/
+    eos_files/sir_nginx.conf
+    eos_files/sir_settings.py
+    eos_files/sir_uwsgi.ini
+    eos_files/pmacct/._.DS_Store
+    eos_files/pmacct/.DS_Store
+    eos_files/pmacct/libjansson.so.4
+    eos_files/pmacct/pmacct
+    eos_files/pmacct/pmacct.conf
+    eos_files/pmacct/pmacct.db
+    eos_files/pmacct/sfacctd
 
-Enabling pmacct
+    [dbarroso@lab tmp]$ sudo cp eos_files/pmacct/pmacct.conf /etc/
+    [dbarroso@lab tmp]$ sudo cp eos_files/pmacct/pmacct /usr/bin/
+    [dbarroso@lab tmp]$ sudo cp eos_files/pmacct/sfacctd /usr/sbin/
+    [dbarroso@lab tmp]$ sudo mkdir -p /mnt/drive/sir/output/bgp/
+
+If the database doesn't exist yet, now you can just copy the empty database::
+
+    [dbarroso@lab tmp]$ sudo cp eos_files/pmacct/pmacct.db /mnt/drive/sir/output/
+
+And finally, start pmacct::
+
+    [dbarroso@lab tmp]$ sudo immortalize --log=/var/log/pmacct.log --daemonize /usr/sbin/sfacctd -f /etc/pmacct.conf
+
+Configuring EOS
 ---------------
 
-::
-    daemon pmacct
-       exec /mnt/drive/sir/pmacct/sbin/start_pmacct.sh
-       no shutdown
+Now go back to EOS CLI and configure sflow and BGP::
+
+    [dbarroso@lab tmp]$ exit
+    logout
+    lab# conf
 
     sflow sample dangerous 10000
     sflow polling-interval 1
     sflow destination 127.0.0.9 9999
-    sflow source-interface Ethernet47
+    sflow source-interface $SOURCE_INTERFACE
     sflow run
 
     router bgp $AS
+      neighbor 127.0.0.9 transport remote-port 1179
+      neighbor 127.0.0.9 update-source $SOURCE_INTERFACE
       neighbor 127.0.0.9 remote-as $AS
       neighbor 127.0.0.9 description "SIR/pmacct"
-      neighbor 127.0.0.9 transport remote-port 1179
-      neighbor 127.0.0.9 update-source Ethernet47
       neighbor 127.0.0.9 maximum-routes 12000
 
-.. warning:: Don't forget to replace ``$AS`` with your own AS.
+.. warning:: Don't forget to replace ``$$SOURCE_INTERFACE`` with the source-interface you want to use to connect from your device to the agent and ``$AS`` with your own AS.
