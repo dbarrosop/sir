@@ -2,25 +2,52 @@
 Enabling SIR agent
 ==================
 
-This is super easy to do. First clone SIR and install requirements::
+This is super easy to do. First install using pip::
 
-    $ git clone git@github.com:dbarrosop/sir.git
-    Cloning into 'sir'...
-    remote: Counting objects: 761, done.
-    remote: Compressing objects: 100% (154/154), done.
-    remote: Total 761 (delta 85), reused 0 (delta 0), pack-reused 599
-    Receiving objects: 100% (761/761), 1.84 MiB | 1.25 MiB/s, done.
-    Resolving deltas: 100% (373/373), done.
-    Checking connectivity... done.
-    $ cd sir
-    $ pip install -U -r requirements.txt
-    /lib/python2.7/site-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:90: InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. For more information, see https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning.
-      InsecurePlatformWarning
-    Requirement already up-to-date: flask in /lib/python2.7/site-packages (from -r requirements.txt (line 1))
-    Requirement already up-to-date: Werkzeug>=0.7 in /lib/python2.7/site-packages (from flask->-r requirements.txt (line 1))
-    Requirement already up-to-date: Jinja2>=2.4 in /lib/python2.7/site-packages (from flask->-r requirements.txt (line 1))
-    Requirement already up-to-date: itsdangerous>=0.21 in /lib/python2.7/site-packages (from flask->-r requirements.txt (line 1))
-    Requirement already up-to-date: markupsafe in /lib/python2.7/site-packages (from Jinja2>=2.4->flask->-r requirements.txt (line 1))
+  $ sudo pip install SIR
+  You are using pip version 6.0.8, however version 7.1.0 is available.
+  You should consider upgrading via the 'pip install --upgrade pip' command.
+  Collecting SIR
+    Downloading SIR-0.10.tar.gz (79kB)
+      100% |################################| 81kB 1.2MB/s
+  Collecting flask (from SIR)
+    Using cached Flask-0.10.1.tar.gz
+  Collecting ipaddress (from SIR)
+    Using cached ipaddress-1.0.14-py27-none-any.whl
+  Collecting PyYAML (from SIR)
+    Using cached PyYAML-3.11.tar.gz
+  Collecting Werkzeug>=0.7 (from flask->SIR)
+    Using cached Werkzeug-0.10.4-py2.py3-none-any.whl
+  Collecting Jinja2>=2.4 (from flask->SIR)
+    Downloading Jinja2-2.8-py2.py3-none-any.whl (263kB)
+      100% |################################| 266kB 1.1MB/s
+  Collecting itsdangerous>=0.21 (from flask->SIR)
+    Using cached itsdangerous-0.24.tar.gz
+  Collecting MarkupSafe (from Jinja2>=2.4->flask->SIR)
+    Using cached MarkupSafe-0.23.tar.gz
+  Installing collected packages: MarkupSafe, itsdangerous, Jinja2, Werkzeug, PyYAML, ipaddress, flask, SIR
+    Running setup.py install for MarkupSafe
+      building 'markupsafe._speedups' extension
+      clang -fno-strict-aliasing -fno-common -dynamic -I/usr/local/include -I/usr/local/opt/sqlite/include -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -I/usr/local/Cellar/python/2.7.8_2/Frameworks/Python.framework/Versions/2.7/include/python2.7 -c markupsafe/_speedups.c -o build/temp.macosx-10.10-x86_64-2.7/markupsafe/_speedups.o
+      clang -bundle -undefined dynamic_lookup -L/usr/local/lib -L/usr/local/opt/sqlite/lib build/temp.macosx-10.10-x86_64-2.7/markupsafe/_speedups.o -o build/lib.macosx-10.10-x86_64-2.7/markupsafe/_speedups.so
+    Running setup.py install for itsdangerous
+
+
+    Running setup.py install for PyYAML
+      checking if libyaml is compilable
+      clang -fno-strict-aliasing -fno-common -dynamic -I/usr/local/include -I/usr/local/opt/sqlite/include -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -I/usr/local/Cellar/python/2.7.8_2/Frameworks/Python.framework/Versions/2.7/include/python2.7 -c build/temp.macosx-10.10-x86_64-2.7/check_libyaml.c -o build/temp.macosx-10.10-x86_64-2.7/check_libyaml.o
+      build/temp.macosx-10.10-x86_64-2.7/check_libyaml.c:2:10: fatal error: 'yaml.h' file not found
+      #include <yaml.h>
+               ^
+      1 error generated.
+      libyaml is not found or a compiler error: forcing --without-libyaml
+      (if libyaml is installed correctly, you may need to
+       specify the option --include-dirs or uncomment and
+       modify the parameter include_dirs in setup.cfg)
+
+    Running setup.py install for flask
+    Running setup.py install for SIR
+    Successfully installed Jinja2-2.8 MarkupSafe-0.23 PyYAML-3.11 SIR-0.10 Werkzeug-0.10.4 flask-0.10.1 ipaddress-1.0.14 itsdangerous-0.24
 
 Now configure SIR. Edit file ``settings.py``::
 
@@ -31,10 +58,24 @@ Now configure SIR. Edit file ``settings.py``::
     BIND_IP = '0.0.0.0'                                 # IP you want to bind the service to
     PORT= 8080                                          # Port you want to bind the service to
 
-Now you can start SIR and access it on the ``IP:PORT`` specified above.::
+Now you need an application server like UWSGI or gunicorn to run the application. There is tons of documentation out there
+on how to run flask application. I suggest you to start `here <http://flask.pocoo.org/docs/0.10/deploying/>`_. For the
+sake of testing we can use gunicorn like this::
 
-    $ sudo python sir.py
+    $ sudo pip install gunicorn
+    You are using pip version 6.0.8, however version 7.1.0 is available.
+    You should consider upgrading via the 'pip install --upgrade pip' command.
+    Collecting gunicorn
+      Using cached gunicorn-19.3.0-py2.py3-none-any.whl
+    Installing collected packages: gunicorn
+      Compiling /private/var/folders/d9/9h8nsvsd2_vgt9y1l73jhhvr0000gn/T/pip-build-FcSaUJ/gunicorn/gunicorn/workers/_gaiohttp.py
 
-Finally, you should look into exposing SIR via some application server. you can read more about it in the following link:
 
- * `<http://flask.pocoo.org/docs/0.10/deploying/>`_
+    Successfully installed gunicorn-19.3.0
+    $ sudo gunicorn sir.agent:app
+    [2015-07-30 13:21:30 +0200] [46008] [INFO] Starting gunicorn 19.3.0
+    [2015-07-30 13:21:30 +0200] [46008] [INFO] Listening at: http://127.0.0.1:8000 (46008)
+    [2015-07-30 13:21:30 +0200] [46008] [INFO] Using worker: sync
+    [2015-07-30 13:21:30 +0200] [46017] [INFO] Booting worker with pid: 46017
+
+At this point you should be able to access SIR at http://127.0.0.1:8000.

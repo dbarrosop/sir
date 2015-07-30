@@ -22,4 +22,4 @@ to any router or switch that supports those protocols.
   api/api_v1.0
   use_cases/index
   how_to_asr/index
-  how_to_eos_manual/index
+  how_to_eos/index
