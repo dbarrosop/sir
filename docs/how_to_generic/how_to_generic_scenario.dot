@@ -6,10 +6,10 @@ digraph SIR {
     subgraph network {
       IXP[label="Exchange Point", fillcolor="#F5F5DC"];
       Transit[fillcolor="#FFDEAD"];
-      ASR[label="ASR", fillcolor="#5F9EA0", height=0.75, width=0.75];
+      Router[label="Router", fillcolor="#5F9EA0", height=0.75, width=0.75];
 
-      Transit -> ASR[label="0.0.0.0/0", dir=none, style=solid];
-      IXP -> ASR[label="lots of\nprefixes", dir=none, style=solid];
+      Transit -> Router[label="0.0.0.0/0", dir=none, style=solid];
+      IXP -> Router[label="lots of\nprefixes", dir=none, style=solid];
     }
 
     subgraph cluster_1 {
@@ -17,7 +17,7 @@ digraph SIR {
       pmacct;
       sir;
     }
-    ASR -> pmacct[label="netflow &\nBGP"]
+    Router -> pmacct[label="netflow &\nBGP"]
     pmacct -> sir[label="Flows aggr.\nper prefix\n& BGP"]
 
     subgraph external {

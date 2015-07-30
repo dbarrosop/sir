@@ -21,5 +21,5 @@ to any router or switch that supports those protocols.
   architecture/index
   api/api_v1.0
   use_cases/index
-  how_to_asr/index
+  how_to_generic/index
   how_to_eos/index

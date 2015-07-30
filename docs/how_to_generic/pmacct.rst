@@ -138,7 +138,8 @@ And this is how to compile pmacct::
 Configuring pmacct
 ------------------
 
-To configure pmacct you will need to know the IP the ASR will use as source IP for both netflow and BGP. Once you know, paste the following configuration in the file ``/pmacct-1.5.1/etc/pmacct.conf``::
+To configure pmacct you will need to know the IP the router will use as source IP for both netflow and BGP. Once you
+know, paste the following configuration in the file ``/pmacct-1.5.1/etc/pmacct.conf``::
 
     $ cd /pmacct-1.5.1
     $ sudo mkdir etc
@@ -157,7 +158,7 @@ To configure pmacct you will need to know the IP the ASR will use as source IP f
     aggregate: dst_net, dst_mask, dst_as
 
     bgp_daemon: true
-    bgp_daemon_ip: $ASR_SRC_IP
+    bgp_daemon_ip: $ROUTER_SRC_IP
     bgp_daemon_max_peers: 1
     bgp_table_dump_file: /pmacct-1.5.1/output/bgp-$peer_src_ip-%Y_%m_%dT%H_%M_%S.txt
     bgp_table_dump_refresh_time: 3600
@@ -165,10 +166,10 @@ To configure pmacct you will need to know the IP the ASR will use as source IP f
     nfacctd_as_new: bgp
     nfacctd_net: bgp
     nfacctd_port: 9999
-    nfacctd_ip: $ASR_SRC_IP
+    nfacctd_ip: $ROUTER_SRC_IP
     nfacctd_time_new: true
 
-.. warning:: Don't forget to replace ``$ASR_SRC_IP`` with the IP your ASR will use for both netflow and BGP.
+.. warning:: Don't forget to replace ``$ROUTER_SRC_IP`` with the IP of your router will use for both netflow and BGP.
 
 Now it's time to setup the database::
 
@@ -219,10 +220,12 @@ Finally, it's just a matter of starting pmacct::
 
     $ sudo /pmacct-1.5.1/sbin/nfacctd -f /pmacct-1.5.1/etc/pmacct.conf
 
-Configuring the ASR
--------------------
+Configuring the Router
+-----------------------
 
-Configuring the ASR is relatively easy, you only have to configure netflow to send the flows that you want to process and BGP to send the prefixes you want to use for the aggregation. Here is an example::
+For the example we are going to use an ASR. Adapt the config for your network and your device. Configuring the ASR is
+relatively easy, you only have to configure netflow to send the flows that you want to process and BGP to send the
+prefixes you want to use for the aggregation. Here is an example::
 
     flow exporter-map SIR
      version v9
@@ -264,4 +267,6 @@ Configuring the ASR is relatively easy, you only have to configure netflow to se
 
 .. warning:: Don't forget to replace ``$PMACCT_IP`` with the IP of the server where you are running pmacct and ``$AS`` with your own AS.
 
-.. note:: If you want you can configure several ASR's pointing to the same SIR agent. The only thing you have to change is in pmacct's configuration the parameter ``bgp_daemon_max_peers`` to the number of ASR's that you are going to configure.
+.. note:: If you want you can configure several routers pointing to the same SIR agent. The only thing you have to
+          change is in pmacct's configuration the parameter ``bgp_daemon_max_peers`` to the number of routrs that you
+          are going to configure.
