@@ -52,7 +52,7 @@ This is super easy to do. First install using pip::
 Now configure SIR. Edit file ``settings.py``::
 
     DATABASE = '/pmacct-1.5.1/output/pmacct.db'         # Path to the db
-    BGP_FOLDER = '/spotify/pmacct-1.5.1/output'         # Path to the folder where BGP info is
+    BGP_FOLDER = '/pmacct-1.5.1/output'         # Path to the folder where BGP info is
     DEBUG = False                                       # Set to True only if you are trying to develop and your environment is completely secure
     SECRET_KEY = 'My_super_duper_secret_key'            # Secret key. Keep it secret.
     BIND_IP = '0.0.0.0'                                 # IP you want to bind the service to
