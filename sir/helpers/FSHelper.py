@@ -21,6 +21,24 @@ class FSHelper:
         prefixes = dict()
 
         for n in self.neighbors:
+            prefixes[n] = list()
+            f = 'bgp-{}-{}'.format(n, date).replace('.', '_')
+
+            with open('{}/{}.txt'.format(self.base_path, f)) as data_file:
+                for line in data_file.readlines():
+                    json_data = json.loads(line)
+                    if json_data['event_type'] == 'dump':
+                        prefixes[n].append(json_data['ip_prefix'])
+                data_file.close()
+
+        return prefixes
+
+    def get_raw_bgp(self, date):
+        date = date.replace('-', '_').replace(':', '_')
+
+        prefixes = dict()
+
+        for n in self.neighbors:
             prefixes[n] = dict()
             f = 'bgp-{}-{}'.format(n, date).replace('.', '_')
 

@@ -15,7 +15,7 @@ When reading this documentation you will find variables in two forms:
 * **variable**: Variables that are NOT enclosed by ``<>``:
  * If the method is a GET variables that are between ``<>`` have to be replaced by their values in the URL. For example, ``/api/v1.0/variables/categories/<category>`` will turn into ``/api/v1.0/variables/categories/my_category``.
  * If the method is a POST or a PUT variables variables that are between ``<>`` have to be sent as a JSON object.
- 
+
 
 Responses
 *********
@@ -596,8 +596,6 @@ ___________
 
 Retrieves all the BGP prefixes in the system.
 
-.. warning:: Do it only if need it. If you have the full feed this can return hundreds of MB of data.
-
 Arguments
 _________
 
@@ -614,3 +612,33 @@ ________
 ::
 
     http://127.0.0.1:5000/api/v1.0/pmacct/bgp_prefixes?date=2015-07-16T11:00:01
+
+/api/v1.0/pmacct/raw_bgp
+========================
+
+GET
+---
+
+Description
+___________
+
+Retrieves the BGP raw data from pmacct. That includes AS PATH, local-pref, communities, etc....
+
+.. warning:: Do it only if need it. If you have the full feed this can return hundreds of MB of data.
+
+Arguments
+_________
+
+* **date**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+
+Returns
+_______
+
+The raw data from pmacct.
+
+Examples
+________
+
+::
+
+    http://127.0.0.1:5000/api/v1.0/pmacct/raw_bgp?date=2015-07-16T11:00:01

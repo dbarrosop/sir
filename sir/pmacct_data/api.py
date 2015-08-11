@@ -21,3 +21,9 @@ def get_bgp_prefixes(request):
     date = request.args.get('date')
     bgp_prefixes = fs.get_bgp_prefixes(date)
     return sir.helpers.api.build_api_response(bgp_prefixes, error=False, date=date)
+
+def get_raw_bgp(request):
+    fs = getattr(g, 'fs')
+    date = request.args.get('date')
+    bgp_prefixes = fs.get_raw_bgp(date)
+    return sir.helpers.api.build_api_response(bgp_prefixes, error=False, date=date)

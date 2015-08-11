@@ -1,17 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO Complete pySIR
-# TODO Delete old flows from the API
-# TODO delete raw BGP files from the API
-# TODO UI to Add, Edit, delete variables
-# TODO metrics
-# TODO Cache ASNs from peering db
-# TODO Catch errors in API
-# TODO logging
-# TODO authentication???
-# TODO Evaluate influxdbit
-# TODO Release SIR with RPM
-
 from sir.helpers.SQLite3Helper import SQLite3Helper
 from sir.helpers.FSHelper import FSHelper
 
@@ -186,6 +174,11 @@ def pmacct_data_api_get_dates():
 @app.route('/api/v1.0/pmacct/flows', methods=['GET'])
 def pmacct_data_api_get_flows():
     return jsonify(sir.pmacct_data.api.get_flows(request))
+
+
+@app.route('/api/v1.0/pmacct/raw_bgp', methods=['GET'])
+def pmacct_data_api_get_raw_bgp():
+    return jsonify(sir.pmacct_data.api.get_raw_bgp(request))
 
 
 @app.route('/api/v1.0/pmacct/bgp_prefixes', methods=['GET'])
