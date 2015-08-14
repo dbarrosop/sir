@@ -84,13 +84,7 @@ function restart_sir {
 
 function restart_nginx {
   echo "Restarting nginx"
-  FastCli -p 15 -c "
-  enable
-  conf
-  management api http-commands
-  shut
-  no shut
-  "
+  $VRF_BIN service nginx restart
 }
 
 VRF="default"
