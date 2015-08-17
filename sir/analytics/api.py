@@ -10,12 +10,14 @@ def top_prefixes(request):
     limit_prefixes = int(request.args.get('limit_prefixes', 0))
     net_masks = request.args.get('net_masks', '')
     exclude_net_masks = request.args.get('exclude_net_masks', False)
+    filter_proto = request.args.get('filter_proto', None)
 
     result = db.aggregate_per_prefix(
         start_time, end_time,
         limit=limit_prefixes,
         net_masks=net_masks,
-        exclude_net_masks=exclude_net_masks)
+        exclude_net_masks=exclude_net_masks,
+        filter_proto=filter_proto)
 
     parameters = {
         'limit_prefixes': limit_prefixes,
@@ -23,6 +25,7 @@ def top_prefixes(request):
         'end_time': end_time,
         'net_masks': net_masks,
         'exclude_net_masks': exclude_net_masks,
+        'filter_proto': filter_proto,
     }
     return sir.helpers.api.build_api_response(result, error=False, **parameters)
 
