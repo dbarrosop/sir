@@ -673,31 +673,31 @@ ________
 
     http://127.0.0.1:5000/api/v1.0/pmacct/purge_bgp?older_than=2015-07-29T13:00:01
 
-    /api/v1.0/pmacct/purge_flows
-    ============================
+/api/v1.0/pmacct/purge_flows
+============================
 
-    GET
-    ---
+GET
+---
 
-    Description
-    ___________
+Description
+___________
 
-    Deletes all the flows that are older than ``older_than``.
+Deletes all the flows that are older than ``older_than``.
 
 
-    Arguments
-    _________
+Arguments
+_________
 
-    * **older_than**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+* **older_than**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
 
-    Returns
-    _______
+Returns
+_______
 
-    The flows that were deleted.
+The flows that were deleted.
 
-    Examples
-    ________
+Examples
+________
 
-    ::
+::
 
-        http://127.0.0.1:5000/api/v1.0/pmacct/purge_flows?older_than=2015-07-29T13:00:01
+    http://127.0.0.1:5000/api/v1.0/pmacct/purge_flows?older_than=2015-07-29T13:00:01
