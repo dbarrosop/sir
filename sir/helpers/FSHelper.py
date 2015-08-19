@@ -2,7 +2,7 @@ import glob
 from datetime import datetime
 import json
 import ipaddress
-
+import os
 
 class FSHelper:
     def __init__(self, base_path='./data'):
@@ -92,3 +92,21 @@ class FSHelper:
                             if asn in as_path:
                                 prefixes[n].append(data)
         return prefixes
+
+    def purge_bgp(self, older_than):
+        older_than = datetime.strptime(older_than, '%Y-%m-%dT%H:%M:%S')
+        deleted_files = list()
+
+        for n in self.neighbors:
+            for d in self.dates:
+                if older_than > d:
+                    file_name = '{}/bgp-{}-{}.txt'.format(
+                        self.base_path,
+                        n.replace('.', '_'),
+                        d.strftime('%Y_%m_%dT%H_%M_%S')
+                    )
+                    if os.path.isfile(file_name):
+                        os.remove(file_name)
+                        deleted_files.append(file_name)
+
+        return deleted_files

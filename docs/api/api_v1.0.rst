@@ -89,6 +89,7 @@ _________
 * **limit_prefixes**: Optional. Number of top prefixes to retrieve.
 * **net_masks**: Optional. List of prefix lengths to filter in or out.
 * **exclude_net_masks**: Optional. If set to any value it will return prefixes with a prefix length not included in net_masks. If set to 0 it will return only prefixes with a prefix length included in net_masks. Default is 0.
+* **filter_proto**: Optional. If you don't set it you will get both IPv4 and IPv6 prefixes. If you set it to 4 you will get only IPv4 prefixes. Otherwise, if you set it to 6 you will get IPv6 prefixes.
 
 Returns
 _______
@@ -642,3 +643,61 @@ ________
 ::
 
     http://127.0.0.1:5000/api/v1.0/pmacct/raw_bgp?date=2015-07-16T11:00:01
+
+/api/v1.0/pmacct/purge_bgp
+==========================
+
+GET
+---
+
+Description
+___________
+
+Deletes all the BGP data that is older than ``older_than``.
+
+
+Arguments
+_________
+
+* **older_than**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+
+Returns
+_______
+
+The list of files containing BGP data that was deleted.
+
+Examples
+________
+
+::
+
+    http://127.0.0.1:5000/api/v1.0/pmacct/purge_bgp?older_than=2015-07-29T13:00:01
+
+/api/v1.0/pmacct/purge_flows
+============================
+
+GET
+---
+
+Description
+___________
+
+Deletes all the flows that are older than ``older_than``.
+
+
+Arguments
+_________
+
+* **older_than**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+
+Returns
+_______
+
+The flows that were deleted.
+
+Examples
+________
+
+::
+
+    http://127.0.0.1:5000/api/v1.0/pmacct/purge_flows?older_than=2015-07-29T13:00:01
