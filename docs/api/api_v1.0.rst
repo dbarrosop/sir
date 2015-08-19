@@ -643,3 +643,32 @@ ________
 ::
 
     http://127.0.0.1:5000/api/v1.0/pmacct/raw_bgp?date=2015-07-16T11:00:01
+
+/api/v1.0/pmacct/purge_bgp
+========================
+
+GET
+---
+
+Description
+___________
+
+Deletes all the BGP data that is older than ``older_than``.
+
+
+Arguments
+_________
+
+* **older_than**: Mandatory. Datetime in unicode string following the format ``'%Y-%m-%dT%H:%M:%S'``.
+
+Returns
+_______
+
+The list of files containing BGP data that was deleted.
+
+Examples
+________
+
+::
+
+    http://127.0.0.1:5000/api/v1.0/pmacct/purge_bgp?older_than=2015-07-29T13:00:01

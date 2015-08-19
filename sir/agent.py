@@ -185,5 +185,11 @@ def pmacct_data_api_get_raw_bgp():
 def pmacct_data_api_get_bgp_prefixes():
     return jsonify(sir.pmacct_data.api.get_bgp_prefixes(request))
 
+
+@app.route('/api/v1.0/pmacct/purge_bgp', methods=['GET'])
+def pmacct_data_api_purge_bgp():
+    return jsonify(sir.pmacct_data.api.purge_bgp(request))
+
+
 if __name__ == '__main__':
     app.run(app.config['BIND_IP'], app.config['PORT'])

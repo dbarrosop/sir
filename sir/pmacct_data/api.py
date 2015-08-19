@@ -22,8 +22,16 @@ def get_bgp_prefixes(request):
     bgp_prefixes = fs.get_bgp_prefixes(date)
     return sir.helpers.api.build_api_response(bgp_prefixes, error=False, date=date)
 
+
 def get_raw_bgp(request):
     fs = getattr(g, 'fs')
     date = request.args.get('date')
     bgp_prefixes = fs.get_raw_bgp(date)
     return sir.helpers.api.build_api_response(bgp_prefixes, error=False, date=date)
+
+
+def purge_bgp(request):
+    fs = getattr(g, 'fs')
+    older_than = request.args.get('older_than')
+    purged_bgp_tables = fs.purge_bgp(older_than)
+    return sir.helpers.api.build_api_response(purged_bgp_tables, error=False, older_than=older_than)
