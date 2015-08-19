@@ -191,5 +191,10 @@ def pmacct_data_api_purge_bgp():
     return jsonify(sir.pmacct_data.api.purge_bgp(request))
 
 
+@app.route('/api/v1.0/pmacct/purge_flows', methods=['GET'])
+def pmacct_data_api_purge_flows():
+    return jsonify(sir.pmacct_data.api.purge_flows(request))
+
+
 if __name__ == '__main__':
     app.run(app.config['BIND_IP'], app.config['PORT'])

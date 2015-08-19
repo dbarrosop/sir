@@ -223,3 +223,20 @@ class SQLite3Helper:
                             ;
                 '''
         return self._execute_query(query, [start_time, end_time])
+
+    def purge_flows(self, older_than):
+        query = ''' SELECT ip_dst, mask_dst, bytes, packets, as_dst, stamp_updated
+                            FROM acct
+                            WHERE
+                            datetime(stamp_updated) < datetime(?)
+                            ;
+                '''
+        purged_flows = self._execute_query(query, [older_than])
+        query = ''' DELETE
+                            FROM acct
+                            WHERE
+                            datetime(stamp_updated) < datetime(?)
+                            ;
+                '''
+        self._execute_query(query, [older_than], commit=True)
+        return purged_flows

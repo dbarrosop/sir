@@ -35,3 +35,10 @@ def purge_bgp(request):
     older_than = request.args.get('older_than')
     purged_bgp_tables = fs.purge_bgp(older_than)
     return sir.helpers.api.build_api_response(purged_bgp_tables, error=False, older_than=older_than)
+
+
+def purge_flows(request):
+    db = getattr(g, 'db')
+    older_than = request.args.get('older_than')
+    purged_flows = db.purge_flows(older_than)
+    return sir.helpers.api.build_api_response(purged_flows, error=False, older_than=older_than)
