@@ -8,3 +8,7 @@ that the eAPI is using.
 
 This will give us extra visibility on how we are using the Arista switch and do smart things like optimizing the fib or
 take peering decisions.
+
+.. image:: ../use_cases/peering_router.png
+    :align: center
+    :alt: peering_router

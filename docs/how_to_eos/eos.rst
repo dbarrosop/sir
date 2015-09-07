@@ -1,7 +1,7 @@
 Configuring EOS
 ===============
 
-No matter if you did the manual or the automated deployment you have to configure EOS to peer with pmacct and send sFlow
+No matter if you did the manual or the automated deployment, you have to configure EOS to peer with pmacct and send sFlow
 data::
 
     [dbarroso@lab tmp]$ exit

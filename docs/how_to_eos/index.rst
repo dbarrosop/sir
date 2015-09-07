@@ -11,3 +11,4 @@ How To: EOS
    eos
    accessing_sir
    logging
+   fib_optimizer

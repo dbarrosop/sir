@@ -1,3 +1,5 @@
+.. _A commodity switch as a Peering Router:
+
 A commodity switch as a Peering Router
 ======================================
 
