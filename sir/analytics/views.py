@@ -6,12 +6,18 @@ def _init_context_dates(db, request):
     context = dict()
     dates = db.get_dates()
 
-    starting_time = min(len(dates), 25)
+    if len(dates) > 0:
+        starting_time = min(len(dates), 25)
 
-    context['avail_start_time'] = dates[0].strftime('%Y-%m-%dT%H:%M')
-    context['avail_end_time'] = dates[-1].strftime('%Y-%m-%dT%H:%M')
-    context['start_time'] = request.form.get('start_time', dates[-starting_time].strftime('%Y-%m-%dT%H:%M'))
-    context['end_time'] = request.form.get('end_time', context['avail_end_time'])
+        context['avail_start_time'] = dates[0].strftime('%Y-%m-%dT%H:%M')
+        context['avail_end_time'] = dates[-1].strftime('%Y-%m-%dT%H:%M')
+        context['start_time'] = request.form.get('start_time', dates[-starting_time].strftime('%Y-%m-%dT%H:%M'))
+        context['end_time'] = request.form.get('end_time', context['avail_end_time'])
+    else:
+        context['avail_start_time'] = ''
+        context['avail_end_time'] = ''
+        context['start_time'] = request.form.get('start_time', '')
+        context['end_time'] = request.form.get('end_time', '')
     return context
 
 
@@ -121,7 +127,7 @@ def find_prefix_asn(request):
         context['origin_only'] = True
         context['date'] = context['available_dates'][-1]
     elif request.method == 'POST':
-        context['date'] = request.form.get('date')        
+        context['date'] = request.form.get('date')
         context['query'] = request.form.get('query')
         context['origin_only'] = eval(request.form.get('origin_only', True))
         context['prefixes'] = fs.find_prefixes_asn(context['query'], context['date'], context['origin_only'])
