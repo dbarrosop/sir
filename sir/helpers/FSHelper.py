@@ -84,6 +84,10 @@ class FSHelper:
                 for line in f:
                     if asn in line:
                         data = json.loads(line)
+
+                        if data['event_type'] != 'dump':
+                            continue
+                        
                         as_path = data['as_path'].split(' ')
                         if originate_only:
                             if asn == as_path[-1]:
