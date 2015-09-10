@@ -122,7 +122,7 @@ def analytics_api_top_asns():
     return jsonify(sir.analytics.api.top_asns(request))
 
 
-@app.route('/api/v1.0/analytics/find_prefix/<prefix>/<pl>', methods=['GET'])
+@app.route('/api/v1.0/analytics/find_prefix/<prefix>/<prefix_length>', methods=['GET'])
 def analytics_api_find_prefix(prefix, prefix_length):
     """
     analytics_api_find_prefix

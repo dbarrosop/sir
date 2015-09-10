@@ -45,28 +45,45 @@ def top_asns(request):
 
 
 def find_prefix(request, prefix):
-    # curl http://127.0.0.1:5000/api/v1.0/top_asns\?start_time=2015-07-13T14:00\&end_time=2015-07-14T14:00
+    # curl http://127.0.0.1:5000/api/v1.0/top_asns\?date=2015-07-13T14:00
     fs = getattr(g, 'fs')
     date = request.args.get('date')
-    print date
-    result = fs.find_prefix(prefix, date)
+
     parameters = {
         'prefix': prefix,
         'date': date,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
 
+    try:
+        result = fs.find_prefix(prefix, date)
+        return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    except IOError as e:
+        result = {
+            'error_type': 'file_not_found',
+            'filename': e.filename,
+            'message': 'Could not find file with BGP data: {}'.format(e.filename)
+        }
+        return sir.helpers.api.build_api_response(result, error=True, **parameters)
 
 def find_prefixes_asn(request, asn):
-    # curl http://127.0.0.1:5000/api/v1.0/top_asns\?start_time=2015-07-13T14:00\&end_time=2015-07-14T14:00
+    # curl http://127.0.0.1:5000/api/v1.0/top_asns\?date=2015-07-13T14:00
     fs = getattr(g, 'fs')
     date = request.args.get('date')
     origin_only = request.args.get('origin_only', False)
 
-    result = fs.find_prefixes_asn(asn, date, origin_only)
     parameters = {
         'asn': asn,
         'date': date,
         'origin_only': origin_only,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+
+    try:
+        result = fs.find_prefixes_asn(asn, date, origin_only)
+        return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    except IOError as e:
+        result = {
+            'error_type': 'file_not_found',
+            'filename': e.filename,
+            'message': 'Could not find file with BGP data: {}'.format(e.filename)
+        }
+        return sir.helpers.api.build_api_response(result, error=True, **parameters)
