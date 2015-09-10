@@ -18,14 +18,14 @@ def _variables_post(request):
         'content': content,
         'category': category,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
 
 
 def _variables_get(request):
     db = getattr(g, 'db')
     result = db.get_variables()
     parameters = {}
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
 
 
 def variables(request):
@@ -41,7 +41,7 @@ def _api_variables_var_id_get(request, name):
     parameters = {
         'name': name,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
 
 
 def api_variables_name(request, category, name):
@@ -66,14 +66,14 @@ def api_variables_name(request, category, name):
         'name': name,
         'categories': category,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
 
 
 def variables_category(request):
     db = getattr(g, 'db')
     result = db.get_categories()
     parameters = {}
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
 
 
 def variables_filter_by_category(request, category):
@@ -82,4 +82,4 @@ def variables_filter_by_category(request, category):
     parameters = {
         'categories': category,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)

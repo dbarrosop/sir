@@ -37,7 +37,7 @@ You will get the following response:
 
     {
       "meta": {
-        "error": false,
+        "error_type": null,
         "length": 10,
         "request_time": 11.99163
       },
@@ -62,6 +62,21 @@ You will get the following response:
         }
       ]
     }
+
+Errors
+======
+
+If there is any error in the API call the meta attribute in the response will reflect that and the result will contain
+more information about the error.
+
+Error Types
+-----------
+
+bgp_data_not_found
+__________________
+
+Result: Will show the source that the system was trying to read and couldn't be found.
+
 
 #########
 Endpoints
@@ -166,7 +181,7 @@ Examples
     $ curl http://127.0.0.1:5000/api/v1.0/analytics/find_prefix/192.2.3.1/32\?date\=2015-07-22T05:00:01
     {
       "meta": {
-        "error": false,
+        "error_type": null,
         "length": 2,
         "request_time": 1.88076
       },
@@ -233,7 +248,7 @@ Examples
     curl http://127.0.0.1:5000/api/v1.0/analytics/find_prefixes_asn/345\?date\=2015-07-22T05:00:01\&origin_only=1
     {
       "meta": {
-        "error": false,
+        "error_type": null,
         "length": 2,
         "request_time": 1.15757
       },
@@ -444,7 +459,7 @@ This API call allows you to modify all of some of the values of a variable. For 
      curl -i -H "Content-Type: application/json" -X PUT -d '{"name": "test_varc", "extra_vars": "{'my_param1': 'my_value1', 'my_param2': 'my_value2'}"}' http://127.0.0.1:5000/api/v1.0/variables/categories/development/test_vara HTTP/1.0 200 OK Content-Type: application/json Content-Length: 358 Server: Werkzeug/0.10.4 Python/2.7.8 Date: Tue, 21 Jul 2015 10:16:22 GMT
      {
       "meta": {
-        "error": false,
+        "error_type": null,
         "length": 1,
         "request_time": 0.0055
       },
@@ -498,7 +513,7 @@ Deletes a variable. For example:
      curl -i -X DELETE http://127.0.0.1:5000/api/v1.0/variables/categories/deveopment/test_vara HTTP/1.0 200 OK Content-Type: application/json Content-Length: 183 Server: Werkzeug/0.10.4 Python/2.7.8 Date: Tue, 21 Jul 2015 10:17:27 GMT
      {
       "meta": {
-        "error": false,
+        "error_type": null,
         "length": 0,
         "request_time": 0.0016
       },

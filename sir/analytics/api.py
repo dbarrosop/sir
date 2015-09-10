@@ -27,7 +27,7 @@ def top_prefixes(request):
         'exclude_net_masks': exclude_net_masks,
         'filter_proto': filter_proto,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
 
 
 def top_asns(request):
@@ -41,7 +41,7 @@ def top_asns(request):
         'start_time': start_time,
         'end_time': end_time,
     }
-    return sir.helpers.api.build_api_response(result, error=False, **parameters)
+    return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
 
 
 def find_prefix(request, prefix):
@@ -56,14 +56,9 @@ def find_prefix(request, prefix):
 
     try:
         result = fs.find_prefix(prefix, date)
-        return sir.helpers.api.build_api_response(result, error=False, **parameters)
+        return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
     except IOError as e:
-        result = {
-            'error_type': 'file_not_found',
-            'filename': e.filename,
-            'message': 'Could not find file with BGP data: {}'.format(e.filename)
-        }
-        return sir.helpers.api.build_api_response(result, error=True, **parameters)
+        return sir.helpers.api.build_api_response(e.filename, error_type='bgp_data_not_found', **parameters)
 
 def find_prefixes_asn(request, asn):
     # curl http://127.0.0.1:5000/api/v1.0/top_asns\?date=2015-07-13T14:00
@@ -79,11 +74,6 @@ def find_prefixes_asn(request, asn):
 
     try:
         result = fs.find_prefixes_asn(asn, date, origin_only)
-        return sir.helpers.api.build_api_response(result, error=False, **parameters)
+        return sir.helpers.api.build_api_response(result, error_type=None, **parameters)
     except IOError as e:
-        result = {
-            'error_type': 'file_not_found',
-            'filename': e.filename,
-            'message': 'Could not find file with BGP data: {}'.format(e.filename)
-        }
-        return sir.helpers.api.build_api_response(result, error=True, **parameters)
+        return sir.helpers.api.build_api_response(e.filename, error_type='bgp_data_not_found', **parameters)
