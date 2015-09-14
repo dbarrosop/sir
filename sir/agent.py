@@ -16,6 +16,7 @@ import sir.pmacct_data.api
 from flask import Flask, request, g, jsonify, render_template
 
 import time
+import pkg_resources
 
 app = Flask(__name__)
 app.config.from_envvar('SIR_SETTINGS', silent=True)
@@ -194,6 +195,21 @@ def pmacct_data_api_purge_bgp():
 @app.route('/api/v1.0/pmacct/purge_flows', methods=['GET'])
 def pmacct_data_api_purge_flows():
     return jsonify(sir.pmacct_data.api.purge_flows(request))
+
+###################
+###################
+#  SIR        #####
+###################
+###################
+
+
+@app.route('/api/v1.0/sir/version', methods=['GET'])
+def sir_api_version():
+    sir_version = pkg_resources.require("sir")[0].version
+    config_copy = app.config.copy()
+    config_copy.pop('PERMANENT_SESSION_LIFETIME')
+    return jsonify(sir.helpers.api.build_api_response({'version': sir_version,
+                                                       'configuration': config_copy}, error=False))
 
 
 if __name__ == '__main__':
