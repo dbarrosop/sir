@@ -79,7 +79,7 @@ If you want to modify any variable later on you can run the following code in yo
     }
     sir = pySIR(base_url, verify_ssl=False)
 
-    sir.put_variables_by_category_and_name('apps', 'fib_optimizer', content = json.dumps(configuration))
+    sir.put_variables_by_category_and_name(category='apps', name='fib_optimizer', content = json.dumps(configuration))
 
 
 Scheduling fib_optimizer
