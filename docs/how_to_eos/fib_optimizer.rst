@@ -61,7 +61,7 @@ Now, execute inside your python shell the following code (modify the configurati
     }
     sir = pySIR(base_url, verify_ssl=False)
 
-    sir.post_variables('apps', 'fib_optimizer', content = json.dumps(configuration))
+    sir.post_variables(category='apps', name='fib_optimizer', content = json.dumps(configuration))
 
 If you want to modify any variable later on you can run the following code in your python shell::
 
