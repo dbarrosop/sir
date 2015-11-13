@@ -36,4 +36,4 @@ Documentation
 
 You can find the documentation on [Read the Docs](http://sdn-internet-router-sir.readthedocs.org/en/latest/).
 
-If you have any questions or you want to chat about SIR feel free to join the IRC channel #sdn_sir on freenode.
+If you have any questions or you want to chat about SIR feel free to join the '''SIR''' channel on slack at [network.toCode()](https://networktocode.herokuapp.com/).
