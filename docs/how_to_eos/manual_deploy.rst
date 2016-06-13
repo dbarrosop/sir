@@ -29,8 +29,8 @@ First you have to get all the related configuration files and copy them to the c
     Arista Networks EOS shell
 
     [dbarroso@lab ~]$ cd /tmp/
-    [dbarroso@lab tmp]$ sudo ip netns exec ns-mgmtVRF wget http://sdn-internet-router-sir.readthedocs.org/en/latest/_static/eos_files.tar.gz
-    --2015-07-28 13:30:35--  http://sdn-internet-router-sir.readthedocs.org/en/latest/_static/eos_files.tar.gz
+    [dbarroso@lab tmp]$ sudo ip netns exec ns-mgmtVRF wget https://sdn-internet-router-sir.readthedocs.io/en/latest/_static/eos_files.tar.gz
+    --2015-07-28 13:30:35--  https://sdn-internet-router-sir.readthedocs.io/en/latest/_static/eos_files.tar.gz
     Resolving sdn-internet-router-sir.readthedocs.org... 162.209.114.75
     Connecting to sdn-internet-router-sir.readthedocs.org|162.209.114.75|:80... connected.
     HTTP request sent, awaiting response... 200 OK
