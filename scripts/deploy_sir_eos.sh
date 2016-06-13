@@ -1,5 +1,5 @@
 #!/bin/sh
-PMACCT_URL="http://sdn-internet-router-sir.readthedocs.org/en/latest/_static/eos_files.tar.gz"
+PMACCT_URL="https://sdn-internet-router-sir.readthedocs.io/en/latest/_static/eos_files.tar.gz"
 TMP_FOLDER="/tmp"
 PMACCT_FOLDER="/tmp/eos_files"
 

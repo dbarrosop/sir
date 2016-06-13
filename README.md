@@ -19,12 +19,12 @@ The agent will expose a Web UI and an API that will allow you do things like:
 * Look for all the prefixes that traverses or originates in a particular ASN.
 * Check all the prefixes in the router that allows you to reach certain prefixes or IP.
 
-You can read the full list of features in the following [link](http://sdn-internet-router-sir.readthedocs.org/en/latest/features/index.html).
+You can read the full list of features in the following [link](https://sdn-internet-router-sir.readthedocs.io/en/latest/features/index.html).
 
 Applications
 ============
 
-This agent will give you some visibility about your network. You can use this data to better choose your network equipment, to do traffic engineering, capacity planning, peering decisions... anything you want. You can see some use cases in the following [link](http://sdn-internet-router-sir.readthedocs.org/en/latest/use_cases/index.html).
+This agent will give you some visibility about your network. You can use this data to better choose your network equipment, to do traffic engineering, capacity planning, peering decisions... anything you want. You can see some use cases in the following [link](https://sdn-internet-router-sir.readthedocs.io/en/latest/use_cases/index.html).
 
 Here is a list of links where you can get tools and apps that leverages on SIR:
 
@@ -34,6 +34,6 @@ Here is a list of links where you can get tools and apps that leverages on SIR:
 Documentation
 =============
 
-You can find the documentation on [Read the Docs](http://sdn-internet-router-sir.readthedocs.org/en/latest/).
+You can find the documentation on [Read the Docs](https://sdn-internet-router-sir.readthedocs.io/en/latest/).
 
 If you have any questions or you want to chat about SIR feel free to join the ``SIR`` channel on slack at [network.toCode()](https://networktocode.herokuapp.com/).
