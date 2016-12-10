@@ -58,6 +58,8 @@ Now configure SIR. Edit file ``settings.py``::
     BIND_IP = '0.0.0.0'                                 # IP you want to bind the service to
     PORT= 8080                                          # Port you want to bind the service to
 
+.. note:: You can place the ``settings.py`` file anywhere you like. However, you will have to set the environment variable ``SIR_SETTINGS`` pointing towards it so it can be found. For example, ``export SIR_SETTINGS=/path/to/settings.py``.
+
 Now you need an application server like UWSGI or gunicorn to run the application. There is tons of documentation out there
 on how to run flask application. I suggest you to start `here <http://flask.pocoo.org/docs/0.10/deploying/>`_. For the
 sake of testing we can use gunicorn like this::
